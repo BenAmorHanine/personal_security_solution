@@ -9,3 +9,5 @@ pretrained_models/
 wav2vec2_checkpoints/
 *.ckpt
 *.bin
+
+vocal_env/*
