@@ -1,3 +1,11 @@
 *.pdf
 /data/**
 draft.txt
+
+# Ignore big model checkpoints and caches
+emotion-recognition-wav2vec2-IEMOCAP/
+notebooks/wav2vec2_checkpoints/
+pretrained_models/
+wav2vec2_checkpoints/
+*.ckpt
+*.bin
