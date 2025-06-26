@@ -11,3 +11,7 @@ wav2vec2_checkpoints/
 *.bin
 
 vocal_env/*
+notebooks/tunisian_data/**
+notebooks/*.csv
+
+notebooks/tunisian_data_speech/
