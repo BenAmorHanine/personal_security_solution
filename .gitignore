@@ -1,17 +1,29 @@
 *.pdf
-/data/**
 draft.txt
 
-# Ignore big model checkpoints and caches
+# Ignore data and dataset outputs
+
+/data/**
+notebooks/tunisian_data/**
+notebooks/tunisian_data_speech/
+notebooks/*.csv
+notebooks/caches/** */
+
+
+# Ignore big model checkpoints and 
 emotion-recognition-wav2vec2-IEMOCAP/
 notebooks/wav2vec2_checkpoints/
 pretrained_models/
 wav2vec2_checkpoints/
 *.ckpt
 *.bin
+*.safetensors
 
-vocal_env/*
-notebooks/tunisian_data/**
-notebooks/*.csv
 
-notebooks/tunisian_data_speech/
+# Ignore virtual environments
+vocal_env/
+bertenv/
+
+# Ignore model folders
+models/**
+
