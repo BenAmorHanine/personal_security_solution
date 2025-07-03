@@ -1,0 +1,8 @@
+fastapi
+pymongo
+pandas
+numpy
+scikit-learn
+uvicorn
+apscheduler
+python-dotenv
