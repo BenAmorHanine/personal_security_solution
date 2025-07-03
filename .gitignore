@@ -10,7 +10,7 @@ notebooks/*.csv
 notebooks/caches/** */
 
 
-# Ignore big model checkpoints and 
+# Ignore big model checkpoints
 emotion-recognition-wav2vec2-IEMOCAP/
 notebooks/wav2vec2_checkpoints/
 pretrained_models/
