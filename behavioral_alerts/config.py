@@ -5,12 +5,12 @@
 # Anomaly Detection Thresholds
 DISTANCE_THRESHOLD = 0.05  # approx ~5km
 PROB_THRESHOLD = 0.05
-LATE_NIGHT_HOURS = list(range(22, 24)) + list(range(0, 5))  # 10PM–5AM
+LATE_NIGHT_HOURS = list(range(22, 24)) + list(range(0, 4))  # 10PM–5AM
 
 # Clustering Parameters
 MIN_SAMPLES_CLUSTERING = 5
 CLUSTERING_XI = 0.1
-
+CLUSTERING_METHOD = "dbscan"  # Options: "dbscan", "optics"
 # Scheduler
 PROFILE_UPDATE_INTERVAL_MINUTES = 30
 

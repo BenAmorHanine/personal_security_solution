@@ -1,6 +1,8 @@
 from fastapi import APIRouter
 from db.mongo import get_collection
-from core.logic import detect_anomalies, store_capture
+from core.anomalies import *
+from core.profiling import build_user_profile
+from utils.store import store_capture
 from utils.alert import trigger_alert
 from models.schemas import CaptureRequest
 from datetime import datetime

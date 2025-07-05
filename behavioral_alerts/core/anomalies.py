@@ -1,14 +1,14 @@
 from .profiling import build_user_profile
+from ..config import DISTANCE_THRESHOLD, PROB_THRESHOLD, LATE_NIGHT_HOURS , CLUSTERING_METHOD
 from pymongo.collection import Collection
 import numpy as np
 from datetime import datetime
 
-""""DISTANCE_THRESHOLD = 0.05
-PROB_THRESHOLD = 0.05
-LATE_NIGHT_HOURS = list(range(22, 24)) + list(range(0, 5))
-""""
+"""This file detects whether a new user activity is unusual, by comparing it to their profile built by profiling.py."""
 
-from ../config import DISTANCE_THRESHOLD, PROB_THRESHOLD, LATE_NIGHT_HOURS
+
+
+
 
 def detect_user_anomalies(lat, lon, hour, weekday, month, user_id, collection: Collection):
     profile = build_user_profile(user_id, collection)
@@ -38,7 +38,10 @@ def detect_user_anomalies(lat, lon, hour, weekday, month, user_id, collection: C
         time_anomaly += 0.3
     if month_prob < PROB_THRESHOLD:
         time_anomaly += 0.2
-    if hour in LATE_NIGHT_HOURS:
+    """if hour in LATE_NIGHT_HOURS:
+        time_anomaly += 0.5"""
+    # Replace hardcoded late-night logic with user-specific rarity
+    if hour_freq.get(hour, 0) < hour_freq.quantile(0.05):  # rare hour for this user
         time_anomaly += 0.5
 
     return loc_anomaly, min(1.0, time_anomaly)
