@@ -45,3 +45,29 @@ def detect_user_anomalies(lat, lon, hour, weekday, month, user_id, collection: C
         time_anomaly += 0.5
 
     return loc_anomaly, min(1.0, time_anomaly)
+
+
+from datetime import datetime, timedelta
+
+def should_retrain(collection, user_id, last_trained):
+    data_count = collection.count_documents({"user_id": user_id})
+    if data_count > 1000 or (datetime.now() - last_trained > timedelta(days=30)):
+        return True
+    return False
+
+import joblib
+
+def save_profile(user_id, optics, scaler):
+    joblib.dump(optics, f"models/{user_id}_optics.pkl")
+    joblib.dump(scaler, f"models/{user_id}_scaler.pkl")
+
+def load_profile(user_id):
+    optics = joblib.load(f"models/{user_id}_optics.pkl")
+    scaler = joblib.load(f"models/{user_id}_scaler.pkl")
+    return optics, scaler
+
+"""from .autoencoder_module import compute_anomaly_score_autoencoder
+score = compute_anomaly_score_autoencoder(user_id, lat, lon, datetime.now())
+if score > YOUR_THRESHOLD:
+    trigger_alert()
+"""

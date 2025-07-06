@@ -10,9 +10,6 @@ from functools import lru_cache
 """This file builds a profile of each user based on their location and time history (e.g., usual zones, hours, weekdays...).
 It uses clustering algorithms (OPTICS or DBSCAN) to identify common locations and temporal patterns."""
 
-# In-memory cache for user profiles
-user_profiles_cache = {}
-cache_duration = timedelta(minutes=5)
 
 
 def preprocess_user_data(user_id, collection):
@@ -76,3 +73,31 @@ def build_user_profile(user_id, collection, clustering_method=CLUSTERING_METHOD)
         return build_user_profile_optics(user_id, collection)
     else:
         raise ValueError(f"Unsupported clustering method: {clustering_method}, Use dbscan or optics.")
+
+
+# In-memory cache for user profiles
+user_profiles_cache = {}
+cache_duration = timedelta(minutes=5)
+
+@lru_cache(maxsize=1000)
+def build_user_profile(user_id, data):
+    """Build a user profile with location clusters and temporal features."""
+    user_data = data[data['user_id'] == user_id]
+    user_data = preprocess_user_data(user_data)
+    
+    # Cluster locations
+    coords = user_data[['latitude', 'longitude']].values
+    clustering = DBSCAN(eps=0.01, min_samples=5).fit(coords)
+    user_data['location_cluster'] = clustering.labels_
+    
+    # Extract temporal features
+    hour_freq = user_data['hour'].value_counts(normalize=True).to_dict()
+    weekday_freq = user_data['weekday'].value_counts(normalize=True).to_dict()
+    month_freq = user_data['month'].value_counts(normalize=True).to_dict()
+    
+    return {
+        'clusters': user_data.groupby('location_cluster')[['latitude', 'longitude']].mean().to_dict(),
+        'hour_freq': hour_freq,
+        'weekday_freq': weekday_freq,
+        'month_freq': month_freq
+    }
