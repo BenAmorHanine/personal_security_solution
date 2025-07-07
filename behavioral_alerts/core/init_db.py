@@ -1,4 +1,4 @@
-from .data_utils import setup_timeseries_collection, setup_geospatial_collection, setup_users_collection
+from .utils import setup_timeseries_collection, setup_geospatial_collection, setup_users_collection
 from datetime import datetime
 from pymongo import MongoClient
 

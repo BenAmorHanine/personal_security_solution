@@ -4,7 +4,7 @@ from pymongo.collection import Collection
 from .profiling import detect_user_anomalies
 from .incident_prediction import predict_incident, load_incident_model
 from .threshold_adjustment import predict_threshold, load_threshold_model
-from .data_utils import insert_location, insert_geo_data, insert_user_alert
+from .utils import insert_location, insert_geo_data, insert_user_alert
 
 def capture_and_store(user_id: str, lat: float, lon: float, ts_collection: Collection, geo_collection: Collection, users_collection: Collection):
     now = datetime.now()

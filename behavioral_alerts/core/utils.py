@@ -2,6 +2,37 @@ from pymongo import MongoClient
 from datetime import datetime
 from .config import MONGO_URI, DB_NAME
 
+# utils.py
+import pandas as pd
+
+def preprocess_user_data(user_id, collection):
+    df = pd.DataFrame(list(collection.find({"user_id": user_id})))
+    if df.empty or len(df) < 10:
+        return None
+    df["timestamp"] = pd.to_datetime(df["timestamp"])
+    df["hour"] = df["timestamp"].dt.hour
+    df["weekday"] = df["timestamp"].dt.dayofweek
+    df["month"] = df["timestamp"].dt.month
+    df["time_diff"] = df["timestamp"].diff().dt.total_seconds().fillna(0) / 3600
+    return df
+
+
+# model_utils.py
+import base64
+import joblib
+import io
+
+def serialize_model(obj):
+    buffer = io.BytesIO()
+    joblib.dump(obj, buffer)
+    buffer.seek(0)
+    return base64.b64encode(buffer.read()).decode('utf-8')
+
+def deserialize_model(encoded_str):
+    buffer = io.BytesIO(base64.b64decode(encoded_str.encode('utf-8')))
+    return joblib.load(buffer)
+
+
 def setup_timeseries_collection():
     client = MongoClient(MONGO_URI)
     db = client[DB_NAME]

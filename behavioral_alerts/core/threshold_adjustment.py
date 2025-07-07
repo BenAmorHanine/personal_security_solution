@@ -3,7 +3,8 @@ import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 import joblib
-from src.profiling import preprocess_user_data
+from .utils import preprocess_user_data
+from .utils import serialize_model, deserialize_model
 
 def extract_threshold_features(df):
     return {
@@ -26,12 +27,42 @@ def train_threshold_model(features, targets):
     model.fit(features, targets)
     return model
 
-def save_threshold_model(user_id, model):
-    joblib.dump(model, f"models/{user_id}_rf_threshold.pkl")
+import joblib
+import os
+import base64
+import io
+from datetime import datetime
+
+def save_threshold_model(user_id, model, save_to_mongo=False, users_collection=None, save_local=True):
+    if save_to_mongo and users_collection is not None:
+        # Serialize and save to MongoDB
+        buffer = io.BytesIO()
+        joblib.dump(model, buffer)
+        buffer.seek(0)
+        encoded_model = base64.b64encode(buffer.read()).decode('utf-8')
+
+        users_collection.update_one(
+            {"user_id": user_id},
+            {
+                "$set": {
+                    "threshold_model": {
+                        "model": encoded_model,
+                        "saved_at": datetime.utcnow()
+                    }
+                }
+            },
+            upsert=True
+        )
+        print(f"[✓] Saved threshold model for {user_id} to MongoDB")
+
+    if save_local:
+        os.makedirs("models", exist_ok=True)
+        joblib.dump(model, f"models/{user_id}_threshold_model.pkl")
+        print(f"[✓] Saved threshold model locally for {user_id}")
 
 def load_threshold_model(user_id):
     try:
-        return joblib.load(f"models/{user_id}_rf_threshold.pkl")
+        return joblib.load(f"models/{user_id}_threshold_model.pkl")
     except FileNotFoundError:
         return None
 

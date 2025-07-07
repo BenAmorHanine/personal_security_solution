@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from core.profiling import detect_user_anomalies, load_profile
 from core.incident_prediction import predict_incident, load_incident_model
 from core.threshold_adjustment import predict_threshold, load_threshold_model
-from core.data_utils import setup_timeseries_collection, setup_geospatial_collection, setup_users_collection
+from behavioral_alerts.core.utils import setup_timeseries_collection, setup_geospatial_collection, setup_users_collection
 import pandas as pd
 
 app = FastAPI()
