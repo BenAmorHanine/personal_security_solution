@@ -1,103 +1,90 @@
-from pymongo.collection import Collection
-from sklearn.cluster import OPTICS, DBSCAN
-from config import CLUSTERING_METHOD
+from sklearn.cluster import OPTICS
 from sklearn.preprocessing import StandardScaler
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 from functools import lru_cache
-
-"""This file builds a profile of each user based on their location and time history (e.g., usual zones, hours, weekdays...).
-It uses clustering algorithms (OPTICS or DBSCAN) to identify common locations and temporal patterns."""
-
-
+import joblib
+from src.config import DISTANCE_THRESHOLD, DEFAULT_PROB_THRESHOLD
+from src.threshold_adjustment import predict_threshold, load_threshold_model
 
 def preprocess_user_data(user_id, collection):
     df = pd.DataFrame(list(collection.find({"user_id": user_id})))
     if df.empty or len(df) < 10:
         return None
-
     df["timestamp"] = pd.to_datetime(df["timestamp"])
     df["hour"] = df["timestamp"].dt.hour
     df["weekday"] = df["timestamp"].dt.dayofweek
     df["month"] = df["timestamp"].dt.month
-
+    df["time_diff"] = df["timestamp"].diff().dt.total_seconds().fillna(0) / 3600
     return df
 
-def extract_temporal_features(df):
+@lru_cache(maxsize=1000)
+def build_user_profile(user_id, collection, last_trained=None):
+    df = preprocess_user_data(user_id, collection)
+    if df is None:
+        return None, None, None, None, None
+    coords = df[["latitude", "longitude"]].values
+    scaler = StandardScaler()
+    coords_scaled = scaler.fit_transform(coords)
+    optics = OPTICS(min_samples=5, xi=0.1) #tnjm tzid if clustering method is optics for these 2 lines
+    labels = optics.fit_predict(coords_scaled)
+    df["cluster"] = labels
+    centroids = df[df["cluster"] != -1].groupby("cluster")[["latitude", "longitude"]].mean()
     hour_freq = df["hour"].value_counts(normalize=True)
     weekday_freq = df["weekday"].value_counts(normalize=True)
     month_freq = df["month"].value_counts(normalize=True)
-    return hour_freq, weekday_freq, month_freq
-
-def build_user_profile_optics(user_id, collection):
-    df = preprocess_user_data(user_id, collection)
-    if df is None:
-        return None, None, None, None, None
-
-    coords = df[["latitude", "longitude"]].values
-    scaler = StandardScaler()
-    coords_scaled = scaler.fit_transform(coords)
-
-    optics = OPTICS(min_samples=5, xi=0.1)
-    labels = optics.fit_predict(coords_scaled)
-    df["cluster"] = labels
-
-    centroids = df[df["cluster"] != -1].groupby("cluster")[["latitude", "longitude"]].mean()
-    hour_freq, weekday_freq, month_freq = extract_temporal_features(df)
-
     return centroids, hour_freq, weekday_freq, month_freq, scaler
 
-def build_user_profile_dbscan(user_id, collection):
-    df = preprocess_user_data(user_id, collection)
-    if df is None:
-        return None, None, None, None, None
+def save_profile(user_id, optics, scaler):
+    joblib.dump(optics, f"models/{user_id}_optics.pkl")
+    joblib.dump(scaler, f"models/{user_id}_scaler.pkl")
 
-    coords = df[["latitude", "longitude"]].values
-    scaler = StandardScaler()
-    coords_scaled = scaler.fit_transform(coords)
+def load_profile(user_id):
+    try:
+        optics = joblib.load(f"models/{user_id}_optics.pkl")
+        scaler = joblib.load(f"models/{user_id}_scaler.pkl")
+        return optics, scaler
+    except FileNotFoundError:
+        return None, None
 
-    dbscan = DBSCAN(eps=0.5, min_samples=5)
-    labels = dbscan.fit_predict(coords_scaled)
-    df["cluster"] = labels
+def detect_user_anomalies(lat, lon, hour, weekday, month, user_id, collection, prob_threshold=None):
+    profile = build_user_profile(user_id, collection)
+    if profile[0] is None:
+        return 0.0, 0.0
+    centroids, hour_freq, weekday_freq, month_freq, scaler = profile
+    if prob_threshold is None:
+        threshold_model = load_threshold_model(user_id)
+        if threshold_model:
+            df = preprocess_user_data(user_id, collection)
+            features = [df["hour"].std(), df["cluster"].diff().ne(0).mean(), len(df)]
+            prob_threshold = predict_threshold(threshold_model, features)
+        else:
+            prob_threshold = DEFAULT_PROB_THRESHOLD
+    loc_anomaly = 0.0
+    coords = scaler.transform([[lat, lon]])
+    for _, zone in centroids.iterrows():
+        dist = np.sqrt((coords[0][0] - zone["latitude"])**2 + (coords[0][1] - zone["longitude"])**2)
+        if dist < DISTANCE_THRESHOLD:
+            break
+        else:
+            loc_anomaly = 1.0
+    time_anomaly = 0.0
+    hour_prob = hour_freq.get(hour, 0.01)
+    weekday_prob = weekday_freq.get(weekday, 0.01)
+    month_prob = month_freq.get(month, 0.01)
+    if hour_prob < prob_threshold:
+        time_anomaly += 0.5
+    if weekday_prob < prob_threshold:
+        time_anomaly += 0.3
+    if month_prob < prob_threshold:
+        time_anomaly += 0.2
+    if hour_prob < hour_freq.quantile(0.05):  # Rare hour
+        time_anomaly += 0.5
+    return loc_anomaly, min(1.0, time_anomaly)
 
-    centroids = df[df["cluster"] != -1].groupby("cluster")[["latitude", "longitude"]].mean()
-    hour_freq, weekday_freq, month_freq = extract_temporal_features(df)
-
-    return centroids, hour_freq, weekday_freq, month_freq, scaler
-
-def build_user_profile(user_id, collection, clustering_method=CLUSTERING_METHOD):
-    if CLUSTERING_METHOD == "dbscan":
-        return build_user_profile_dbscan(user_id, collection)
-    elif CLUSTERING_METHOD == "optics":
-        return build_user_profile_optics(user_id, collection)
-    else:
-        raise ValueError(f"Unsupported clustering method: {clustering_method}, Use dbscan or optics.")
-
-
-# In-memory cache for user profiles
-user_profiles_cache = {}
-cache_duration = timedelta(minutes=5)
-
-@lru_cache(maxsize=1000)
-def build_user_profile(user_id, data):
-    """Build a user profile with location clusters and temporal features."""
-    user_data = data[data['user_id'] == user_id]
-    user_data = preprocess_user_data(user_data)
-    
-    # Cluster locations
-    coords = user_data[['latitude', 'longitude']].values
-    clustering = DBSCAN(eps=0.01, min_samples=5).fit(coords)
-    user_data['location_cluster'] = clustering.labels_
-    
-    # Extract temporal features
-    hour_freq = user_data['hour'].value_counts(normalize=True).to_dict()
-    weekday_freq = user_data['weekday'].value_counts(normalize=True).to_dict()
-    month_freq = user_data['month'].value_counts(normalize=True).to_dict()
-    
-    return {
-        'clusters': user_data.groupby('location_cluster')[['latitude', 'longitude']].mean().to_dict(),
-        'hour_freq': hour_freq,
-        'weekday_freq': weekday_freq,
-        'month_freq': month_freq
-    }
+def should_retrain(collection, user_id, last_trained):
+    data_count = collection.count_documents({"user_id": user_id})
+    if last_trained is None or data_count > 1000 or (datetime.now() - last_trained > timedelta(days=30)):
+        return True
+    return False

@@ -1,5 +1,5 @@
 from .profiling import build_user_profile
-from ..config import DISTANCE_THRESHOLD, PROB_THRESHOLD, LATE_NIGHT_HOURS , CLUSTERING_METHOD
+from .config import DISTANCE_THRESHOLD, PROB_THRESHOLD, LATE_NIGHT_HOURS , CLUSTERING_METHOD
 from pymongo.collection import Collection
 import numpy as np
 from datetime import datetime
