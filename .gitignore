@@ -27,3 +27,14 @@ bertenv/
 # Ignore model folders
 models/**
 
+
+__pycache__/
+*.pyc
+
+behavioral_alerts/core/__pycache__/
+
+*.pkl
+models/
+
+behavioral_alerts/models/
+behavioral_alerts/db/__pycache__

@@ -67,8 +67,8 @@ def save_profile(user_id, model, scaler, save_to_mongo=False, users_collection=N
     if save_local:
         user_dir = os.path.join("behavioral_alerts", "models", user_id)
         os.makedirs(user_dir, exist_ok=True)
-        joblib.dump(model, os.path.join(user_dir, f"{user_id}_optics.pkl"))
-        joblib.dump(scaler, os.path.join(user_dir, f"{user_id}_scaler.pkl"))
+        joblib.dump(model, os.path.join(user_dir, f"{user_id}_optics_behavioral_clust.pkl"))
+        joblib.dump(scaler, os.path.join(user_dir, f"{user_id}_scaler_behavioral_clust.pkl"))
         print(f"[✓] Saved model locally for {user_id}")
 
 

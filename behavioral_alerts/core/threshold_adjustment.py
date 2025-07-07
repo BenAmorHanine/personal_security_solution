@@ -56,8 +56,9 @@ def save_threshold_model(user_id, model, save_to_mongo=False, users_collection=N
         print(f"[✓] Saved threshold model for {user_id} to MongoDB")
 
     if save_local:
-        os.makedirs("models", exist_ok=True)
-        joblib.dump(model, f"models/{user_id}_threshold_model.pkl")
+        user_dir = os.path.join("behavioral_alerts", "models", user_id)
+        os.makedirs(user_dir, exist_ok=True)
+        joblib.dump(model, os.path.join(user_dir, f"{user_id}_threshold_model.pkl"))
         print(f"[✓] Saved threshold model locally for {user_id}")
 
 def load_threshold_model(user_id):

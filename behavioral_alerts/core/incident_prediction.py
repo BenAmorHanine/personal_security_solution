@@ -55,11 +55,11 @@ def save_incident_model(user_id, model, scaler, save_to_mongo=False, users_colle
         print(f"[✓] Saved incident model for {user_id} to MongoDB")
 
     if save_local:
-        os.makedirs("models", exist_ok=True)
-        joblib.dump(model, f"models/{user_id}_xgboost.pkl")
-        joblib.dump(scaler, f"models/{user_id}_xgboost_scaler.pkl")
+        user_dir = os.path.join("behavioral_alerts", "models", user_id)
+        os.makedirs(user_dir, exist_ok=True)
+        joblib.dump(model, os.path.join(user_dir, f"{user_id}_xgboost_incident_pred.pkl"))
+        joblib.dump(scaler, os.path.join(user_dir, f"{user_id}_xgboost_incident_pred_scaler.pkl"))
         print(f"[✓] Saved incident model locally for {user_id}")
-
 
 def load_incident_model(user_id):
     try:
