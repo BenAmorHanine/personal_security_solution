@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 import os
 
-from config import MONGO_URI
+from behavioral_alerts.core.config import MONGO_URI
 
 def get_db():
     client = MongoClient(MONGO_URI)

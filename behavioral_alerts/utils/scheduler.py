@@ -1,6 +1,6 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from db.mongo import get_collection
-from core.logic import build_profile
+from behavioral_alerts.core.profiling import build_profile
 from datetime import datetime, timedelta
 import pandas as pd
 
@@ -24,7 +24,7 @@ def start_scheduler():
 from apscheduler.schedulers.background import BackgroundScheduler
 from core.profiling import build_user_profile
 from db.mongo import get_db
-from config import MONGO_DB_NAME, MONGO_COLLECTION_NAME
+from behavioral_alerts.core.config import MONGO_DB_NAME, MONGO_COLLECTION_NAME
 from datetime import datetime, timedelta
 import pandas as pd
 

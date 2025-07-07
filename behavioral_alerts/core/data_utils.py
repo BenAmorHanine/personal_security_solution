@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 from datetime import datetime
-from config import MONGO_URI, DB_NAME
+from .config import MONGO_URI, DB_NAME
 
 def setup_timeseries_collection():
     client = MongoClient(MONGO_URI)

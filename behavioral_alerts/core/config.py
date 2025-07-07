@@ -1,6 +1,7 @@
 # config.py
 
-
+MONGO_URI = "mongodb://localhost:27017"
+DB_NAME = "hydatis"
 
 # Anomaly Detection Thresholds
 DISTANCE_THRESHOLD = 0.05  # approx ~5km
