@@ -1,4 +1,4 @@
-import requests
+"""import requests
 
 url = "http://localhost:8000/anomaly_score"
 payload = {
@@ -10,4 +10,17 @@ payload = {
        "month": 7
        }
 response = requests.post(url, json=payload)
-print(response.json())
+print(response.json())"""
+
+from behavioral_alerts.core.threshold_adjustment import *
+features, target = prepare_threshold_data(data_collection, "user1")
+model = train_threshold_model(features, target)
+prediction = predict_threshold(model, features[0])
+print("Threshold:", prediction)
+
+
+from behavioral_alerts.core.incident_prediction import *
+features, labels = prepare_incident_data(data_collection, "user1")
+model, scaler = train_incident_model(features, labels)
+probability = predict_incident(model, scaler, 0.8, 0.7)
+print("Incident Probability:", probability)

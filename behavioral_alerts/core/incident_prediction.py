@@ -61,16 +61,77 @@ def save_incident_model(user_id, model, scaler, save_to_mongo=False, users_colle
         joblib.dump(scaler, os.path.join(user_dir, f"{user_id}_xgboost_incident_pred_scaler.pkl"))
         print(f"[✓] Saved incident model locally for {user_id}")
 
+import os
+import joblib
+
+def load_incident_model(user_id, path=None):
+    if path is None:
+        try:
+            return joblib.load(f"models/{user_id}_xgboost_incident_pred.pkl") , joblib.load(f"models/{user_id}_xgboost_incident_pred_scaler.pkl")
+        except FileNotFoundError:
+            return None
+    else:
+        try:
+            model = joblib.load(os.path.join(path, f"{user_id}_xgboost_incident_pred.pkl"))
+            scaler = joblib.load(os.path.join(path, f"{user_id}_xgboost_incident_pred_scaler.pkl"))
+            return model, scaler
+        except FileNotFoundError:
+            return None, None
+
+"""def load_incident_model(user_id):
+    try:
+        user_dir = os.path.join("behavioral_alerts", "models", user_id)
+        model_path = os.path.join(user_dir, f"{user_id}_xgboost_incident_pred.pkl")
+        scaler_path = os.path.join(user_dir, f"{user_id}_xgboost_incident_pred_scaler.pkl")
+
+        if not os.path.exists(model_path):
+            print(f"[✗] Model file not found at {model_path}")
+            return None, None
+        if not os.path.exists(scaler_path):
+            print(f"[✗] Scaler file not found at {scaler_path}")
+            return None, None
+
+        model = joblib.load(model_path)
+        scaler = joblib.load(scaler_path)
+        print(f"[✓] Successfully loaded incident model and scaler for {user_id}")
+        return model, scaler
+
+    except Exception as e:
+        print(f"[✗] Error loading model for {user_id}: {e}")
+        return None, None
+"""
+import os
+import joblib
+"""
 def load_incident_model(user_id):
     try:
-        model = joblib.load(f"models/{user_id}_xgboost.pkl")
-        scaler = joblib.load(f"models/{user_id}_xgboost_scaler.pkl")
+        user_dir = os.path.join("behavioral_alerts", "models", user_id)
+        model_path = os.path.join(user_dir, f"{user_id}_xgboost_incident_pred.pkl")
+        scaler_path = os.path.join(user_dir, f"{user_id}_xgboost_incident_pred_scaler.pkl")
+
+        print(f"[Debug] Trying to load:\n  {model_path}\n  {scaler_path}")
+
+        if not os.path.exists(model_path):
+            print(f"[✗] Model file not found at {model_path}")
+            return None, None
+
+        if not os.path.exists(scaler_path):
+            print(f"[✗] Scaler file not found at {scaler_path}")
+            return None, None
+
+        model = joblib.load(model_path)
+        scaler = joblib.load(scaler_path)
+
+        print(f"[✓] Successfully loaded model and scaler for {user_id}")
         return model, scaler
-    except FileNotFoundError:
+
+    except Exception as e:
+        print(f"[✗] Exception while loading model: {e}")
         return None, None
+"""
 
 def predict_incident(model, scaler, location_anomaly, time_anomaly):
-    features = np.array([[location_anomaly, time_anomaly]])
+    features = np.array([[location_anomaly, time_anomaly]], columns=["location_anomaly_score", "time_anomaly_score"])
     features_scaled = scaler.transform(features)
     probability = model.predict_proba(features_scaled)[0][1]
     return probability
@@ -98,5 +159,4 @@ def load_incident_model_from_db(user_id, users_collection):
     except Exception as e:
         print(f"[✗] Failed to load incident model for {user_id}: {e}")
         return None, None
-
 
