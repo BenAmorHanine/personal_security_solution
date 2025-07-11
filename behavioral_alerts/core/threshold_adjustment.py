@@ -3,8 +3,6 @@ import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 import joblib
-from .utils import preprocess_user_data
-from .utils import serialize_model, deserialize_model
 
 def extract_threshold_features(df):
     return {
@@ -14,7 +12,11 @@ def extract_threshold_features(df):
     }
 
 def prepare_threshold_data(collection, user_id):
-    df = preprocess_user_data(user_id, collection)
+    from .profiling import preprocess_user_data
+    #No retraining inside it — 
+    # if the model is outdated, you should call maybe_retrain_user_profile() 
+    # explicitly before.
+    df = preprocess_user_data(user_id, collection)#, should_retrain, build_user_profile)
     if df is None:
         return None, None
     features = extract_threshold_features(df)

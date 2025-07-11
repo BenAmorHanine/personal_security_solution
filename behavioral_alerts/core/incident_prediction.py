@@ -131,7 +131,7 @@ def load_incident_model(user_id):
 """
 
 def predict_incident(model, scaler, location_anomaly, time_anomaly):
-    features = np.array([[location_anomaly, time_anomaly]], columns=["location_anomaly_score", "time_anomaly_score"])
+    features = pd.DataFrame([[location_anomaly, time_anomaly]], columns=["location_anomaly_score", "time_anomaly_score"])
     features_scaled = scaler.transform(features)
     probability = model.predict_proba(features_scaled)[0][1]
     return probability

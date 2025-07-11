@@ -10,7 +10,6 @@ import io
 from pymongo.collection import Collection
 from .config import DISTANCE_THRESHOLD, DEFAULT_PROB_THRESHOLD, CLUSTERING_METHOD
 from functools import lru_cache
-from .threshold_adjustment import load_threshold_model, predict_threshold
 
 
 # ------------------------------
@@ -25,8 +24,11 @@ def preprocess_user_data(user_id, collection: Collection):
     df["weekday"] = df["timestamp"].dt.dayofweek
     df["month"] = df["timestamp"].dt.month
     df["time_diff"] = df["timestamp"].diff().dt.total_seconds().fillna(0) / 3600
+    """if 'cluster' not in df.columns or should_retrain(collection, user_id, None):
+        df, _, _ = build_user_profile(user_id, collection, save_to_mongo=True)
+    """
     return df
-
+   
 # ------------------------------
 # Build Profile
 # ------------------------------
@@ -57,6 +59,7 @@ def build_user_profile(user_id, collection: Collection, clustering_method=CLUSTE
     save_profile_to_db(user_id, centroids, hour_freq, weekday_freq, month_freq, collection.database["users"])
 
     return centroids, hour_freq, weekday_freq, month_freq, scaler
+    
 
 # ------------------------------
 # Save/Load Profile to Disk or MongoDB
@@ -173,6 +176,8 @@ def load_model_from_mongodb(user_id: str, users_collection: Collection):
 # Anomaly Detection
 # ------------------------------
 def detect_user_anomalies(lat, lon, hour, weekday, month, user_id, collection, prob_threshold=None):
+    from .threshold_adjustment import load_threshold_model, predict_threshold
+
     profile = build_user_profile(user_id, collection)
     if profile[0] is None:
         return 0.0, 0.0
@@ -217,3 +222,5 @@ def should_retrain(collection, user_id, last_trained):
   return (last_trained is None or data_count > 1000 or 
           datetime.now() - last_trained > timedelta(days=30) or 
           recent_data > 0.2 * data_count)  # Retrain if >20% new data
+
+
