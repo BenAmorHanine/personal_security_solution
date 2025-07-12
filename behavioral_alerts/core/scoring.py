@@ -19,10 +19,18 @@ def evaluate_user_behavior(
     threshold_model=None
 ):
     # Load models only if not provided
-    if not incident_model or not scaler:
+    if  incident_model is None or  scaler is None:
         incident_model, scaler = load_incident_model(user_id)
-    if not threshold_model:
+        if incident_model is None or scaler is None:
+            return {
+                "error": f"Model not found for user {user_id}"
+            }
+    if  threshold_model is None:
         threshold_model = load_threshold_model(user_id)
+    if threshold_model is None:
+        return {
+            "error": f"Threshold model not found for user {user_id}"
+        }
 
     # Ensure models are loaded
     if not incident_model or not scaler or not threshold_model:
@@ -51,9 +59,19 @@ def evaluate_user_behavior(
     # Predict threshold
     threshold = predict_threshold(threshold_model, threshold_input)
 
+    log_prediction(user_id, location_score, time_score, prob, threshold, prob >= threshold)
+
     # Compare and return result
     return {
         "incident_probability": prob,
         "dynamic_threshold": threshold,
         "anomaly": prob >= threshold
     }
+
+
+from datetime import datetime
+
+def log_prediction(user_id, location_score, time_score, prob, threshold, is_anomaly):
+    with open("prediction_logs.txt", "a") as f:
+        f.write(f"{datetime.now()} | user: {user_id} | loc_score: {location_score} | time_score: {time_score} "
+                f"| prob: {prob:.4f} | threshold: {threshold:.4f} | anomaly: {is_anomaly}\n")
