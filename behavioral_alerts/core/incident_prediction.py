@@ -56,12 +56,14 @@ def save_incident_model(user_id, model, scaler, save_to_mongo=False, users_colle
 
     if save_local:
         #user_dir = os.path.join("behavioral_alerts", "models", user_id)
-        user_dir = os.path.join("..","..", "models", user_id)
+        user_dir = os.path.join("..","SOLUTION_SECURITE_PERSO" ,"models", user_id)
 
         os.makedirs(user_dir, exist_ok=True)
         joblib.dump(model, os.path.join(user_dir, f"{user_id}_xgboost_incident_pred.pkl"))
         joblib.dump(scaler, os.path.join(user_dir, f"{user_id}_xgboost_incident_pred_scaler.pkl"))
-        print(f"[✓] Saved incident model locally for {user_id}")
+        print(f"[✓] Saved incident model locally for {user_id} at {user_dir}" )
+        print("Saving incident model to:", os.path.abspath(user_dir))
+
 
 import os
 import joblib
