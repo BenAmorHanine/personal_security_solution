@@ -23,6 +23,9 @@ wav2vec2_checkpoints/
 # Ignore virtual environments
 vocal_env/
 bertenv/
+vocal_env/
+safety_env/
+venv/
 
 # Ignore model folders
 models/**
@@ -38,3 +41,7 @@ models/
 
 behavioral_alerts/models/
 behavioral_alerts/db/__pycache__
+fusion/__pycache__
+fusion/models/
+
+fusion/alerts.log

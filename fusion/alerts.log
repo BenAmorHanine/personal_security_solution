@@ -1,0 +1,8 @@
+DEBUG:speechbrain.utils.checkpoints:Registered checkpoint save hook for _speechbrain_save
+DEBUG:speechbrain.utils.checkpoints:Registered checkpoint load hook for _speechbrain_load
+DEBUG:speechbrain.utils.checkpoints:Registered checkpoint save hook for save
+DEBUG:speechbrain.utils.checkpoints:Registered checkpoint load hook for load
+INFO:speechbrain.utils.quirks:Applied quirks (see `speechbrain.utils.quirks`): [disable_jit_profiling, allow_tf32]
+INFO:speechbrain.utils.quirks:Excluded quirks specified by the `SB_DISABLE_QUIRKS` environment (comma-separated list): []
+DEBUG:speechbrain.utils.checkpoints:Registered checkpoint save hook for _save
+DEBUG:speechbrain.utils.checkpoints:Registered checkpoint load hook for _recover
