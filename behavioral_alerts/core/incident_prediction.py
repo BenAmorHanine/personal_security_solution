@@ -55,7 +55,9 @@ def save_incident_model(user_id, model, scaler, save_to_mongo=False, users_colle
         print(f"[✓] Saved incident model for {user_id} to MongoDB")
 
     if save_local:
-        user_dir = os.path.join("behavioral_alerts", "models", user_id)
+        #user_dir = os.path.join("behavioral_alerts", "models", user_id)
+        user_dir = os.path.join("..","..", "models", user_id)
+
         os.makedirs(user_dir, exist_ok=True)
         joblib.dump(model, os.path.join(user_dir, f"{user_id}_xgboost_incident_pred.pkl"))
         joblib.dump(scaler, os.path.join(user_dir, f"{user_id}_xgboost_incident_pred_scaler.pkl"))
