@@ -39,7 +39,6 @@ from pymongo.collection import Collection
 from .profiling           import should_retrain, build_user_profile, detect_user_anomalies
 from .threshold_adjustment import load_threshold_model, predict_threshold
 from .incident_prediction  import load_incident_model, predict_incident
-from .data_utils           import insert_location, insert_geo_data, insert_user_alert
 
 
 def process_capture(
