@@ -45,3 +45,10 @@ fusion/__pycache__
 fusion/models/
 
 fusion/alerts.log
+draftt/
+draftt
+**/__pycache__/
+**/caches/
+**/cache/
+**.log
+**/logs/
