@@ -6,3 +6,4 @@ INFO:speechbrain.utils.quirks:Applied quirks (see `speechbrain.utils.quirks`): [
 INFO:speechbrain.utils.quirks:Excluded quirks specified by the `SB_DISABLE_QUIRKS` environment (comma-separated list): []
 DEBUG:speechbrain.utils.checkpoints:Registered checkpoint save hook for _save
 DEBUG:speechbrain.utils.checkpoints:Registered checkpoint load hook for _recover
+INFO:faster_whisper:Processing audio with duration 00:03.413
