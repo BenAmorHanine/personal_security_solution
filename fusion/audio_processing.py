@@ -220,13 +220,13 @@ def load_audio(audio_path, sample_rate=16000):
         return None, None
     
 
-def transcribe_audio(audio_file):
+def transcribe_audio(audio_file, whisper_transcription_model):
     audio, sample_rate = load_audio(audio_file)
     if audio is None:
         return None
 
     try:
-        whisper_transcription_model = whisper.load_model("base")
+        #whisper_transcription_model = whisper.load_model("base")
         result = whisper_transcription_model.transcribe(audio_file, language="ar")
         transcription = result["text"]
         print(f"Transcription from Whisper: {transcription}")
