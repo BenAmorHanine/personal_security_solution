@@ -129,32 +129,6 @@ def audio_features(audio_path): #ok A PART ALAHOU AALAM PROBLEME FI STRESS DETEC
     }
 
 
-def analyze_vocal_input(audio_path):
-    """
-    Comprehensive analysis of vocal input: transcription, classification, and audio features.
-
-    Args:
-        audio_path (str): Path to the audio file.
-        whisper_model (str): Name of the Whisper model (default: "base").
-        tunbert_model_path (str): Path to the TunBERT model (default: "../../models/fine_tuned_model_tunBERT").
-
-    Returns:
-        dict: Combined results including transcription, classification, and audio features.
-    """
-    # Transcribe audio
-    
-    transcription = vocal_analysis.transcribe_audio(audio_path)
-    
-    features = vocal_analysis.audio_features(audio_path)
-    
-    classification = vocal_analysis.classify_text(transcription)
-    return {
-        "transcription:" : transcription
-        "classification" : classification
-        "audio_features":  features
-        
-    }
-
 def analyze_vocal(audio_path):
     """
     Comprehensive analysis of vocal input: transcription, classification, and audio features.
