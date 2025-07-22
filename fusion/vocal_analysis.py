@@ -47,7 +47,7 @@ def transcribe_audio(audio_path, model_name="base"): #ok
     result = model.transcribe(audio_file, language="ar")
     return result["text"]
 
-def classify_text(text, model_path= '../models/fine_tuned_model_tunBERT'):
+def classify_text(text, model_path= '../models/fine_tuned_model_tunBERT'): #ok
     """
     Classify the given text using the fine-tuned TunBERT model.
 
@@ -71,8 +71,8 @@ def classify_text(text, model_path= '../models/fine_tuned_model_tunBERT'):
 
 
 
-def audio_features(audio_file): #ok ig
-    audio_file,sample_rate=load_audio_file(audio_file)
+def audio_features(audio_path): #ok A PART ALAHOU AALAM PROBLEME FI STRESS DETECTION
+    audio_file,sample_rate=load_audio_file(audio_path)
     #stress
     try:
         out_prob, score, index, text_lab = stress_model2.classify_file(audio_file)
@@ -129,7 +129,7 @@ def audio_features(audio_file): #ok ig
     }
 
 
-def analyze_vocal_input(audio_path, whisper_model="base", tunbert_model_path="../../models/fine_tuned_model_tunBERT"):
+def analyze_vocal_input(audio_path):
     """
     Comprehensive analysis of vocal input: transcription, classification, and audio features.
 
@@ -142,47 +142,34 @@ def analyze_vocal_input(audio_path, whisper_model="base", tunbert_model_path="..
         dict: Combined results including transcription, classification, and audio features.
     """
     # Transcribe audio
-    transcription = transcribe_audio(audio_path, whisper_model)
     
-    # Classify the transcribed text
-    classification = classify_text(transcription, tunbert_model_path)
+    transcription = vocal_analysis.transcribe_audio(audio_path)
     
-    # Extract audio features
-    features = audio_features(audio_path)
+    features = vocal_analysis.audio_features(audio_path)
     
+    classification = vocal_analysis.classify_text(transcription)
+    return {
+        "transcription:" : transcription
+        "classification" : classification
+        "audio_features":  features
+        
+    }
+
+def analyze_vocal(audio_path):
+    """
+    Comprehensive analysis of vocal input: transcription, classification, and audio features.
+
+    Returns:
+        dict: Combined results including transcription, classification, and audio features.
+    """
+    
+    transcription = vocal_analysis.transcribe_audio(audio_path)
+    
+    features = vocal_analysis.audio_features(audio_path)
+    
+    classification = vocal_analysis.classify_text(transcription)
     return {
         "transcription": transcription,
         "classification": classification,
         "audio_features": features
     }
-
-
-
-
-
-"""def extract_audio_features(audio_path):
-    y, sr = librosa.load(audio_path)
-    
-    # Extract MFCCs (Mel-frequency cepstral coefficients) as a basic feature
-    mfccs = librosa.feature.mfcc(y=y, sr=sr)
-    mfcc_mean = mfccs.mean(axis=1).tolist()
-    
-    # Extract pitch for tone (using zero-crossing rate as a proxy)
-    pitches, magnitudes = librosa.piptrack(y=y, sr=sr)
-    pitch_mean = np.mean(pitches[pitches > 0]) if np.any(pitches > 0) else 0
-    
-    # Extract tempo for rhythm
-    tempo, _ = librosa.beat.beat_track(y=y, sr=sr)
-    
-    # Placeholder for stress (could be based on energy or intensity)
-    rms = librosa.feature.rms(y=y)
-    stress_level = np.mean(rms)  # Simple proxy for stress
-    
-    features = {
-        "stress": float(stress_level),  # Convert to float for JSON serialization
-        "rhythm": float(tempo),        # Convert to float for JSON serialization
-        "tone": float(pitch_mean),     # Convert to float for JSON serialization
-        "mfccs": mfcc_mean             # List of floats
-    }
-    return features
-"""
