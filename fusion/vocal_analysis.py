@@ -137,11 +137,11 @@ def analyze_vocal(audio_path):
         dict: Combined results including transcription, classification, and audio features.
     """
     
-    transcription = vocal_analysis.transcribe_audio(audio_path)
+    transcription = transcribe_audio(audio_path)
     
-    features = vocal_analysis.audio_features(audio_path)
+    features = audio_features(audio_path)
     
-    classification = vocal_analysis.classify_text(transcription)
+    classification = classify_text(transcription)
     return {
         "transcription": transcription,
         "classification": classification,
