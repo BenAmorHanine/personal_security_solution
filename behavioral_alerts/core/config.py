@@ -1,4 +1,9 @@
 # config.py
+from pathlib import Path
+import os
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+MODEL_DIR = os.path.join(BASE_DIR, "models")
 
 MONGO_URI = "mongodb://localhost:27017"
 DB_NAME = "hydatis"

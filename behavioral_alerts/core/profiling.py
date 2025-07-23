@@ -8,32 +8,37 @@ import os
 import base64
 import io
 from pymongo.collection import Collection
-from .config import DISTANCE_THRESHOLD, DEFAULT_PROB_THRESHOLD, CLUSTERING_METHOD
+from .config import DISTANCE_THRESHOLD, DEFAULT_PROB_THRESHOLD, CLUSTERING_METHOD, MODEL_DIR
 from functools import lru_cache
 
 
-# ------------------------------
+
 # Preprocessing
 # ------------------------------
 def preprocess_user_data(user_id, collection: Collection):
-    df = pd.DataFrame(list(collection.find({"user_id": user_id})))
-    if df.empty or len(df) < 10:
-        return None
-    df["timestamp"] = pd.to_datetime(df["timestamp"])
-    df["hour"] = df["timestamp"].dt.hour
-    df["weekday"] = df["timestamp"].dt.dayofweek
-    df["month"] = df["timestamp"].dt.month
-    df["time_diff"] = df["timestamp"].diff().dt.total_seconds().fillna(0) / 3600
-    """if 'cluster' not in df.columns or should_retrain(collection, user_id, None):
+    try:
+        df = pd.DataFrame(list(collection.find({"user_id": user_id})))
+        if df.empty or len(df) < 10:
+            raise ValueError(f"Insufficient data for user {user_id}")
+        df["timestamp"] = pd.to_datetime(df["timestamp"], errors="coerce")
+        if df["timestamp"].isna().any():
+            raise ValueError("Invalid timestamps in data")
+        df["hour"] = df["timestamp"].dt.hour
+        df["weekday"] = df["timestamp"].dt.dayofweek
+        df["month"] = df["timestamp"].dt.month
+        df["time_diff"] = df["timestamp"].diff().dt.total_seconds().fillna(0) / 3600
+        """if 'cluster' not in df.columns or should_retrain(collection, user_id, None):
         df, _, _ = build_user_profile(user_id, collection, save_to_mongo=True)
-    """
-    return df
-   
-# ------------------------------
+        """
+        return df
+    except Exception as e:
+        print(f"Error preprocessing data for {user_id}: {e}")
+        return None
+
 # Build Profile
 # ------------------------------
 @lru_cache(maxsize=1000)
-def build_user_profile(user_id, collection: Collection, clustering_method=CLUSTERING_METHOD, last_trained=None, save_to_mongo=False):
+def build_user_profile(user_id, collection: Collection, clustering_method=CLUSTERING_METHOD, last_trained=None, save_to_mongo=True):
     df = preprocess_user_data(user_id, collection)
     if df is None:
         return None, None, None, None, None
@@ -69,7 +74,8 @@ def save_profile(user_id, model, scaler, save_to_mongo=False, users_collection=N
         save_model_to_mongodb(user_id, model, scaler, users_collection)
     if save_local:
         #user_dir = os.path.join("behavioral_alerts", "models", user_id)
-        user_dir = os.path.join("..","SOLUTION_SECURITE_PERSO" ,"models", user_id)
+        #user_dir = os.path.join("..","SOLUTION_SECURITE_PERSO" ,"models", user_id)
+        user_dir = os.path.join(MODEL_DIR, user_id)
         os.makedirs(user_dir, exist_ok=True)
         joblib.dump(model, os.path.join(user_dir, f"{user_id}_optics_behavioral_clust.pkl"))
         joblib.dump(scaler, os.path.join(user_dir, f"{user_id}_scaler_behavioral_clust.pkl"))
@@ -93,14 +99,18 @@ def save_profile_to_db(user_id, centroids, hour_freq, weekday_freq, month_freq, 
     hour_freq_str = {str(k): v for k, v in hour_freq.items()}
     weekday_freq_str = {str(k): v for k, v in weekday_freq.items()}
     month_freq_str = {str(k): v for k, v in month_freq.items()}
-
+    centroids_geojson = [
+        {"cluster_id": idx, "center": {"type": "Point", "coordinates": [row["longitude"], row["latitude"]]}, "radius": 100.0}
+        for idx, row in centroids.reset_index().iterrows()
+    ]
     users_collection.update_one(
         {"user_id": user_id},
         {
             "$set": {
                 "behavior_profile": {
-                    "centroids": centroids.reset_index().to_dict(orient="records"),
-                    "hour_freq": hour_freq_str,
+                    #"centroids": centroids.reset_index().to_dict(orient="records"),
+                    "centroids": centroids_geojson,
+                     "hour_freq": hour_freq_str,
                     "weekday_freq": weekday_freq_str,
                     "month_freq": month_freq_str,
                     "last_updated": datetime.utcnow()
@@ -179,7 +189,7 @@ def load_model_from_mongodb(user_id: str, users_collection: Collection):
 def detect_user_anomalies(lat, lon, hour, weekday, month, user_id, collection, prob_threshold=None):
     from .threshold_adjustment import load_threshold_model, predict_threshold
 
-    profile = build_user_profile(user_id, collection)
+    profile = build_user_profile(user_id, collection.database["users"])
     if profile[0] is None:
         return 0.0, 0.0
     centroids, hour_freq, weekday_freq, month_freq, scaler = profile
@@ -209,7 +219,7 @@ def detect_user_anomalies(lat, lon, hour, weekday, month, user_id, collection, p
         time_anomaly += 0.3
     if month_prob < prob_threshold:
         time_anomaly += 0.2
-    if hour_prob < hour_freq.quantile(0.05):  # Rare hour
+    if hour_prob < np.quantile(list(hour_freq.values()), 0.05): # hour_prob < hour_freq.quantile(0.05):  # Rare hour
         time_anomaly += 0.5
     return loc_anomaly, min(1.0, time_anomaly)
 
