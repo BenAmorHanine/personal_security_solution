@@ -26,3 +26,10 @@ API_PORT = 8000
 
 # Logging (optional)
 DEBUG_MODE = True
+
+
+# Twilio Configuration
+#to be updated later
+TWILIO_SID = "ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+TWILIO_AUTH_TOKEN = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+TWILIO_PHONE = "+1234567890"

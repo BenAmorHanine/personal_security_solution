@@ -6,7 +6,6 @@
   "phone": String,
   "emergency_contact_phone": String, // Primary contact for alerts
   "emergency_contacts": [{name: String, phone: String}], // Additional contacts
-  "subscription_status": "free|premium",
   "behavior_profile": {
     "centroids": [{cluster_id: Int, center: {type: "Point", coordinates: [Float, Float]}, radius: Float}],
     "hour_freq": {hour: Float},
@@ -14,7 +13,7 @@
     "month_freq": {month: Float},
     "last_updated": ISODate
   },
-  "ml_model": {
+  "ml_model": { //for profile
     "optics_model": String, // Base64-encoded OPTICS model
     "scaler": String, // Base64-encoded scaler
     "saved_at": ISODate
@@ -42,7 +41,7 @@
   "alert": {
     "alert_id": UUID,
     "alert_time": ISODate,
-    "audio_file": String, // Path to audio file
+    "audio_file": String, // Path to audio file // then will be sent to the vocal models and to the police
     "health_data": {heart_rate: Float, stress: Float}, // Optional biomonitoring data
     "location_anomaly_score": Float,
     "time_anomaly_score": Float,
