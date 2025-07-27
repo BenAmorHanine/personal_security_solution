@@ -1,5 +1,7 @@
 from pymongo import MongoClient
-from config import MONGO_URI
+from .config import MONGO_URI
+import numpy as np
+
 
 def initialize_db():
     try:
@@ -47,8 +49,18 @@ def initialize_db():
 
 if __name__ == "__main__":
     initialize_db()
+"""    from .db_functions import create_user, register_device, update_location
+    from .profiling import preprocess_user_data, build_user_profile, detect_user_anomalies
 
-
+    user_id = create_user("John Doe", "john@example.com", "+1234567890", "+0987654321")
+    device_id = register_device(user_id, "smartwatch", "m2m_12345")
+    for _ in range(100):  # Simulate location data
+        update_location(user_id, device_id, 48.8566 + np.random.normal(0, 0.01), 2.3522 + np.random.normal(0, 0.01))
+    df = preprocess_user_data(user_id)
+    centroids, hour_freq, weekday_freq, month_freq, scaler = build_user_profile(user_id, locations_collection)
+    loc_anomaly, time_anomaly = detect_user_anomalies(48.8566, 2.3522, 12, 3, 7, user_id, locations_collection)
+    print(f"Location Anomaly: {loc_anomaly}, Time Anomaly: {time_anomaly}")
+"""
 
 """
 Testing:
