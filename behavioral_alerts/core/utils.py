@@ -57,69 +57,60 @@ def deserialize_model(encoded_str):
     buffer = io.BytesIO(base64.b64decode(encoded_str.encode('utf-8')))
     return joblib.load(buffer)
 
+from pymongo import MongoClient, GEOSPHERE
+from .config import MONGO_URI
+from datetime import datetime, timezone
 
 def setup_timeseries_collection():
-    client = MongoClient(MONGO_URI)
-    db = client[DB_NAME]
+    """Set up the device_logs time-series collection."""
     try:
-        db.create_collection(
-            "user_locations_ts",
-            timeseries={
-                "timeField": "timestamp",
-                "metaField": "user_id",
-                "granularity": "seconds"
-            }
-        )
+        client = MongoClient(MONGO_URI)
+        db = client["safety_db_hydatis"]
+        collections = db.list_collection_names()
+        if "device_logs" not in collections:
+            db.create_collection(
+                "device_logs",
+                timeseries={
+                    "timeField": "timestamp",
+                    "metaField": "device_id",
+                    "granularity": "seconds"
+                }
+            )
+        db.device_logs.create_index("device_id")
+        db.device_logs.create_index("timestamp")
+        print(f"[✓] Initialized device_logs collection at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+        return db.device_logs
     except Exception as e:
-        print(f"Collection exists or error: {e}")
-    return db["user_locations_ts"]
+        print(f"[✗] Error setting up device_logs collection at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
+        raise
 
 def setup_geospatial_collection():
-    client = MongoClient(MONGO_URI)
-    db = client[DB_NAME]
-    collection = db["user_locations_geo"]
-    collection.create_index([("location_index", "2dsphere")])
-    return collection
+    """Set up the locations collection with geospatial index."""
+    try:
+        client = MongoClient(MONGO_URI)
+        db = client["safety_db_hydatis"]
+        collections = db.list_collection_names()
+        if "locations" not in collections:
+            db.create_collection("locations")
+        db.locations.create_index("user_id")
+        db.locations.create_index("device_id")
+        db.locations.create_index([("location", GEOSPHERE)])
+        print(f"[✓] Initialized locations collection at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+        return db.locations
+    except Exception as e:
+        print(f"[✗] Error setting up locations collection at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
+        raise
 
 def setup_users_collection():
-    client = MongoClient(MONGO_URI)
-    db = client[DB_NAME]
-    return db["users"]
-
-def insert_location(collection, user_id, lat, lon, timestamp):
-    collection.insert_one({
-        "user_id": user_id,
-        "timestamp": timestamp,
-        "latitude": lat,
-        "longitude": lon
-    })
-
-def insert_geo_data(collection, user_id, lat, lon):
-    collection.insert_one({
-        "user_id": user_id,
-        "location_index": {
-            "type": "Point",
-            "coordinates": [lon, lat]
-        }
-    })
-
-def insert_user_alert(collection, user_id, location_anomaly, time_anomaly, is_incident):
-    collection.update_one(
-        {"user_id": user_id},
-        {
-            "$push": {
-                "alert_history": {
-                    "timestamp": datetime.now(),
-                    "location_anomaly_score": location_anomaly,
-                    "time_anomaly_score": time_anomaly,
-                    "is_incident": is_incident
-                }
-            },
-            "$set": {
-                "model_metadata": {
-                    "last_trained": datetime.now()
-                }
-            }
-        },
-        upsert=True
-    )
+    """Set up the users collection."""
+    try:
+        client = MongoClient(MONGO_URI)
+        db = client["safety_db_hydatis"]
+        if "users" not in db.list_collection_names():
+            db.create_collection("users")
+        db.users.create_index("user_id", unique=True)
+        print(f"[✓] Initialized users collection at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+        return db.users
+    except Exception as e:
+        print(f"[✗] Error setting up users collection at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
+        raise

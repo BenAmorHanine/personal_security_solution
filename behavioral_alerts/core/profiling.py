@@ -7,16 +7,16 @@ from sklearn.cluster import OPTICS
 from sklearn.preprocessing import StandardScaler
 import joblib
 import os
-from .config import MONGO_URI, MODEL_DIR, DISTANCE_THRESHOLD
+from .config import MONGO_URI, MODEL_DIR, DISTANCE_THRESHOLD, DEFAULT_PROB_THRESHOLD
 from .threshold_adjustment import adjust_threshold
 
 
 client = MongoClient(MONGO_URI)
 db = client["safety_db_hydatis"]
-locations_collection = db["locations"]
+loc_collection = db["locations"]
 users_collection = db["users"]
 
-def preprocess_user_data(user_id):
+def preprocess_user_data(user_id, locations_collection=loc_collection):
     """Extract and preprocess user location data from locations collection."""
     try:
         one_month_ago = datetime.now(timezone.utc) - timedelta(days=30)
@@ -67,6 +67,7 @@ def build_user_profile(user_id, locations_collection):
     try:
         df = preprocess_user_data(user_id)
         if df is None:
+            print(f"[DEBUG] No profile built for user {user_id} due to insufficient data at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
             return None, None, None, None, None
         coordinates = df[["latitude", "longitude"]].values
         scaler = StandardScaler()
@@ -114,21 +115,25 @@ def build_user_profile(user_id, locations_collection):
         print(f"[✗] Error building profile for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
         return None, None, None, None, None
 
-def detect_user_anomalies(lat, lon, hour, weekday, month, user_id, collection=None, prob_threshold=0.5):
+def detect_user_anomalies(lat, lon, hour, weekday, month, user_id, collection=None, prob_threshold=DEFAULT_PROB_THRESHOLD):
     """Detect anomalies in location and time for a user."""
     try:
         user = users_collection.find_one({"user_id": user_id})
         if not user or "behavior_profile" not in user:
-            return 1.0, 1.0
+            print(f"[DEBUG] No behavior profile for user {user_id}, deferring profile creation at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+            return 1.0, 1.0  # Fallback for users with insufficient data
+        prob_threshold = adjust_threshold(user_id, collection if collection is not None else loc_collection)
+        if prob_threshold is None:
+            prob_threshold = DEFAULT_PROB_THRESHOLD
+        print(f"[DEBUG] Using prob_threshold={prob_threshold} for user {user_id}")
         centroids = user["behavior_profile"].get("centroids", [])
         hour_freq = user["behavior_profile"].get("hour_freq", {})
         weekday_freq = user["behavior_profile"].get("weekday_freq", {})
         month_freq = user["behavior_profile"].get("month_freq", {})
         loc_anomaly = 1.0
         for zone in centroids:
-            # Distance in degrees, converted to meters
             dist = np.sqrt((lat - zone["center"]["coordinates"][1])**2 + (lon - zone["center"]["coordinates"][0])**2) * 111320
-            if dist < zone["radius"]:
+            if dist < max(zone["radius"], DISTANCE_THRESHOLD):
                 loc_anomaly = 0.0
                 break
         time_anomaly = 1.0 - max(
@@ -136,7 +141,7 @@ def detect_user_anomalies(lat, lon, hour, weekday, month, user_id, collection=No
             weekday_freq.get(str(weekday), 0.0),
             month_freq.get(str(month), 0.0)
         )
-        return loc_anomaly, time_anomaly
+        return loc_anomaly, time_anomaly if time_anomaly > prob_threshold else 0.0
     except Exception as e:
         print(f"[✗] Error detecting anomalies for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
         return 1.0, 1.0

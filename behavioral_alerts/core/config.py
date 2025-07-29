@@ -10,7 +10,7 @@ DB_NAME = "safety_db_hydatis"
 
 # Anomaly Detection Thresholds
 DISTANCE_THRESHOLD =0.5 # approx ~5km
-DEFAULT_PROB_THRESHOLD = 0.05
+DEFAULT_PROB_THRESHOLD = 0.5 #0.05
 LATE_NIGHT_HOURS = list(range(22, 24)) + list(range(0, 4))  # 10PM–5AM
 
 # Clustering Parameters

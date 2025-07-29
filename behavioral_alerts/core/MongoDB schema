@@ -1,53 +1,29 @@
-// users collection
 {
-  "user_id": UUID,
-  "name": String,
-  "email": String,
-  "phone": String,
-  "emergency_contact_phone": String, // Primary contact for alerts
-  "emergency_contacts": [{name: String, phone: String}], // Additional contacts
-  "behavior_profile": {
-    "centroids": [{cluster_id: Int, center: {type: "Point", coordinates: [Float, Float]}, radius: Float}],
-    "hour_freq": {hour: Float},
-    "weekday_freq": {weekday: Float},
-    "month_freq": {month: Float},
-    "last_updated": ISODate
+  "user_id": String, // Unique UUID (e.g., "ee505198-d6d0-49b3-aa71-af86e421f4be")
+  "name": String, // User name (e.g., "Test User")
+  "email": String, // Unique email (e.g., "test@example.com")
+  "phone": String, // Phone number (e.g., "+33612345678")
+  "emergency_contact_phone": String, // Emergency contact (e.g., "+33687654321")
+  "created_at": ISODate, // Creation timestamp (e.g., "2025-07-29T11:21:00Z")
+  "behavior_profile": { // Optional, only after 10+ location records
+    "centroids": [
+      {
+        "cluster_id": Int32, // Cluster ID (e.g., 0)
+        "center": {
+          "type": "Point",
+          "coordinates": [Double, Double] // [lon, lat] (e.g., [2.3522, 48.8566])
+        },
+        "radius": Double // Radius in meters (e.g., 500.0)
+      }
+    ],
+    "hour_freq": {String: Double}, // Hour frequencies (e.g., {"0": 0.1, "1": 0.05, ...})
+    "weekday_freq": {String: Double}, // Weekday frequencies (e.g., {"0": 0.14, ...})
+    "month_freq": {String: Double}, // Month frequencies (e.g., {"1": 0.083, ...})
+    "last_updated": ISODate // Profile update timestamp
   },
-  "ml_model": { //for profile
-    "optics_model": String, // Base64-encoded OPTICS model
-    "scaler": String, // Base64-encoded scaler
-    "saved_at": ISODate
-  },
-  "threshold_model": {
-    "model": String, // Base64-encoded RandomForest model
-    "saved_at": ISODate
-  },
-  "ml_incident_model": {
-    "xgboost_model": String, // Base64-encoded XGBoost model
-    "scaler": String, // Base64-encoded scaler
-    "saved_at": ISODate
-  },
-  "created_at": ISODate,
-  "updated_at": ISODate
-}
-
-// locations collection (time-series)
-{
-  "user_id": UUID,
-  "device_id": UUID,
-  "location": {type: "Point", coordinates: [Float, Float]},
-  "timestamp": ISODate,
-  "location_type": "gps|wifi|bluetooth|uwb",
-  "alert": {
-    "alert_id": UUID,
-    "alert_time": ISODate,
-    "audio_file": String, // Path to audio file // then will be sent to the vocal models and to the police
-    "health_data": {heart_rate: Float, stress: Float}, // Optional biomonitoring data
-    "location_anomaly_score": Float,
-    "time_anomaly_score": Float,
-    "ai_score": Float, // Incident probability from XGBoost
-    "is_incident": Boolean, // Ground truth (if available)
-    "status": "pending|processed|resolved|sent_to_police",
-    "nearest_police_station": {name: String, address: String, distance_m: Float}
+  "ml_incident_model": { // Optional, serialized model
+    "xgboost_model": String, // Base64-encoded XGBClassifier
+    "scaler": String, // Base64-encoded StandardScaler
+    "saved_at": ISODate // Model save timestamp
   }
 }

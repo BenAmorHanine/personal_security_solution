@@ -1,88 +1,86 @@
-from pymongo import MongoClient
+
+from pymongo import MongoClient, GEOSPHERE
 from .config import MONGO_URI
-import numpy as np
+from datetime import datetime, timezone
+import uuid
 
-
-def initialize_db():
+def initialize_database():
+    """Initialize the MongoDB database and collections."""
     try:
         client = MongoClient(MONGO_URI)
         db = client["safety_db_hydatis"]
-
-        # Create users collection
-        users = db["users"]
-        users.create_index([("user_id", 1)], unique=True)
-        users.create_index([("email", 1)], unique=True)
-        print("[✓] Created users collection with indexes")
-        #validation
-        db.command({
-            "collMod": "users",
-            "validator": {
-                "$jsonSchema": {
-                    "bsonType": "object",
-                    "required": ["user_id", "email", "emergency_contact_phone", "created_at"],
-                    "properties": {
-                        "user_id": {"bsonType": "string"},
-                        "email": {"bsonType": "string"},
-                        "emergency_contact_phone": {"bsonType": "string"},
-                        "subscription_status": {"enum": ["free", "premium"]}
-                    }
+        
+        # Create collections if they don't exist
+        db.create_collection("users", validator={
+            "$jsonSchema": {
+                "bsonType": "object",
+                "required": ["user_id", "name", "email", "phone", "emergency_contact_phone", "created_at"],
+                "properties": {
+                    "user_id": {"bsonType": "string"},
+                    "name": {"bsonType": "string"},
+                    "email": {"bsonType": "string"},
+                    "phone": {"bsonType": "string"},
+                    "emergency_contact_phone": {"bsonType": "string"},
+                    "created_at": {"bsonType": "date"},
+                    "behavior_profile": {"bsonType": ["object", "null"]},
+                    "incident_model": {"bsonType": ["binData", "null"]},
+                    "incident_scaler": {"bsonType": ["binData", "null"]},
+                    "model_last_updated": {"bsonType": ["date", "null"]}
                 }
             }
         })
-
-
-        # Create locations collection (time-series)
-        db.create_collection(
-            "locations",
-            timeseries={
-                "timeField": "timestamp",
-                "metaField": "user_id",
-                "granularity": "minutes"
+        db.create_collection("locations", validator={
+            "$jsonSchema": {
+                "bsonType": "object",
+                "required": ["location_id", "user_id", "device_id", "location", "timestamp"],
+                "properties": {
+                    "location_id": {"bsonType": "string"},
+                    "user_id": {"bsonType": "string"},
+                    "device_id": {"bsonType": "string"},
+                    "location": {
+                        "bsonType": "object",
+                        "required": ["type", "coordinates"],
+                        "properties": {
+                            "type": {"enum": ["Point"]},
+                            "coordinates": {
+                                "bsonType": "array",
+                                "items": {"bsonType": "double"}
+                            }
+                        }
+                    },
+                    "location_type": {"bsonType": "string"},
+                    "timestamp": {"bsonType": "date"},
+                    "alert": {"bsonType": ["object", "null"]}
+                }
             }
-        )
-        db["locations"].create_index([("location", "2dsphere")])
-        print("[✓] Created locations time-series collection with 2dsphere index")
-
-        client.close()
+        })
+        db.create_collection("devices", validator={
+            "$jsonSchema": {
+                "bsonType": "object",
+                "required": ["device_id", "user_id", "device_type", "sim_id", "battery_level", "registered_at"],
+                "properties": {
+                    "device_id": {"bsonType": "string"},
+                    "user_id": {"bsonType": "string"},
+                    "device_type": {"bsonType": "string"},
+                    "sim_id": {"bsonType": "string"},
+                    "battery_level": {"bsonType": "int"},
+                    "registered_at": {"bsonType": "date"}
+                }
+            }
+        })
+        
+        # Create indexes
+        db.users.create_index([("user_id", 1)], unique=True)
+        db.users.create_index([("email", 1)], unique=True)
+        db.locations.create_index([("location_id", 1)], unique=True)
+        db.locations.create_index([("user_id", 1), ("timestamp", -1)])
+        db.locations.create_index([("location", GEOSPHERE)])
+        db.devices.create_index([("device_id", 1)], unique=True)
+        db.devices.create_index([("user_id", 1)])
+        
+        print(f"[✓] Initialized database at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
     except Exception as e:
-        print(f"Error initializing database: {e}")
+        print(f"[✗] Error initializing database at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
 
 if __name__ == "__main__":
-    initialize_db()
-"""    from .db_functions import create_user, register_device, update_location
-    from .profiling import preprocess_user_data, build_user_profile, detect_user_anomalies
-
-    user_id = create_user("John Doe", "john@example.com", "+1234567890", "+0987654321")
-    device_id = register_device(user_id, "smartwatch", "m2m_12345")
-    for _ in range(100):  # Simulate location data
-        update_location(user_id, device_id, 48.8566 + np.random.normal(0, 0.01), 2.3522 + np.random.normal(0, 0.01))
-    df = preprocess_user_data(user_id)
-    centroids, hour_freq, weekday_freq, month_freq, scaler = build_user_profile(user_id, locations_collection)
-    loc_anomaly, time_anomaly = detect_user_anomalies(48.8566, 2.3522, 12, 3, 7, user_id, locations_collection)
-    print(f"Location Anomaly: {loc_anomaly}, Time Anomaly: {time_anomaly}")
-"""
-
-"""
-Testing:
-After running init_db.py, insert a test user:
-python
-
-from db_functions import create_user
-user_id = create_user(
-    name="John Doe",
-    email="john@example.com",
-    phone="+1234567890",
-    emergency_contact_phone="+0987654321"
-)
-print(f"Created test user: {user_id}")
-
-
-
-
-Verify collections in MongoDB shell:
-
-use safety_db
-show collections
-db.users.findOne()
-db.locations.getCollectionInfos()
-"""
+    initialize_database()
