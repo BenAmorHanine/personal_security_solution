@@ -8,6 +8,8 @@ MODEL_DIR = os.path.join(BASE_DIR, "models")
 MONGO_URI = "mongodb://localhost:27017"
 DB_NAME = "safety_db_hydatis"
 
+LOG_DIR = os.path.join(BASE_DIR, "logs")
+
 # Anomaly Detection Thresholds
 DISTANCE_THRESHOLD =0.5 # approx ~5km
 DEFAULT_PROB_THRESHOLD = 0.5 #0.05

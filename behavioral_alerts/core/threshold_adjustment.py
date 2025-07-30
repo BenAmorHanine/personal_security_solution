@@ -1,127 +1,79 @@
-
-from sklearn.ensemble import RandomForestRegressor
-import pandas as pd
-import numpy as np
+from pymongo import MongoClient
 from datetime import datetime, timedelta, timezone
+import numpy as np
+import pandas as pd
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error
 import joblib
 import os
-import io
-import base64
-from .config import MODEL_DIR, DEFAULT_PROB_THRESHOLD
+from .config import MONGO_URI, MODEL_DIR, DEFAULT_PROB_THRESHOLD
 
-def extract_threshold_features(df):
-    return {
-        "hour_std": df["hour"].std(),
-        "location_transition_freq": df["cluster"].diff().ne(0).mean() if "cluster" in df else 0,
-        "data_volume": len(df),
-        "alert_frequency": df["alert"].notnull().mean() if "alert" in df else 0.0
-    }
+client = MongoClient(MONGO_URI)
+db = client["safety_db_hydatis"]
+locations_collection = db["locations"]
+users_collection = db["users"]
 
-def prepare_threshold_data(collection, user_id):
-    from .profiling import preprocess_user_data
-    df = preprocess_user_data(user_id, collection)
-    if df is None:
-        return None, None
-    features = extract_threshold_features(df)
-    feature_array = np.array([[features["hour_std"], features["location_transition_freq"], features["data_volume"]]])
-    target_threshold = 0.05 + features["hour_std"] * 0.01 + features["alert_frequency"] * 0.1
-    return feature_array, [target_threshold]
-
-def train_threshold_model(features, targets):
+def adjust_threshold(user_id, collection=locations_collection, users_collection=users_collection):
+    """Adjust anomaly detection threshold using RandomForestRegressor."""
     try:
-        model = RandomForestRegressor(random_state=42)
-        model.fit(features, targets)
-        from sklearn.metrics import mean_squared_error
-        predictions = model.predict(features)
-        mse = mean_squared_error(targets, predictions)
-        print(f"[DEBUG] Threshold model MSE: {mse} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-        return model
-    except Exception as e:
-        print(f"[✗] Error training threshold model at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
-        return None
-
-def save_threshold_model(user_id, model, save_to_mongo=True, users_collection=None, save_local=True):
-    try:
-        if save_to_mongo and users_collection is not None:
-            buffer = io.BytesIO()
-            joblib.dump(model, buffer)
-            buffer.seek(0)
-            encoded_model = base64.b64encode(buffer.read()).decode('utf-8')
-            users_collection.update_one(
-                {"user_id": user_id},
-                {
-                    "$set": {
-                        "threshold_model": {
-                            "model": encoded_model,
-                            "saved_at": datetime.now(timezone.utc)
-                        }
-                    }
-                },
-                upsert=True
-            )
-            print(f"[✓] Saved threshold model for {user_id} to MongoDB at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-        if save_local:
-            user_dir = os.path.join(MODEL_DIR, user_id)
-            os.makedirs(user_dir, exist_ok=True)
-            joblib.dump(model, os.path.join(user_dir, f"{user_id}_threshold_model.pkl"))
-            print(f"[✓] Saved threshold model locally for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-    except Exception as e:
-        print(f"[✗] Error saving threshold model for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
-
-def load_threshold_model(user_id):
-    try:
-        user_dir = os.path.join(MODEL_DIR, user_id)
-        model = joblib.load(os.path.join(user_dir, f"{user_id}_threshold_model.pkl"))
-        print(f"[✓] Loaded threshold model for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-        return model
-    except FileNotFoundError:
-        print(f"[✗] Threshold model not found for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-        return None
-
-def predict_threshold(model, features):
-    try:
-        return model.predict([features])[0]
-    except Exception as e:
-        print(f"[✗] Error predicting threshold at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
-        return DEFAULT_PROB_THRESHOLD
-
-def should_retrain_threshold(collection, user_id, last_trained):
-    data_count = collection.count_documents({"user_id": user_id})
-    now = datetime.now(timezone.utc)
-    # Ensure last_trained is offset-aware
-    if last_trained and last_trained.tzinfo is None:
-        last_trained = last_trained.replace(tzinfo=timezone.utc)
-    if last_trained is None or data_count > 1000 or (now - last_trained > timedelta(days=30)):
-        print(f"[DEBUG] Retraining threshold for {user_id}: data_count={data_count}, last_trained={last_trained} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-        return True
-    return False
-
-def adjust_threshold(user_id, collection):
-    """Adjust threshold for a user based on historical data."""
-    try:
-        user = collection.database["users"].find_one({"user_id": user_id})
-        last_trained = user.get("threshold_model", {}).get("saved_at") if user else None
-        if should_retrain_threshold(collection, user_id, last_trained):
-            features, targets = prepare_threshold_data(collection, user_id)
-            if features is None or targets is None:
-                print(f"[✗] Failed to prepare threshold data for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-                return DEFAULT_PROB_THRESHOLD
-            model = train_threshold_model(features, targets)
-            if model is None:
-                print(f"[✗] Failed to train threshold model for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-                return DEFAULT_PROB_THRESHOLD
-            save_threshold_model(user_id, model, save_to_mongo=True, users_collection=collection.database["users"])
-        else:
-            model = load_threshold_model(user_id)
-            if model is None:
-                print(f"[✗] No threshold model available for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-                return DEFAULT_PROB_THRESHOLD
-        features, _ = prepare_threshold_data(collection, user_id)
-        if features is None:
-            print(f"[✗] Failed to prepare features for prediction for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+        one_month_ago = datetime.now(timezone.utc) - timedelta(days=30)
+        alerts = list(collection.find({
+            "user_id": user_id,
+            "alert": {"$exists": True},
+            "timestamp": {"$gte": one_month_ago}
+        }))
+        print(f"[DEBUG] Preprocessed {len(alerts)} alerts for user {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+        
+        if len(alerts) < 2:
+            print(f"[DEBUG] Insufficient alerts for user {user_id}: {len(alerts)} records, using default threshold {DEFAULT_PROB_THRESHOLD} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
             return DEFAULT_PROB_THRESHOLD
-        threshold = predict_threshold(model, features[0])
-        print(f"[DEBUG] Predicted threshold for {user_id}: {threshold} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+        
+        features = []
+        target = []
+        for alert in alerts:
+            features.append([
+                alert["alert"]["location_anomaly_score"],
+                alert["alert"]["time_anomaly_score"],
+                alert["alert"]["ai_score"]
+            ])
+            target.append(alert["alert"]["ai_score"])
+        
+        # Convert to DataFrame for feature names
+        feature_df = pd.DataFrame(features, columns=["location_anomaly", "time_anomaly", "ai_score"])
+        target = np.array(target)
+        
+        rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
+        rf_model.fit(feature_df, target)
+        
+        mse = mean_squared_error(target, rf_model.predict(feature_df))
+        print(f"[DEBUG] Threshold model MSE: {mse} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+        
+        # Save model locally
+        user_dir = os.path.join(MODEL_DIR, user_id)
+        os.makedirs(user_dir, exist_ok=True)
+        model_path = os.path.join(user_dir, f"{user_id}_rf_threshold.pkl")
+        joblib.dump(rf_model, model_path)
+        print(f"[✓] Saved threshold model locally for {user_id} at {model_path} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+        
+        # Save to MongoDB
+        model_bytes = joblib.dump(rf_model, "memory")[0]
+        users_collection.update_one(
+            {"user_id": user_id},
+            {"$set": {"ml_threshold_model": model_bytes}},
+            upsert=True
+        )
+        print(f"[✓] Saved threshold model for {user_id} to MongoDB at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+        
+        # Predict threshold
+        latest_alert = alerts[-1]
+        input_data = pd.DataFrame([[
+            latest_alert["alert"]["location_anomaly_score"],
+            latest_alert["alert"]["time_anomaly_score"],
+            latest_alert["alert"]["ai_score"]
+        ]], columns=["location_anomaly", "time_anomaly", "ai_score"])
+        threshold = rf_model.predict(input_data)[0]
+        threshold = max(0.1, min(threshold, 0.9))  # Bound between 0.1 and 0.9
+        print(f"[✓] Predicted threshold for user {user_id}: {threshold} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
         return threshold
     except Exception as e:
         print(f"[✗] Error adjusting threshold for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")

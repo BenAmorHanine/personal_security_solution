@@ -1,147 +1,116 @@
-
 from pymongo import MongoClient
 from datetime import datetime, timedelta, timezone
 import pandas as pd
 import numpy as np
 from sklearn.cluster import OPTICS
 from sklearn.preprocessing import StandardScaler
-import joblib
-import os
-from .config import MONGO_URI, MODEL_DIR, DISTANCE_THRESHOLD, DEFAULT_PROB_THRESHOLD
-from .threshold_adjustment import adjust_threshold
-
+from .config import MONGO_URI
 
 client = MongoClient(MONGO_URI)
 db = client["safety_db_hydatis"]
-loc_collection = db["locations"]
-users_collection = db["users"]
+locations_collection = db["locations"]
 
-def preprocess_user_data(user_id, locations_collection=loc_collection):
-    """Extract and preprocess user location data from locations collection."""
+def preprocess_data(user_id, collection=locations_collection):
+    """Preprocess location data for profiling."""
     try:
-        one_month_ago = datetime.now(timezone.utc) - timedelta(days=30)
-        data = list(locations_collection.find({
+        one_month_ago = datetime.now(timezone.utc) - timedelta(days=35)  # Extended to 35 days
+        locations = list(collection.find({
             "user_id": user_id,
-            "timestamp": {"$gte": one_month_ago},
-            "alert": {"$exists": False},
-            "location": {"$exists": True}
+            "timestamp": {"$gte": one_month_ago}
         }))
-        print(f"[DEBUG] Found {len(data)} records for user {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+        print(f"[DEBUG] Found {len(locations)} records for user {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+        if locations:
+            print(f"[DEBUG] Location timestamps: {[loc['timestamp'].strftime('%Y-%m-%d %H:%M:%S %Z') for loc in locations]}")
         
-        # Filter valid location documents
-        valid_data = []
-        for doc in data:
-            loc = doc.get("location")
-            if isinstance(loc, dict) and loc.get("type") == "Point" and isinstance(loc.get("coordinates"), list) and len(loc["coordinates"]) == 2:
-                try:
-                    lat, lon = float(loc["coordinates"][1]), float(loc["coordinates"][0])
-                    valid_data.append(doc)
-                except (TypeError, ValueError):
-                    print(f"[DEBUG] Invalid coordinates in document for user {user_id}: {doc}")
-            else:
-                print(f"[DEBUG] Invalid location document for user {user_id}: {doc}")
-        
-        print(f"[DEBUG] Valid records after filtering: {len(valid_data)}")
-        if valid_data:
-            print(f"[DEBUG] Sample valid document: {valid_data[0]}")
-        if not valid_data or len(valid_data) < 10:
-            raise ValueError(f"Insufficient data for user {user_id}: {len(valid_data)} records")
-        
-        df = pd.DataFrame(valid_data)
-        df["timestamp"] = pd.to_datetime(df["timestamp"], errors="coerce")
-        if df["timestamp"].isna().any():
-            raise ValueError("Invalid timestamps in data")
-        df["latitude"] = df["location"].apply(lambda x: float(x["coordinates"][1]))
-        df["longitude"] = df["location"].apply(lambda x: float(x["coordinates"][0]))
-        df["hour"] = df["timestamp"].dt.hour
-        df["weekday"] = df["timestamp"].dt.dayofweek
-        df["month"] = df["timestamp"].dt.month
-        df["time_diff"] = df["timestamp"].diff().dt.total_seconds().fillna(0) / 3600
-        return df
-    except Exception as e:
-        print(f"[✗] Error preprocessing data for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
-        return None
-
-def build_user_profile(user_id, locations_collection):
-    """Build user behavior profile using clustering and frequency analysis."""
-    try:
-        df = preprocess_user_data(user_id)
-        if df is None:
-            print(f"[DEBUG] No profile built for user {user_id} due to insufficient data at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+        if len(locations) < 5:
+            print(f"[✗] Error preprocessing data for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: Insufficient data for user {user_id}: {len(locations)} records")
             return None, None, None, None, None
-        coordinates = df[["latitude", "longitude"]].values
+        
+        df = pd.DataFrame(locations)
+        df["hour"] = df["timestamp"].apply(lambda x: x.hour)
+        df["weekday"] = df["timestamp"].apply(lambda x: x.weekday())
+        df["month"] = df["timestamp"].apply(lambda x: x.month)
+        
+        # Convert lat/lon to kilometers (approximation: 1 degree = 111 km)
+        X = df[["latitude", "longitude", "hour", "weekday", "month"]].values
         scaler = StandardScaler()
-        scaled_coordinates = scaler.fit_transform(coordinates)
-        # Use max_eps suitable for scaled data
-        clustering = OPTICS(max_eps=DISTANCE_THRESHOLD, min_samples=5).fit(scaled_coordinates)
-        labels = clustering.labels_
-        print(f"[DEBUG] Cluster labels: {np.unique(labels)}")
-        centroids = []
-        for cluster_id in np.unique(labels[labels != -1]):
-            cluster_points = coordinates[labels == cluster_id]  # Use original coordinates for radius
-            center = cluster_points.mean(axis=0)
-            # Calculate radius in meters using Haversine distance approximation
-            radius = np.max(np.sqrt(((cluster_points - center) ** 2).sum(axis=1))) * 111320  # Approx. degrees to meters
-            centroids.append({
-                "cluster_id": int(cluster_id),
-                "center": {"type": "Point", "coordinates": [float(center[1]), float(center[0])]},
-                "radius": float(radius)
-            })
-        print(f"[DEBUG] Found {len(centroids)} clusters for user {user_id}")
+        X_scaled = scaler.fit_transform(X)
+        
         hour_freq = df["hour"].value_counts(normalize=True).to_dict()
         weekday_freq = df["weekday"].value_counts(normalize=True).to_dict()
         month_freq = df["month"].value_counts(normalize=True).to_dict()
-        users_collection.update_one(
-            {"user_id": user_id},
-            {
-                "$set": {
-                    "behavior_profile": {
-                        "centroids": centroids,
-                        "hour_freq": {str(k): float(v) for k, v in hour_freq.items()},
-                        "weekday_freq": {str(k): float(v) for k, v in weekday_freq.items()},
-                        "month_freq": {str(k): float(v) for k, v in month_freq.items()},
-                        "last_updated": datetime.now(timezone.utc)
-                    }
-                }
-            },
-            upsert=True
-        )
-        user_dir = os.path.join(MODEL_DIR, user_id)
-        os.makedirs(user_dir, exist_ok=True)
-        joblib.dump(clustering, os.path.join(user_dir, f"{user_id}_optics_model.pkl"))
-        joblib.dump(scaler, os.path.join(user_dir, f"{user_id}_optics_scaler.pkl"))
+        
+        print(f"[DEBUG] Preprocessed {len(X)} records for user {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+        return df, X_scaled, hour_freq, weekday_freq, month_freq, scaler
+    except Exception as e:
+        print(f"[✗] Error preprocessing data for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
+        return None, None, None, None, None
+
+def build_user_profile(user_id, collection=locations_collection):
+    """Build user profile using OPTICS clustering."""
+    try:
+        df, X_scaled, hour_freq, weekday_freq, month_freq, scaler = preprocess_data(user_id, collection)
+        if df is None:
+            print(f"[DEBUG] No profile built for user {user_id} due to insufficient data at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+            return None, None, None, None, None
+        
+        # OPTICS clustering
+        if not df.empty:
+            coords_km = df[["latitude", "longitude"]] * 111
+            std_km = np.std(coords_km.values, axis=0).mean()
+            max_eps = max(0.5, min(1.5, std_km * 2))  # Dynamic max_eps
+            print(f"[DEBUG] Computed max_eps={max_eps:.2f} km based on std={std_km:.2f} km")
+        else:
+            max_eps = 1.0
+        optics = OPTICS(min_samples=3, max_eps=max_eps)
+        labels = optics.fit_predict(X_scaled)
+        print(f"[DEBUG] Cluster labels: {labels.tolist()}")
+        
+        unique_labels = set(labels) - {-1}
+        centroids = []
+        for cluster_id in unique_labels:
+            cluster_points = X_scaled[labels == cluster_id]
+            cluster_df = df[labels == cluster_id]
+            centroid = {
+                "cluster_id": int(cluster_id),
+                "center": cluster_points[:, :2].mean(axis=0).tolist(),
+                "size": len(cluster_points),
+                "hour_mean": cluster_df["hour"].mean(),
+                "weekday_mean": cluster_df["weekday"].mean(),
+                "month_mean": cluster_df["month"].mean()
+            }
+            centroids.append(centroid)
+        
+        print(f"[DEBUG] Found {len(centroids)} clusters for user {user_id}")
+        for c in centroids:
+            print(f"[DEBUG] Cluster {c['cluster_id']}: size={c['size']}, center={c['center']}, hour_mean={c['hour_mean']:.2f}")
+        print(f"[✓] Built user profile: {len(centroids)} clusters at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
         return centroids, hour_freq, weekday_freq, month_freq, scaler
     except Exception as e:
         print(f"[✗] Error building profile for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
         return None, None, None, None, None
 
-def detect_user_anomalies(lat, lon, hour, weekday, month, user_id, collection=None, prob_threshold=DEFAULT_PROB_THRESHOLD):
-    """Detect anomalies in location and time for a user."""
+def detect_user_anomalies(latitude, longitude, hour, weekday, month, user_id, collection=locations_collection):
+    """Detect anomalies in user location and time."""
     try:
-        user = users_collection.find_one({"user_id": user_id})
-        if not user or "behavior_profile" not in user:
+        centroids, hour_freq, weekday_freq, month_freq, scaler = build_user_profile(user_id, collection)
+        if centroids is None:
             print(f"[DEBUG] No behavior profile for user {user_id}, deferring profile creation at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-            return 1.0, 1.0  # Fallback for users with insufficient data
-        prob_threshold = adjust_threshold(user_id, collection if collection is not None else loc_collection)
-        if prob_threshold is None:
-            prob_threshold = DEFAULT_PROB_THRESHOLD
-        print(f"[DEBUG] Using prob_threshold={prob_threshold} for user {user_id}")
-        centroids = user["behavior_profile"].get("centroids", [])
-        hour_freq = user["behavior_profile"].get("hour_freq", {})
-        weekday_freq = user["behavior_profile"].get("weekday_freq", {})
-        month_freq = user["behavior_profile"].get("month_freq", {})
-        loc_anomaly = 1.0
-        for zone in centroids:
-            dist = np.sqrt((lat - zone["center"]["coordinates"][1])**2 + (lon - zone["center"]["coordinates"][0])**2) * 111320
-            if dist < max(zone["radius"], DISTANCE_THRESHOLD):
-                loc_anomaly = 0.0
-                break
-        time_anomaly = 1.0 - max(
-            hour_freq.get(str(hour), 0.0),
-            weekday_freq.get(str(weekday), 0.0),
-            month_freq.get(str(month), 0.0)
-        )
-        return loc_anomaly, time_anomaly if time_anomaly > prob_threshold else 0.0
+            return 1.0, 1.0
+        
+        input_data = np.array([[latitude, longitude, hour, weekday, month]])
+        input_scaled = scaler.transform(input_data)
+        
+        min_distance = float("inf")
+        for centroid in centroids:
+            centroid_scaled = scaler.transform([[centroid["center"][0], centroid["center"][1], centroid["hour_mean"], centroid["weekday_mean"], centroid["month_mean"]]])
+            distance = np.linalg.norm(input_scaled[:, :2] - centroid_scaled[:, :2])
+            min_distance = min(min_distance, distance)
+        
+        location_anomaly = min(min_distance / 1.0, 1.0)  # Normalize by max_eps
+        time_anomaly = 1.0 - (hour_freq.get(hour, 0) + weekday_freq.get(weekday, 0) + month_freq.get(month, 0)) / 3
+        print(f"[✓] Detected anomalies for user {user_id}: location={location_anomaly}, time={time_anomaly} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+        return location_anomaly, time_anomaly
     except Exception as e:
         print(f"[✗] Error detecting anomalies for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
         return 1.0, 1.0
