@@ -1,13 +1,13 @@
 from pymongo import MongoClient
 from datetime import datetime, timedelta, timezone
-import pandas as pd
 import numpy as np
-from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import accuracy_score
-import joblib
+from sklearn.model_selection import KFold
+from sklearn.metrics import f1_score
+import pickle
 import os
-from .config import MONGO_URI, MODEL_DIR, DEFAULT_PROB_THRESHOLD
+from .config import MONGO_URI, MODEL_DIR
 
 client = MongoClient(MONGO_URI)
 db = client["safety_db_hydatis"]
@@ -15,125 +15,162 @@ locations_collection = db["locations"]
 users_collection = db["users"]
 
 def prepare_incident_data(user_id, collection=locations_collection):
-    """Prepare data for incident prediction model."""
+    """Prepare data for incident prediction model with enriched features."""
     try:
-        one_month_ago = datetime.now(timezone.utc) - timedelta(days=30)
+        one_month_ago = datetime.now(timezone.utc) - timedelta(days=35)
         alerts = list(collection.find({
             "user_id": user_id,
-            "alert": {"$exists": True},
-            "timestamp": {"$gte": one_month_ago}
+            "timestamp": {"$gte": one_month_ago},
+            "alert.is_incident": {"$exists": True}
         }))
         print(f"[DEBUG] Preprocessed {len(alerts)} alerts for user {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-        
-        if len(alerts) < 2:
-            print(f"[DEBUG] Insufficient alert data for user {user_id}: {len(alerts)} records, supplementing with dummy data at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-            features = np.array([[0.0, 0.0], [1.0, 1.0]])
-            labels = np.array([0, 1])
-            return features, labels
-        
-        features = []
-        labels = []
+
+        if len(alerts) < 20:
+            print(f"[DEBUG] Insufficient alerts for user {user_id}: {len(alerts)} records, skipping model training at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+            return None, None
+
+        anomaly_features = []
+        incident_labels = []
         for alert in alerts:
-            features.append([
-                alert["alert"]["location_anomaly_score"],
-                alert["alert"]["time_anomaly_score"]
-            ])
-            labels.append(int(alert["alert"]["is_incident"]))
-        print(f"[DEBUG] Label values: {labels}")
-        
-        features = np.array(features)
-        labels = np.array(labels)
-        print(f"[DEBUG] Prepared {len(features)} records for user {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-        return features, labels
+            location_anomaly = alert.get("alert", {}).get("location_anomaly", 1.0)
+            hour_anomaly = alert.get("alert", {}).get("hour_anomaly", 1.0)
+            weekday_anomaly = alert.get("alert", {}).get("weekday_anomaly", 1.0)
+            month_anomaly = alert.get("alert", {}).get("month_anomaly", 1.0)
+            is_incident = alert.get("alert", {}).get("is_incident", False)
+            anomaly_features.append([location_anomaly, hour_anomaly, weekday_anomaly, month_anomaly])
+            incident_labels.append(1 if is_incident else 0)
+
+        print(f"[DEBUG] Incident labels: {incident_labels}")
+        return np.array(anomaly_features), np.array(incident_labels)
     except Exception as e:
         print(f"[✗] Error preparing incident data for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
-        return np.array([[0.0, 0.0], [1.0, 1.0]]), np.array([0, 1])
-
-def train_incident_model(features, labels):
-    """Train logistic regression model for incident prediction."""
-    try:
-        if len(features) < 2 or len(np.unique(labels)) < 2:
-            print(f"[✗] Error training incident model at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: Insufficient data or single class")
-            return None, None
-        
-        scaler = StandardScaler()
-        X_scaled = scaler.fit_transform(features)
-        model = LogisticRegression(random_state=42)
-        model.fit(X_scaled, labels)
-        
-        predictions = model.predict(X_scaled)
-        accuracy = accuracy_score(labels, predictions)
-        print(f"[✓] Incident model accuracy: {accuracy} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-        return model, scaler
-    except Exception as e:
-        print(f"[✗] Error training incident model at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
         return None, None
 
-def save_incident_model(user_id, model, scaler, users_collection=users_collection):
-    """Save incident model and scaler to disk and MongoDB."""
+def train_incident_model(anomaly_features, incident_labels):
+    """Train the incident prediction model with cross-validation and threshold optimization."""
     try:
-        if model is None or scaler is None:
-            print(f"[✗] Error saving incident model for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: Model or scaler is None")
-            return
-        
-        # Verify types
-        if not isinstance(model, LogisticRegression):
-            print(f"[✗] Error saving incident model for {user_id}: Expected LogisticRegression, got {type(model)}")
-            return
-        if not isinstance(scaler, StandardScaler):
-            print(f"[✗] Error saving incident scaler for {user_id}: Expected StandardScaler, got {type(scaler)}")
-            return
-        
-        # Save to disk
-        user_dir = os.path.join(MODEL_DIR, user_id)
-        os.makedirs(user_dir, exist_ok=True)
-        model_path = os.path.join(user_dir, f"{user_id}_incident_model.pkl")
-        scaler_path = os.path.join(user_dir, f"{user_id}_incident_scaler.pkl")
-        joblib.dump(model, model_path)
-        joblib.dump(scaler, scaler_path)
-        print(f"[✓] Saved incident model locally for {user_id} at {model_path} and scaler at {scaler_path} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-        
-        # Save to MongoDB
-        model_bytes = joblib.dump(model, "memory")[0]
-        scaler_bytes = joblib.dump(scaler, "memory")[0]
-        users_collection.update_one(
-            {"user_id": user_id},
-            {"$set": {
-                "ml_incident_model": model_bytes,
-                "ml_incident_scaler": scaler_bytes
-            }},
-            upsert=True
-        )
-        print(f"[✓] Saved incident model for {user_id} to MongoDB at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-    except Exception as e:
-        print(f"[✗] Error saving incident model for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
+        if anomaly_features is None or incident_labels is None:
+            print(f"[DEBUG] No data to train incident model at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+            return None, None, None
 
-def predict_incident(user_id, loc_anomaly, time_anomaly):
-    """Predict incident probability using trained model from disk."""
+        scaler = StandardScaler()
+        scaled_features = scaler.fit_transform(anomaly_features)
+
+        model = RandomForestClassifier(n_estimators=100, random_state=42)
+
+        # Cross-validation
+        kf = KFold(n_splits=5, shuffle=True, random_state=42)
+        val_probs = []
+        val_labels = []
+
+        for train_idx, val_idx in kf.split(scaled_features):
+            X_train, X_val = scaled_features[train_idx], scaled_features[val_idx]
+            y_train, y_val = incident_labels[train_idx], incident_labels[val_idx]
+
+            model.fit(X_train, y_train)
+            probs = model.predict_proba(X_val)[:, 1]
+            val_probs.extend(probs)
+            val_labels.extend(y_val)
+
+        # Find optimal threshold using F1-score
+        thresholds = np.arange(0.1, 1.0, 0.05)
+        f1_scores = []
+        for thresh in thresholds:
+            preds = [1 if p >= thresh else 0 for p in val_probs]
+            f1 = f1_score(val_labels, preds)
+            f1_scores.append(f1)
+
+        optimal_idx = np.argmax(f1_scores)
+        optimal_threshold = thresholds[optimal_idx]
+        print(f"[✓] Optimal threshold: {optimal_threshold:.2f} with F1-score: {f1_scores[optimal_idx]:.2f} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+
+        # Train final model on all data
+        model.fit(scaled_features, incident_labels)
+
+        return model, scaler, optimal_threshold
+    except Exception as e:
+        print(f"[✗] Error training incident model at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
+        return None, None, None
+
+def save_incident_model(
+    user_id,
+    model,
+    scaler,
+    threshold,
+    name="Test User",
+    email=None,
+    phone="+1234567890",
+    emergency_contact_phone="+0987654321",
+    collection=users_collection,
+    save_to_db=False
+):
+    """Save the incident model, scaler, and threshold to local storage (mandatory) and optionally to MongoDB."""
     try:
+        if model is None or scaler is None or threshold is None:
+            print(f"[DEBUG] No incident model to save for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+            return
+
+        # Mandatory: Save to local storage
+        os.makedirs(os.path.join(MODEL_DIR, user_id), exist_ok=True)
         model_path = os.path.join(MODEL_DIR, user_id, f"{user_id}_incident_model.pkl")
         scaler_path = os.path.join(MODEL_DIR, user_id, f"{user_id}_incident_scaler.pkl")
+
+        with open(model_path, "wb") as f:
+            pickle.dump(model, f)
+        with open(scaler_path, "wb") as f:
+            pickle.dump(scaler, f)
+
+        print(f"[✓] Saved incident model locally for {user_id} at {model_path} and scaler at {scaler_path} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+
+        # Optional: Save to MongoDB
+        if save_to_db:
+            if email is None:
+                email = f"test_{user_id}@example.com"
+
+            try:
+                collection.update_one(
+                    {"user_id": user_id},
+                    {"$set": {
+                        "user_id": user_id,
+                        "name": name,
+                        "email": email,
+                        "phone": phone,
+                        "emergency_contact_phone": emergency_contact_phone,
+                        "created_at": datetime.now(timezone.utc),
+                        "incident_model": pickle.dumps(model),
+                        "incident_scaler": pickle.dumps(scaler),
+                        "optimal_threshold": threshold
+                    }},
+                    upsert=True
+                )
+                print(f"[✓] Saved incident model and threshold for {user_id} to MongoDB at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+            except Exception as e:
+                print(f"[✗] Failed to save incident model to MongoDB for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
+
+    except Exception as e:
+        print(f"[✗] Error saving incident model locally for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
+
         
-        if not (os.path.exists(model_path) and os.path.exists(scaler_path)):
-            print(f"[DEBUG] No incident model or scaler found for user {user_id} at {model_path}, using default score {DEFAULT_PROB_THRESHOLD} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-            return DEFAULT_PROB_THRESHOLD
-        
-        model = joblib.load(model_path)
-        scaler = joblib.load(scaler_path)
-        
-        # Verify types
-        if not isinstance(model, LogisticRegression):
-            print(f"[✗] Error loading incident model for {user_id}: Expected LogisticRegression, got {type(model)}")
-            return DEFAULT_PROB_THRESHOLD
-        if not isinstance(scaler, StandardScaler):
-            print(f"[✗] Error loading incident scaler for {user_id}: Expected StandardScaler, got {type(scaler)}")
-            return DEFAULT_PROB_THRESHOLD
-        
-        features = np.array([[loc_anomaly, time_anomaly]])
-        features_scaled = scaler.transform(features)
-        prob = model.predict_proba(features_scaled)[0][1]
-        print(f"[✓] Predicted incident probability for {user_id}: {prob} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-        return prob
+def predict_incident(user_id, latitude, longitude, hour, weekday, month, collection=locations_collection):
+    """Predict the probability of an incident using enriched features."""
+    try:
+        from .profiling import detect_user_anomalies
+        user = users_collection.find_one({"user_id": user_id})
+        if user is None or "incident_model" not in user or "incident_scaler" not in user:
+            print(f"[DEBUG] No incident model found for {user_id}, returning default probability 1.0 at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+            return 1.0
+
+        model = pickle.loads(user["incident_model"])
+        scaler = pickle.loads(user["incident_scaler"])
+
+        # Assuming detect_user_anomalies returns [location_anomaly, hour_anomaly, weekday_anomaly, month_anomaly]
+        anomalies = detect_user_anomalies(latitude, longitude, hour, weekday, month, user_id, collection)
+        anomaly_features = np.array([anomalies])
+        scaled_anomaly_features = scaler.transform(anomaly_features)
+        incident_probability = model.predict_proba(scaled_anomaly_features)[0][1]
+
+        print(f"[✓] Predicted incident probability for {user_id}: {incident_probability:.2f} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+        return incident_probability
     except Exception as e:
         print(f"[✗] Error predicting incident for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
-        return DEFAULT_PROB_THRESHOLD
+        return 1.0

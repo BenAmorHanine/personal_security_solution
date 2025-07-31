@@ -13,7 +13,7 @@ locations_collection = db["locations"]
 def preprocess_data(user_id, collection=locations_collection):
     """Preprocess location data for profiling."""
     try:
-        one_month_ago = datetime.now(timezone.utc) - timedelta(days=35)  # Extended to 35 days
+        one_month_ago = datetime.now(timezone.utc) - timedelta(days=35)
         locations = list(collection.find({
             "user_id": user_id,
             "timestamp": {"$gte": one_month_ago}
@@ -27,11 +27,19 @@ def preprocess_data(user_id, collection=locations_collection):
             return None, None, None, None, None
         
         df = pd.DataFrame(locations)
+        # Extract latitude and longitude from GeoJSON location field
+        df["latitude"] = df["location"].apply(lambda x: x["coordinates"][1] if isinstance(x, dict) and "coordinates" in x else None)
+        df["longitude"] = df["location"].apply(lambda x: x["coordinates"][0] if isinstance(x, dict) and "coordinates" in x else None)
+        
+        # Check for missing coordinates
+        if df["latitude"].isnull().any() or df["longitude"].isnull().any():
+            print(f"[✗] Error preprocessing data for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: Missing latitude or longitude values")
+            return None, None, None, None, None
+        
         df["hour"] = df["timestamp"].apply(lambda x: x.hour)
         df["weekday"] = df["timestamp"].apply(lambda x: x.weekday())
         df["month"] = df["timestamp"].apply(lambda x: x.month)
         
-        # Convert lat/lon to kilometers (approximation: 1 degree = 111 km)
         X = df[["latitude", "longitude", "hour", "weekday", "month"]].values
         scaler = StandardScaler()
         X_scaled = scaler.fit_transform(X)
@@ -46,23 +54,23 @@ def preprocess_data(user_id, collection=locations_collection):
         print(f"[✗] Error preprocessing data for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
         return None, None, None, None, None
 
+
+
 def build_user_profile(user_id, collection=locations_collection):
     """Build user profile using OPTICS clustering."""
     try:
-        df, X_scaled, hour_freq, weekday_freq, month_freq, scaler = preprocess_data(user_id, collection)
-        if df is None:
+        result = preprocess_data(user_id, collection)
+        if len(result) == 5:  # Handle insufficient data case
             print(f"[DEBUG] No profile built for user {user_id} due to insufficient data at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
             return None, None, None, None, None
+        df, X_scaled, hour_freq, weekday_freq, month_freq, scaler = result
         
         # OPTICS clustering
-        if not df.empty:
-            coords_km = df[["latitude", "longitude"]] * 111
-            std_km = np.std(coords_km.values, axis=0).mean()
-            max_eps = max(0.5, min(1.5, std_km * 2))  # Dynamic max_eps
-            print(f"[DEBUG] Computed max_eps={max_eps:.2f} km based on std={std_km:.2f} km")
-        else:
-            max_eps = 1.0
-        optics = OPTICS(min_samples=3, max_eps=max_eps)
+        coords_km = df[["latitude", "longitude"]] * 111
+        std_km = np.std(coords_km.values, axis=0).mean()
+        max_eps = max(0.5, min(1.0, std_km * 1.5))  # Cap at 1.0 km
+        print(f"[DEBUG] Computed max_eps={max_eps:.2f} km based on std={std_km:.2f} km")
+        optics = OPTICS(min_samples=2, max_eps=max_eps)
         labels = optics.fit_predict(X_scaled)
         print(f"[DEBUG] Cluster labels: {labels.tolist()}")
         
@@ -107,7 +115,7 @@ def detect_user_anomalies(latitude, longitude, hour, weekday, month, user_id, co
             distance = np.linalg.norm(input_scaled[:, :2] - centroid_scaled[:, :2])
             min_distance = min(min_distance, distance)
         
-        location_anomaly = min(min_distance / 1.0, 1.0)  # Normalize by max_eps
+        location_anomaly = min(min_distance / 1.0, 1.0)
         time_anomaly = 1.0 - (hour_freq.get(hour, 0) + weekday_freq.get(weekday, 0) + month_freq.get(month, 0)) / 3
         print(f"[✓] Detected anomalies for user {user_id}: location={location_anomaly}, time={time_anomaly} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
         return location_anomaly, time_anomaly
