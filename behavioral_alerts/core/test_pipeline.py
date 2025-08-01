@@ -18,14 +18,12 @@ users_collection = db["users"]
 
 # Function to generate synthetic data for a user
 def generate_synthetic_data(user_id, num_locations=30, num_alerts=20):
-    # Generate synthetic locations with varying times and locations
     for _ in range(num_locations):
         latitude = random.uniform(48.7, 49.0)
         longitude = random.uniform(2.2, 2.5)
         timestamp = datetime.now(timezone.utc) - timedelta(days=random.randint(0, 30), hours=random.randint(0, 23))
         update_location(user_id, device_id, latitude, longitude, timestamp)
 
-    # Generate synthetic alerts with varying anomaly scores and incident labels
     for _ in range(num_alerts):
         latitude = random.uniform(48.7, 49.0)
         longitude = random.uniform(2.2, 2.5)
@@ -34,10 +32,8 @@ def generate_synthetic_data(user_id, num_locations=30, num_alerts=20):
         month = random.randint(1, 12)
         location_anomaly, time_anomaly = detect_user_anomalies(latitude, longitude, hour, weekday, month, user_id, locations_collection)
         ai_score = predict_incident(user_id, latitude, longitude, hour, weekday, month, locations_collection)
-        is_incident = random.choice([True, False])  # Randomly assign incident label
+        is_incident = random.choice([True, False])
         log_alert(user_id, device_id, latitude, longitude, None, ai_score, is_incident)
-
-
 
 # Function to evaluate model performance
 def evaluate_model(model, X, y):
@@ -52,48 +48,51 @@ def evaluate_model(model, X, y):
         f1_scores.append(f1)
     return np.mean(f1_scores)
 
-# Function to optimize threshold
-def optimize_threshold(model, X, y):
-    thresholds = np.arange(0.1, 1.0, 0.1)
-    best_threshold = 0.5
-    best_f1 = 0
-    for threshold in thresholds:
-        y_pred = (model.predict_proba(X)[:, 1] >= threshold).astype(int)
-        f1 = f1_score(y, y_pred)
-        if f1 > best_f1:
-            best_f1 = f1
-            best_threshold = threshold
-    return best_threshold
-
 # Simulated users and devices
 user_ids = [str(uuid.uuid4()) for _ in range(3)]  # Create 3 users
 device_ids = [str(uuid.uuid4()) for _ in range(3)]  # Create 3 devices
 
 try:
-    for user_id, device_id in zip(user_ids, device_ids):
-        # Create user with unique email
-        unique_email = f"test_{user_id}@eexample.com"
-        existing_user = users_collection.find_one({"user_id": user_id})
-        if not existing_user:
-            create_user("Test User", unique_email, "+1234567890", "+0987654321")
-        else:
-            users_collection.update_one(
-                {"user_id": user_id},
-                {
-                    "$set": {
-                        "name": "Test User",
-                        "email": unique_email,
-                        "phone": "+1234567890",
-                        "emergency_contact_phone": "+0987654321",
-                        "created_at": datetime.now(timezone.utc)
-                    }
+    # Initialize collections if they don't exist
+    if "users" not in db.list_collection_names():
+        db.create_collection("users", validator={
+            "$jsonSchema": {
+                "bsonType": "object",
+                "required": ["user_id", "name", "email", "phone", "emergency_contact_phone", "created_at"],
+                "properties": {
+                    "user_id": {"bsonType": "string"},
+                    "name": {"bsonType": "string"},
+                    "email": {"bsonType": "string"},
+                    "phone": {"bsonType": "string"},
+                    "emergency_contact_phone": {"bsonType": "string"},
+                    "created_at": {"bsonType": "date"}
                 }
-            )
-            print(f"[✓] Updated user {user_id} with email {unique_email} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+            }
+        })
+        users_collection.create_index("email", unique=True)
+        print(f"[✓] Created users collection with schema and email index at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+
+    if "locations" not in db.list_collection_names():
+        db.create_collection("locations")
+        print(f"[✓] Created locations collection at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+
+    for user_id, device_id in zip(user_ids, device_ids):
+        # Skip if user_id already exists
+        if users_collection.find_one({"user_id": user_id}):
+            print(f"[DEBUG] User {user_id} already exists, skipping at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+            continue
+
+        # Create user with unique email
+        unique_email = f"test_{user_id}@example.com"  # Fixed typo
+        try:
+            create_user("Test User", unique_email, "+1234567890", "+0987654321")
+        except Exception as e:
+            print(f"[✗] Failed to create user {user_id}, skipping: {e}")
+            continue
 
         # Register device
         existing_device = users_collection.find_one({"user_id": user_id, "devices.device_id": device_id})
-        if not existing_user:
+        if not existing_device:
             register_device(user_id, "smartphone", "SIM123456", 100)
         else:
             users_collection.update_one(
@@ -135,7 +134,7 @@ try:
                     phone="+1234567890",
                     emergency_contact_phone="+0987654321",
                     collection=users_collection,
-                    save_to_db=True  # Set to True to enable MongoDB saving
+                    save_to_db=True  # Set to False to skip MongoDB
                 )
 
         # Simulate SOS alerts

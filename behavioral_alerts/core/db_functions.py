@@ -8,24 +8,32 @@ db = client["safety_db_hydatis"]
 users_collection = db["users"]
 locations_collection = db["locations"]
 
-def create_user(name, email, phone, emergency_contact_phone):
-    """Create a new user and return their user_id."""
+def create_user(name, email, phone, emergency_contact_phone, collection=users_collection):
+    """Create a new user with a unique email."""
     try:
         user_id = str(uuid.uuid4())
-        user = {
+        # Check if email already exists
+        existing_email_doc = collection.find_one({"email": email})
+        if existing_email_doc:
+            # Generate a unique email by appending a random suffix
+            email = f"{email.split('@')[0]}_{uuid.uuid4().hex[:8]}@example.com"
+            print(f"[DEBUG] Email {email} already exists, using unique email {email} for user {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+
+        user_doc = {
             "user_id": user_id,
             "name": name,
             "email": email,
             "phone": phone,
             "emergency_contact_phone": emergency_contact_phone,
-            "created_at": datetime.now(timezone.utc)
+            "created_at": datetime.now(timezone.utc),
+            "devices": []
         }
-        users_collection.insert_one(user)
-        print(f"[✓] Created user {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+        collection.insert_one(user_doc)
+        print(f"[✓] Created user {user_id} with email {email} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
         return user_id
     except Exception as e:
-        print(f"[✗] Error creating user at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
-        return None
+        print(f"[✗] Error creating user with email {email} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
+        raise
 
 def register_device(user_id, device_type, sim_id, battery_level):
     """Register a device for a user and return the device_id."""
