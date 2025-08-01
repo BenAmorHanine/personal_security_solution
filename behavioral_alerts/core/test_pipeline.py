@@ -32,7 +32,8 @@ def generate_synthetic_data(user_id, num_locations=30, num_alerts=20):
         month = random.randint(1, 12)
         location_anomaly, time_anomaly = detect_user_anomalies(latitude, longitude, hour, weekday, month, user_id, locations_collection)
         ai_score = predict_incident(user_id, latitude, longitude, hour, weekday, month, locations_collection)
-        is_incident = random.choice([True, False])
+        #is_incident = random.choice([True, False])
+        is_incident = location_anomaly > 0.7 or time_anomaly > 0.7
         log_alert(user_id, device_id, latitude, longitude, None, ai_score, is_incident)
 
 # Function to evaluate model performance

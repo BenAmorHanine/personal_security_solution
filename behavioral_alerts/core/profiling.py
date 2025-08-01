@@ -9,6 +9,7 @@ from .config import MONGO_URI
 client = MongoClient(MONGO_URI)
 db = client["safety_db_hydatis"]
 locations_collection = db["locations"]
+users_collection = db["users"]
 
 def preprocess_data(user_id, collection=locations_collection):
     """Preprocess location data for profiling."""
@@ -56,7 +57,7 @@ def preprocess_data(user_id, collection=locations_collection):
 
 
 
-def build_user_profile(user_id, collection=locations_collection):
+def build_user_profile(user_id, collection=locations_collection, users_collection=users_collection):
     """Build user profile using OPTICS clustering."""
     try:
         result = preprocess_data(user_id, collection)
@@ -64,6 +65,7 @@ def build_user_profile(user_id, collection=locations_collection):
             print(f"[DEBUG] No profile built for user {user_id} due to insufficient data at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
             return None, None, None, None, None
         df, X_scaled, hour_freq, weekday_freq, month_freq, scaler = result
+        print(f"[DEBUG] Data points for user {user_id}: {len(df)}")
         
         # OPTICS clustering
         coords_km = df[["latitude", "longitude"]] * 111
@@ -92,7 +94,21 @@ def build_user_profile(user_id, collection=locations_collection):
         print(f"[DEBUG] Found {len(centroids)} clusters for user {user_id}")
         for c in centroids:
             print(f"[DEBUG] Cluster {c['cluster_id']}: size={c['size']}, center={c['center']}, hour_mean={c['hour_mean']:.2f}")
+        # Convert numeric keys to strings for MongoDB
+        hour_freq_str = {str(k): float(v) for k, v in hour_freq.items()}
+        weekday_freq_str = {str(k): float(v) for k, v in weekday_freq.items()}
+        month_freq_str = {str(k): float(v) for k, v in month_freq.items()}
+        users_collection.update_one(
+            {"user_id": user_id},
+            {"$set": 
+             {"profile": 
+                {"centroids": centroids, 
+                 "hour_freq": hour_freq_str, 
+                 "weekday_freq": weekday_freq_str, 
+                 "month_freq": month_freq_str}}}
+        )
         print(f"[✓] Built user profile: {len(centroids)} clusters at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+        
         return centroids, hour_freq, weekday_freq, month_freq, scaler
     except Exception as e:
         print(f"[✗] Error building profile for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
