@@ -70,7 +70,8 @@ def build_user_profile(user_id, collection=locations_collection, users_collectio
         # OPTICS clustering
         coords_km = df[["latitude", "longitude"]] * 111
         std_km = np.std(coords_km.values, axis=0).mean()
-        max_eps = max(0.5, min(1.0, std_km * 1.5))  # Cap at 1.0 km
+        #max_eps = max(0.5, min(1.0, std_km * 1.5))  # Cap at 1.0 km
+        max_eps = 0.3 if len(df) < 5 else max(0.3, min(2.0, std_km * 1.2))
         print(f"[DEBUG] Computed max_eps={max_eps:.2f} km based on std={std_km:.2f} km")
         optics = OPTICS(min_samples=2, max_eps=max_eps)
         labels = optics.fit_predict(X_scaled)
