@@ -133,9 +133,12 @@ def detect_user_anomalies(latitude, longitude, hour, weekday, month, user_id, co
             min_distance = min(min_distance, distance)
         
         location_anomaly = min(min_distance / 1.0, 1.0)
-        time_anomaly = 1.0 - (hour_freq.get(hour, 0) + weekday_freq.get(weekday, 0) + month_freq.get(month, 0)) / 3
-        print(f"[✓] Detected anomalies for user {user_id}: location={location_anomaly}, time={time_anomaly} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-        return location_anomaly, time_anomaly
+        #time_anomaly = 1.0 - (hour_freq.get(hour, 0) + weekday_freq.get(weekday, 0) + month_freq.get(month, 0)) / 3
+        hour_anomaly = 1.0 - hour_freq.get(hour, 0)
+        weekday_anomaly = 1.0 - weekday_freq.get(weekday, 0)
+        month_anomaly = 1.0 - month_freq.get(month, 0)
+        print(f"[✓] Detected anomalies for user {user_id}: location={location_anomaly}, hour={hour_anomaly}, weekday= {weekday_anomaly}, month= {month_anomaly} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+        return location_anomaly,hour_anomaly, weekday_anomaly, month_anomaly #,time_anomaly
     except Exception as e:
         print(f"[✗] Error detecting anomalies for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
-        return 1.0, 1.0
+        return (1.0, 1.0, 1.0, 1.0)

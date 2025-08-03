@@ -1,13 +1,19 @@
 from pymongo import MongoClient
 from datetime import datetime, timedelta, timezone
 import numpy as np
-from sklearn.ensemble import RandomForestClassifier
+import pandas as pd
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from xgboost import XGBClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import KFold
 from sklearn.metrics import f1_score
 import pickle
 import os
 from .config import MONGO_URI, MODEL_DIR
+from .profiling import detect_user_anomalies #we will call it in the capture file and pass the results as parameters
+import io
+import base64
+import joblib
 
 client = MongoClient(MONGO_URI)
 db = client["safety_db_hydatis"]
@@ -17,10 +23,10 @@ users_collection = db["users"]
 def prepare_incident_data(user_id, collection=locations_collection):
     """Prepare data for incident prediction model with enriched features."""
     try:
-        one_month_ago = datetime.now(timezone.utc) - timedelta(days=35)
+        three_month_ago = datetime.now(timezone.utc) - timedelta(days=90)
         alerts = list(collection.find({
             "user_id": user_id,
-            "timestamp": {"$gte": one_month_ago},
+            "timestamp": {"$gte": three_month_ago},
             "alert.is_incident": {"$exists": True}
         }))
         print(f"[DEBUG] Preprocessed {len(alerts)} alerts for user {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
@@ -56,8 +62,8 @@ def train_incident_model(anomaly_features, incident_labels):
         scaler = StandardScaler()
         scaled_features = scaler.fit_transform(anomaly_features)
 
-        model = RandomForestClassifier(n_estimators=100, random_state=42)
-
+        #model = RandomForestClassifier(n_estimators=100, random_state=42)
+        model = XGBClassifier(random_state=42, eval_metric="logloss", scale_pos_weight=(len(incident_labels) - sum(incident_labels)) / sum(incident_labels) if sum(incident_labels) > 0 else 1)
         # Cross-validation
         kf = KFold(n_splits=5, shuffle=True, random_state=42)
         val_probs = []
@@ -73,7 +79,7 @@ def train_incident_model(anomaly_features, incident_labels):
             val_labels.extend(y_val)
 
         # Find optimal threshold using F1-score
-        thresholds = np.arange(0.1, 1.0, 0.05)
+        thresholds = np.arange(0.1, 1.0, 0.05, 0.5, 0.7)
         f1_scores = []
         for thresh in thresholds:
             preds = [1 if p >= thresh else 0 for p in val_probs]
@@ -150,11 +156,68 @@ def save_incident_model(
     except Exception as e:
         print(f"[✗] Error saving incident model locally for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
 
-        
-def predict_incident(user_id, latitude, longitude, hour, weekday, month, collection=locations_collection):
-    """Predict the probability of an incident using enriched features."""
+
+def load_incident_model(user_id, path=None, users_collection=users_collection):
+    """Load incident model and scaler from MongoDB or disk."""
     try:
-        from .profiling import detect_user_anomalies
+        if path is None:
+            doc = users_collection.find_one({"user_id": user_id})
+            if doc and "ml_incident_model" in doc:
+                def deserialize(encoded_str):
+                    buffer = io.BytesIO(base64.b64decode(encoded_str.encode('utf-8')))
+                    return joblib.load(buffer)
+                model = deserialize(doc["ml_incient_model"]["xgboost_model"])
+                scaler = deserialize(doc["ml_incident_model"]["scaler"])
+                print(f"[✓] Loaded incident model for {user_id} from MongoDB at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+                return model, scaler
+            user_dir = os.path.join(MODEL_DIR, user_id)
+            model_path = os.path.join(user_dir, f"{user_id}_xgboost_incident_pred.pkl")
+            scaler_path = os.path.join(user_dir, f"{user_id}_xgboost_incident_pred_scaler.pkl")
+            if os.path.exists(model_path) and os.path.exists(scaler_path):
+                model = joblib.load(model_path)
+                scaler = joblib.load(scaler_path)
+                print(f"[✓] Loaded incident model for {user_id} from disk at {os.path.abspath(user_dir)} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+                return model, scaler
+            print(f"[✗] Incident model not found for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+            return None, None
+        else:
+            model_path = os.path.join(path, f"{user_id}_xgboost_incident_pred.pkl")
+            scaler_path = os.path.join(path, f"{user_id}_xgboost_incident_pred_scaler.pkl")
+            if os.path.exists(model_path) and os.path.exists(scaler_path):
+                model = joblib.load(model_path)
+                scaler = joblib.load(scaler_path)
+                print(f"[✓] Loaded incident model for {user_id} from path {path} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+                return model, scaler
+            print(f"[✗] Incident model not found for {user_id} at {path} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+            return None, None
+    except Exception as e:
+        print(f"[✗] Error loading incident model for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
+        return None, None
+
+def predict_incident(user_id, location_anomaly, hour_anomaly, weekday_anomaly, month_anomaly):#, collection=locations_collection):
+    """Predict if an alert is an incident based on anomaly scores."""
+    try:
+        model, scaler = load_incident_model(user_id)
+        if model is None or scaler is None:
+            print(f"[WARNING] No incident model for {user_id}, using default probability at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+            return (location_anomaly + hour_anomaly + weekday_anomaly + month_anomaly) / 4
+        features = pd.DataFrame(
+            [[location_anomaly, hour_anomaly, weekday_anomaly, month_anomaly]],
+            columns=["location_anomaly", "hour_anomaly", "weekday_anomaly", "month_anomaly"]
+        )
+        features_scaled = scaler.transform(features)
+        probability = model.predict_proba(features_scaled)[0][1]
+        print(f"[✓] Predicted incident probability for {user_id}: {probability} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+        return probability
+    except Exception as e:
+        print(f"[✗] Error predicting incident for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
+        return (location_anomaly + hour_anomaly + weekday_anomaly + month_anomaly) / 4
+
+
+"""def predict_incident(user_id, latitude, longitude, hour, weekday, month)#, collection=locations_collection):
+    #Predict the probability of an incident using enriched features.
+    try:
+        
         user = users_collection.find_one({"user_id": user_id})
         if user is None or "incident_model" not in user or "incident_scaler" not in user:
             print(f"[DEBUG] No incident model found for {user_id}, returning default probability 1.0 at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
@@ -174,3 +237,4 @@ def predict_incident(user_id, latitude, longitude, hour, weekday, month, collect
     except Exception as e:
         print(f"[✗] Error predicting incident for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
         return 1.0
+"""

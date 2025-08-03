@@ -114,3 +114,52 @@ def setup_users_collection():
     except Exception as e:
         print(f"[✗] Error setting up users collection at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
         raise
+
+
+
+###############################################################################
+from pymongo import MongoClient
+from datetime import datetime, timezone
+
+def insert_location(location_data, collection):
+    """Insert or update location data in the specified collection."""
+    try:
+        collection.update_one(
+            {"user_id": location_data["user_id"], "alert.alert_id": location_data["alert"]["alert_id"]},
+            {"$set": location_data},
+            upsert=True
+        )
+        print(f"[✓] Inserted location data for user {location_data['user_id']} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+    except Exception as e:
+        print(f"[✗] Error inserting location data for user {location_data['user_id']} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
+
+def insert_geo_data(geo_data, collection):
+    """Insert or update geo data in the specified collection."""
+    try:
+        collection.update_one(
+            {"user_id": geo_data["user_id"], "alert_id": geo_data["alert_id"]},
+            {"$set": geo_data},
+            upsert=True
+        )
+        print(f"[✓] Inserted geo data for user {geo_data['user_id']} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+    except Exception as e:
+        print(f"[✗] Error inserting geo data for user {geo_data['user_id']} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
+
+def insert_user_alert(user_id, alert_id, incident_probability, is_incident, timestamp, collection):
+    """Insert or update user alert metadata in the specified collection."""
+    try:
+        collection.update_one(
+            {"user_id": user_id, "alert_id": alert_id},
+            {
+                "$set": {
+                    "alert_id": alert_id,
+                    "incident_probability": float(incident_probability),
+                    "is_incident": is_incident,
+                    "last_alert_timestamp": timestamp
+                }
+            },
+            upsert=True
+        )
+        print(f"[✓] Inserted user alert for user {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+    except Exception as e:
+        print(f"[✗] Error inserting user alert for user {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")

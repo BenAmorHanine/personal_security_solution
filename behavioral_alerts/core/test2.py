@@ -10,6 +10,7 @@ from datetime import datetime, timedelta, timezone
 from sklearn.model_selection import KFold
 from sklearn.metrics import f1_score, precision_score, recall_score, roc_auc_score, confusion_matrix
 import numpy as np
+
 """
 Use cases tested:
 User with Zero Data: Tests build_user_profile and pipeline with no location or alert data, ensuring graceful handling (skips profiling and model training).
@@ -17,11 +18,14 @@ User with Zero Alert History: Tests profiling with location data (30 points) but
 User with Sufficient Data (Real-Time): Tests full pipeline (profiling, model training, real-time predictions) with 100 locations and 50 alerts, simulating production-like conditions.
 User with Invalid Data: Tests update_location and build_user_profile with invalid inputs (e.g., latitude=999, invalid timestamp), ensuring validation prevents crashes.
 Normal User (Baseline): Tests standard pipeline with 30 locations and 20 alerts, validating typical user behavior and model performance.
+the sos and periodic check: capture.py file and api.py file
 """
 client = MongoClient(MONGO_URI)
 db = client["safety_db_hydatis"]
 locations_collection = db["locations"]
 users_collection = db["users"]
+geo_collection = db["geo_data"]
+
 
 # Function to generate synthetic data for a user
 def generate_synthetic_data(user_id, device_id, num_locations=30, num_alerts=20):
@@ -37,7 +41,8 @@ def generate_synthetic_data(user_id, device_id, num_locations=30, num_alerts=20)
         hour = random.randint(0, 23)
         weekday = random.randint(0, 6)
         month = random.randint(1, 12)
-        location_anomaly, time_anomaly = detect_user_anomalies(latitude, longitude, hour, weekday, month, user_id, locations_collection)
+        location_anomaly, hour_nomaly, week_anomaly, month_anomaly = detect_user_anomalies(latitude, longitude, hour, weekday, month, user_id, locations_collection)
+        time_anomaly = max(hour_nomaly, week_anomaly, month_anomaly)
         ai_score = predict_incident(user_id, latitude, longitude, hour, weekday, month, locations_collection)
         is_incident = location_anomaly > 0.7 or time_anomaly > 0.7
         log_alert(user_id, device_id, latitude, longitude, None, ai_score, is_incident)
@@ -232,3 +237,70 @@ try:
 
 except Exception as e:
     print(f"[✗] Error in test pipeline at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
+
+
+#####""""""""""""""#####################################
+"""from datetime import datetime, timedelta, timezone
+from pymongo import MongoClient
+from .config import MONGO_URI
+
+client = MongoClient(MONGO_URI)
+db = client["safety_db_hydatis"]
+locations = db["locations"]
+
+user_id = "ab9f1463-0856-457d-9218-828b86ad0851"
+now = datetime.now(timezone.utc)
+
+dummy_data = [{
+    "user_id": user_id,
+    "latitude": 48.85,
+    "longitude": 2.35,
+    "timestamp": now - timedelta(hours=i),
+    "alert": {
+        "incident_probability": 0.01,
+        "is_incident": False,
+        "location_anomaly": 0.0,
+        "hour_anomaly": 0.0,
+        "weekday_anomaly": 0.0,
+        "month_anomaly": 0.0,
+    }
+} for i in range(10)]  # Add 20 historical records
+
+locations.insert_many(dummy_data)
+print(f"[✓] Inserted dummy history for user {user_id}")
+dummy_data = [{
+    "user_id": user_id,
+    "latitude": 48.85,
+    "longitude": 2.35,
+    "timestamp": now - timedelta(hours=i),
+    "alert": {
+        "incident_probability": 0.7,
+        "is_incident": True,
+        "location_anomaly": 0.7,
+        "hour_anomaly": 0.8,
+        "weekday_anomaly": 0.1,
+        "month_anomaly": 0.4,
+    }
+} for i in range(10)]  # Add 20 historical records
+
+locations.insert_many(dummy_data)
+print(f"[✓] Inserted dummy history for user {user_id}")"""
+
+
+from .capture import process_capture
+print(f"############################################################[TEST] Testing SOS and periodic check for user: user_1001")
+try:
+    generate_synthetic_data("ab9f1463-0856-457d-9218-828b86ad0851", "ab9f1463-0856-457d-9218-828b86ad0851", num_locations=30, num_alerts=20)
+    latitude, longitude = random.uniform(48.7, 49.0), random.uniform(2.2, 2.5)
+    result = process_capture("ab9f1463-0856-457d-9218-828b86ad0851","ab9f1463-0856-457d-9218-828b86ad0851",latitude, longitude, sos_pressed=True
+    )
+    if result and result["is_incident"]:
+        print(f"[✓] SOS alert {result['alert_id']} logged for user user_1001 (phone_001) at {result['timestamp'].strftime('%Y-%m-%d %H:%M:%S CET')}")
+    
+    result = process_capture(
+        "ab9f1463-0856-457d-9218-828b86ad0851","ab9f1463-0856-457d-9218-828b86ad0851", latitude, longitude, sos_pressed=False
+    )
+    if result:
+        print(f"[✓] Periodic check for user user_1001 (phone_001) at {result['timestamp'].strftime('%Y-%m-%d %H:%M:%S CET')}: Incident Prob={result['incident_probability']:.2f}")
+except Exception as e:
+    print(f"[✗] Error in SOS/periodic check test for user user_1001: {e}")
