@@ -1,10 +1,9 @@
 from pymongo import MongoClient
 from datetime import datetime, timedelta, timezone
 import numpy as np
-import os
-import joblib
-import io
-import base64
+import os, joblib, base64, io, pickle
+from sklearn.externals import joblib
+
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import KFold
 from sklearn.metrics import f1_score
@@ -89,18 +88,14 @@ def save_threshold_model(user_id, model, scaler, threshold, save_to_db=False):
 
     if save_to_db:
         try:
-            def serialize(obj):
-                buffer = io.BytesIO()
-                joblib.dump(obj, buffer)
-                buffer.seek(0)
-                return base64.b64encode(buffer.read()).decode('utf-8')
-            model_blob = serialize(model)
-            scaler_blob = serialize(scaler)
+            
+            #model_blob = serialize(model)
+            #scaler_blob = serialize(scaler)
             users_collection.update_one(
                 {"user_id": user_id},
                 {"$set": {
-                    "threshold_model": model_blob,
-                    "threshold_scaler": scaler_blob,
+                    "threshold_model": pickle.dumps(model),
+                    "threshold_scaler": pickle.dumps(scaler),
                     "threshold_value": threshold,
                     "threshold_updated_at": datetime.now(timezone.utc)
                 }},
@@ -111,22 +106,8 @@ def save_threshold_model(user_id, model, scaler, threshold, save_to_db=False):
             print(f"[✗] Failed to save threshold model to DB for {user_id}: {e}")
 
 # --- 5. Load Model (DB → fallback to local → fallback to train) ---
-def load_threshold_model(user_id, fallback_to_train=True):
-    # 1. Try MongoDB
-    user = users_collection.find_one({"user_id": user_id})
-    if user and "threshold_model" in user and "threshold_scaler" in user:
-        try:
-            def deserialize(encoded_str):
-                buffer = io.BytesIO(base64.b64decode(encoded_str.encode('utf-8')))
-                return joblib.load(buffer)
-            model = deserialize(user["threshold_model"])
-            scaler = deserialize(user["threshold_scaler"])
-            print(f"[✓] Loaded threshold model from MongoDB for {user_id}")
-            return model, scaler
-        except Exception as e:
-            print(f"[✗] Failed to load threshold model from DB for {user_id}: {e}")
 
-    # 2. Try local files
+def load_threshold_model(user_id, fallback_to_train=True):
     model_path = os.path.join(MODEL_DIR, user_id, "threshold_model.pkl")
     scaler_path = os.path.join(MODEL_DIR, user_id, "threshold_scaler.pkl")
     if os.path.exists(model_path) and os.path.exists(scaler_path):
@@ -136,9 +117,16 @@ def load_threshold_model(user_id, fallback_to_train=True):
             print(f"[✓] Loaded threshold model from local for {user_id} at {os.path.abspath(model_path)}")
             return model, scaler
         except Exception as e:
-            print(f"[✗] Failed to load local threshold model for {user_id}: {e}")
-
-    # 3. Optional: Train from scratch
+            print(f"[✗] Failed to load local threshold model , trying from DB, for {user_id}: {e}")
+    user = users_collection.find_one({"user_id": user_id})
+    if user and "threshold_model" in user and "threshold_scaler" in user:
+        try:
+            model = pickle.loads(user["threshold_model"])
+            scaler = pickle.loads(user["threshold_scaler"])
+            print(f"[✓] Loaded threshold model from MongoDB for {user_id}")
+            return model, scaler
+        except Exception as e:
+            print(f"[✗] Failed to load threshold model from DB for {user_id}: {e}")
     if fallback_to_train:
         print(f"[INFO] No threshold model found for {user_id}. Training new one...")
         features, labels = prepare_threshold_data(user_id)
@@ -147,17 +135,32 @@ def load_threshold_model(user_id, fallback_to_train=True):
         model, scaler = train_threshold_model(features, labels)
         threshold = adjust_threshold(user_id)
         save_threshold_model(user_id, model, scaler, threshold, save_to_db=True)
+        print(f"[info] Retrained model and saved for user {user_id}")
         return model, scaler
-
+    print(f"[✗] Failed to load and retrain threshold model for user {user_id}")
     return None, None
+
+
+
 
 # --- 6. Predict Using Threshold Model ---
 def predict_threshold(model, scaler, features):
+    """
+    features_array = np.array(features).reshape(1, -1)
+        features_scaled = scaler.transform(features_array)
+    """
     features_scaled = scaler.transform([features])
     return model.predict_proba(features_scaled)[0][1]
 
+def serialize(obj):
+    buffer = io.BytesIO()
+    joblib.dump(obj, buffer)
+    buffer.seek(0)
+    return base64.b64encode(buffer.read()).decode('utf-8')
 
-"""from pymongo import MongoClient
+"""
+PREVIOUS VERSION:
+from pymongo import MongoClient
 from datetime import datetime, timedelta, timezone
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
@@ -229,5 +232,49 @@ def adjust_threshold(user_id, collection=locations_collection):
         return optimal_threshold
     except Exception as e:
         print(f"[✗] Error adjusting threshold for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
-        return 0.5"""
+        return 0.5
+        
+        
+def load_threshold_model(user_id, fallback_to_train=True):
+    # 1. Try MongoDB
+    user = users_collection.find_one({"user_id": user_id})
+    if user and "threshold_model" in user and "threshold_scaler" in user:
+        try:
+            def deserialize(encoded_str):
+                buffer = io.BytesIO(base64.b64decode(encoded_str.encode('utf-8')))
+                return joblib.load(buffer)
+            model = deserialize(user["threshold_model"])
+            scaler = deserialize(user["threshold_scaler"])
+            print(f"[✓] Loaded threshold model from MongoDB for {user_id}")
+            return model, scaler
+        except Exception as e:
+            print(f"[✗] Failed to load threshold model from DB for {user_id}: {e}")
+
+    # 2. Try local files
+    model_path = os.path.join(MODEL_DIR, user_id, "threshold_model.pkl")
+    scaler_path = os.path.join(MODEL_DIR, user_id, "threshold_scaler.pkl")
+    if os.path.exists(model_path) and os.path.exists(scaler_path):
+        try:
+            model = joblib.load(model_path)
+            scaler = joblib.load(scaler_path)
+            print(f"[✓] Loaded threshold model from local for {user_id} at {os.path.abspath(model_path)}")
+            return model, scaler
+        except Exception as e:
+            print(f"[✗] Failed to load local threshold model for {user_id}: {e}")
+
+    # 3. Optional: Train from scratch
+    if fallback_to_train:
+        print(f"[INFO] No threshold model found for {user_id}. Training new one...")
+        features, labels = prepare_threshold_data(user_id)
+        if features is None:
+            return None, None
+        model, scaler = train_threshold_model(features, labels)
+        threshold = adjust_threshold(user_id)
+        save_threshold_model(user_id, model, scaler, threshold, save_to_db=True)
+        return model, scaler
+
+    return None, None
+        
+        
+        """
 

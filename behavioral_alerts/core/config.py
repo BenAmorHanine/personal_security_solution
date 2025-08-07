@@ -31,7 +31,7 @@ DEBUG_MODE = True
 
 
 # Twilio Configuration
-#to be updated later
+#to be updated andused later
 TWILIO_SID = "ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 TWILIO_AUTH_TOKEN = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 TWILIO_PHONE = "+1234567890"

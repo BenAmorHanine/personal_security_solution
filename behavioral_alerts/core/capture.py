@@ -2,7 +2,7 @@ from pymongo import MongoClient
 from datetime import datetime, timezone, timedelta
 from .profiling import detect_user_anomalies, build_user_profile
 from .incident_prediction import predict_incident
-from .threshold_adjustment import predict_threshold
+from .threshold_adjustment import predict_threshold, load_threshold_model
 from .utils import insert_location, insert_geo_data, insert_user_alert
 import uuid
 from .config import MONGO_URI, DEFAULT_PROB_THRESHOLD
@@ -63,7 +63,13 @@ def process_capture(user_id: str, device_id: str, latitude: float, longitude: fl
         incident_probability = predict_incident(user_id, location_anomaly, hour_anomaly, weekday_anomaly, month_anomaly)#, collection=locations_collection)
         
         # Predict threshold
-        threshold = predict_threshold(user_id, location_anomaly, hour_anomaly, weekday_anomaly, month_anomaly, timestamp.hour) 
+        features = [location_anomaly, hour_anomaly, weekday_anomaly, month_anomaly, timestamp.hour]
+        threshold_model, scaler = load_threshold_model(user_id)
+        if threshold_model and scaler:
+            threshold = predict_threshold(threshold_model, scaler, features)
+        else:
+            threshold = DEFAULT_PROB_THRESHOLD
+            print(f"[DEBUG] Using default threshold {threshold} for user {user_id} at {timestamp.strftime('%Y-%m-%d %H:%M:%S CET')}")
 
         # Determine if incident
         is_incident = sos_pressed or (incident_probability >= threshold)
@@ -87,15 +93,7 @@ def process_capture(user_id: str, device_id: str, latitude: float, longitude: fl
         }
         insert_location(location_data, collection=locations_collection)
 
-        # Store geo data
-        geo_data = {
-            "user_id": user_id,
-            "alert_id": alert_id,
-            "latitude": latitude,
-            "longitude": longitude,
-            "timestamp": timestamp,
-        }
-        insert_geo_data(geo_data, collection=geo_collection)
+       #we used to store geo data in a separate collection, but now we store it in the same collection
 
         # Store user alert metadata
         insert_user_alert(user_id, alert_id, incident_probability, is_incident, timestamp, collection=users_collection)
@@ -253,3 +251,14 @@ if __name__ == "__main__":
 """
 
 
+""" 
+       # Store geo data
+        geo_data = {
+            "user_id": user_id,
+            "alert_id": alert_id,
+            "latitude": latitude,
+            "longitude": longitude,
+            "timestamp": timestamp,
+        }
+        insert_geo_data(geo_data, collection=geo_collection)
+        """

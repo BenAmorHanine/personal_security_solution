@@ -53,7 +53,7 @@ def preprocess_data(user_id, collection=locations_collection):
         return df, X_scaled, hour_freq, weekday_freq, month_freq, scaler
     except Exception as e:
         print(f"[✗] Error preprocessing data for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
-        return None, None, None, None, None
+        return None, None, None, None, None, None
 
 
 
