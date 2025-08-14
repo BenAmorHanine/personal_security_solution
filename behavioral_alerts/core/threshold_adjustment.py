@@ -2,7 +2,7 @@ from pymongo import MongoClient
 from datetime import datetime, timedelta, timezone
 import numpy as np
 import os, joblib, base64, io, pickle
-from sklearn.externals import joblib
+import joblib
 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import KFold

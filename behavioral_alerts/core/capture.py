@@ -60,17 +60,16 @@ def process_capture(user_id: str, device_id: str, latitude: float, longitude: fl
         location_anomaly, hour_anomaly, weekday_anomaly, month_anomaly = anomalies
 
         # Predict incident probability
-        incident_probability = predict_incident(user_id, location_anomaly, hour_anomaly, weekday_anomaly, month_anomaly)#, collection=locations_collection)
-        
-        # Predict threshold
-        features = [location_anomaly, hour_anomaly, weekday_anomaly, month_anomaly, timestamp.hour]
+        incident_probability = predict_incident(user_id, location_anomaly, hour_anomaly, weekday_anomaly, month_anomaly)
+
+        # Predict threshold (use only 4 features to match training)
+        features = [location_anomaly, hour_anomaly, weekday_anomaly, month_anomaly]  # Removed timestamp.hour
         threshold_model, scaler = load_threshold_model(user_id)
         if threshold_model and scaler:
             threshold = predict_threshold(threshold_model, scaler, features)
         else:
             threshold = DEFAULT_PROB_THRESHOLD
             print(f"[DEBUG] Using default threshold {threshold} for user {user_id} at {timestamp.strftime('%Y-%m-%d %H:%M:%S CET')}")
-
         # Determine if incident
         is_incident = sos_pressed or (incident_probability >= threshold)
         alert_id = str(uuid.uuid4())

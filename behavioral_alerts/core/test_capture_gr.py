@@ -3,15 +3,17 @@ from datetime import datetime, timedelta, timezone
 from .db_functions import create_user, register_device, update_location, log_alert
 from .profiling import build_user_profile, detect_user_anomalies
 from .incident_prediction import prepare_incident_data, train_incident_model, save_incident_model, predict_incident
+from .threshold_adjustment import adjust_threshold, train_threshold_model, load_threshold_model,prepare_threshold_data, predict_threshold,save_threshold_model
+from .incident_classifier import load_incident_classifier, save_incident_classifier, optimize_incident_threshold
 from pymongo import MongoClient
-from .config import MONGO_URI
+from .config import MONGO_URI, DEFAULT_PROB_THRESHOLD
 
 client = MongoClient(MONGO_URI)
 db = client["safety_db_hydatis"]
 users_collection = db["users"]
 locations_collection = db["locations"]
 
-def process_capture(user_id, device_id, latitude, longitude, sos_pressed=False):
+def process_capture_original(user_id, device_id, latitude, longitude, sos_pressed=False):
     """Simulate processing a capture event."""
     # Update location
     update_location(user_id, device_id, latitude, longitude)
@@ -55,6 +57,101 @@ def process_capture(user_id, device_id, latitude, longitude, sos_pressed=False):
     
     return {"incident_probability": incident_probability, "is_incident": is_incident}
 
+
+def process_capture_updated(user_id, device_id, latitude, longitude, sos_pressed=False):
+    """Simulate processing a capture event."""
+    # Update location
+    update_location(user_id, device_id, latitude, longitude)
+    
+    # Get current time features
+    now = datetime.now(timezone.utc)
+    hour = now.hour
+    weekday = now.weekday()
+    month = now.month
+    
+    # Detect anomalies
+    location_anomaly, hour_anomaly, weekday_anomaly, month_anomaly = detect_user_anomalies(
+        latitude, longitude, hour, weekday, month, user_id
+    )
+    
+    # Predict incident probability
+    incident_probability = predict_threshold(
+        user_id, location_anomaly, hour_anomaly, weekday_anomaly, month_anomaly
+    ) or DEFAULT_PROB_THRESHOLD
+    
+
+    
+    # Determine if it's an incident
+    is_incident = sos_pressed or (incident_probability > optimal_threshold)
+    
+    # Log the alert
+    log_alert(
+        user_id=user_id,
+        device_id=device_id,
+        latitude=latitude,
+        longitude=longitude,
+        incident_probability=incident_probability,
+        is_incident=is_incident,
+        location_anomaly=location_anomaly,
+        hour_anomaly=hour_anomaly,
+        weekday_anomaly=weekday_anomaly,
+        month_anomaly=month_anomaly
+    )
+    
+    return {"incident_probability": incident_probability, "is_incident": is_incident}
+
+def process_capture(user_id, device_id, latitude, longitude, sos_pressed=False, use_threshold_model=True):
+    """Simulate processing a capture event."""
+    # Update location
+    update_location(user_id, device_id, latitude, longitude)
+    
+    # Get current time features
+    now = datetime.now(timezone.utc)
+    hour = now.hour
+    weekday = now.weekday()
+    month = now.month
+    
+    # Detect anomalies
+    location_anomaly, hour_anomaly, weekday_anomaly, month_anomaly = detect_user_anomalies(
+        latitude, longitude, hour, weekday, month, user_id
+    )
+    
+    # Load threshold or model
+    user_doc = users_collection.find_one({"user_id": user_id})
+    if use_threshold_model:
+        model, scaler = load_threshold_model(user_id, fallback_to_train=True)
+        if model is None or scaler is None:
+            print(f"[✗] Could not load or train threshold model for user {user_id}. Using default threshold.")
+            optimal_threshold = DEFAULT_PROB_THRESHOLD  # e.g., 0.5 from config
+            incident_probability = 0.0
+        else:
+            features = [location_anomaly, hour_anomaly, weekday_anomaly, month_anomaly]
+            incident_probability = predict_threshold(model, scaler, features)
+            optimal_threshold = user_doc.get("threshold_value", DEFAULT_PROB_THRESHOLD)
+    else:
+        incident_probability = predict_incident(
+            user_id, location_anomaly, hour_anomaly, weekday_anomaly, month_anomaly
+        )
+        optimal_threshold = user_doc.get("optimal_threshold", DEFAULT_PROB_THRESHOLD)
+    
+    # Determine if it's an incident
+    is_incident = sos_pressed or (incident_probability > optimal_threshold)
+    
+    # Log the alert
+    log_alert(
+        user_id=user_id,
+        device_id=device_id,
+        latitude=latitude,
+        longitude=longitude,
+        incident_probability=incident_probability,
+        is_incident=is_incident,
+        location_anomaly=location_anomaly,
+        hour_anomaly=hour_anomaly,
+        weekday_anomaly=weekday_anomaly,
+        month_anomaly=month_anomaly
+    )
+    
+    return {"incident_probability": incident_probability, "is_incident": is_incident}
 # Step 1: Create a fake user
 user_id = create_user(
     name="Test User",
