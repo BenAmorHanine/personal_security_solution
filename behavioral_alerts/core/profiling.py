@@ -64,6 +64,8 @@ def preprocess_data_origin(user_id, collection=locations_collection):
         hour_freq = {str(k): v for k, v in df["hour"].value_counts(normalize=True).to_dict().items()}
         weekday_freq = {str(k): v for k, v in df["weekday"].value_counts(normalize=True).to_dict().items()}
         month_freq = {str(k): v for k, v in df["month"].value_counts(normalize=True).to_dict().items()}
+        # Fill missing months with 0
+        month_freq = {str(m): month_freq.get(str(m), 0.0) for m in range(1, 13)}
 
         logger.debug(f"Preprocessed {len(X)} records for user {user_id}, coords range: lat={df['latitude'].min():.2f}-{df['latitude'].max():.2f}, lon={df['longitude'].min():.2f}-{df['longitude'].max():.2f}")
         return df, X_scaled, hour_freq, weekday_freq, month_freq, scaler

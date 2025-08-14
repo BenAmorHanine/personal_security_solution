@@ -215,26 +215,27 @@ def test_process_capture_anomalous_no_sos(setup_user_and_device):
 
 
 
-
-"""def test_profile_rebuild_outdated(setup_user_and_device):
-    #Test profile rebuilding for outdated user profile
+def test_process_capture_anomalous_sos(setup_user_and_device):
+    """Test anomalous location with SOS press."""
     user_id, device_id = setup_user_and_device
-    # Set last_updated to >24 hours ago
-    users_collection.update_one(
-        {"user_id": user_id},
-        {"$set": {"last_updated": datetime.now(timezone.utc) - timedelta(hours=25)}}
-    )
-    latitude = 40.0 + random.uniform(-0.01, 0.01)
-    longitude = -74.0 + random.uniform(-0.01, 0.01)
-    result = process_capture(user_id, device_id, latitude, longitude, sos_pressed=False)
-    logger.info(f"Outdated profile test: {result}")
-    user_doc = users_collection.find_one({"user_id": user_id})
-    assert user_doc["last_updated"] > datetime.now(timezone.utc) - timedelta(minutes=5)
+    latitude = 40.0 + random.uniform(-1.0, 1.0)
+    longitude = -74.0 + random.uniform(-1.0, 1.0)
+    result = process_capture(user_id, device_id, latitude, longitude, sos_pressed=True)
+    logger.info(f"Anomalous location, sos_pressed=True: {result}")
     assert 0 <= result['incident_probability'] <= 1
-    assert not result['is_incident']
-    assert result['location_anomaly'] <= 0.2"""
-
+    assert result['location_anomaly'] > 0.9 #< 0.9
+    assert result['is_incident']
+    assert 0.2 <= result['threshold'] <= 1.0
     
+def test_rebuild_user_profile(setup_user_and_device):
+    """Test rebuilding user profile."""
+    user_id, device_id = setup_user_and_device
+    centroids, hour_freq, weekday_freq, month_freq, scaler = build_user_profile(user_id)
+    logger.info(f"Rebuilt user profile with {len(centroids)} clusters.")
+    assert len(centroids) > 0
+    assert np.array(list(hour_freq.values())).shape[0] == 24
+    assert np.array(list(weekday_freq.values())).shape[0] == 7
+    assert np.array(list(month_freq.values())).shape[0] == 12
 if __name__ == "__main__":
     pytest.main([__file__])
     logger.info("DONE.")
