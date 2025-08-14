@@ -6,6 +6,7 @@ import numpy as np
 from sklearn.cluster import OPTICS
 from sklearn.preprocessing import StandardScaler
 from .config import MONGO_URI
+from geopy.distance import geodesic
 
 import logging
 logger = logging.getLogger(__name__)
@@ -310,7 +311,7 @@ def build_user_profile_original(user_id, collection=locations_collection, users_
         print(f"[✗] Error building profile for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
         return None, None, None, None, None
 
-def detect_user_anomalies(latitude, longitude, hour, weekday, month, user_id, collection=locations_collection):
+def detect_user_anomalies_cleanesttttt(latitude, longitude, hour, weekday, month, user_id, collection=locations_collection):
     """Detect anomalies in user location and time (degrees-only pipeline)."""
     try:
         centroids, hour_freq, weekday_freq, month_freq, scaler = build_user_profile(user_id, collection)
@@ -348,6 +349,51 @@ def detect_user_anomalies(latitude, longitude, hour, weekday, month, user_id, co
         print(f"[✗] Error detecting anomalies for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
         return (1.0, 1.0, 1.0, 1.0)
 
+def detect_user_anomalies(latitude, longitude, hour, weekday, month, user_id, collection=locations_collection):
+    """Detect anomalies in user location and time."""
+    try:
+        centroids, hour_freq, weekday_freq, month_freq, scaler = build_user_profile(user_id, collection)
+        if centroids is None:
+            print(f"[DEBUG] No behavior profile for user {user_id}, deferring profile creation at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+            return 1.0, 1.0, 1.0, 1.0
+        
+        input_data = np.array([[latitude, longitude, hour, weekday, month]])
+        input_scaled = scaler.transform(input_data)
+        
+        min_distance_km = float("inf")
+        print(f"[DEBUG] Number of centroids: {len(centroids)}")
+        for centroid in centroids:
+            # Keep centroid in scaled space for consistency
+            centroid_scaled = scaler.transform([[centroid["center"][0], centroid["center"][1], centroid["hour_mean"], centroid["weekday_mean"], centroid["month_mean"]]])
+            
+            # Invert scaling to get raw lat/lon back
+            raw_point = scaler.inverse_transform(input_scaled)[0][:2]
+            raw_centroid = scaler.inverse_transform(centroid_scaled)[0][:2]
+            
+            # Compute geodesic distance in kilometers
+            distance_km = geodesic((raw_point[0], raw_point[1]),
+                                   (raw_centroid[0], raw_centroid[1])).kilometers
+            
+            print(f"[DEBUG] Distance from centroid {centroid['cluster_id']}: {distance_km:.2f} km")
+            min_distance_km = min(min_distance_km, distance_km)
+        
+        # Now threshold is in real kilometers
+        location_anomaly = min(min_distance_km / 2.0, 1.0)  # 2.0 km threshold
+        
+        hour_anomaly = 1.0 - hour_freq.get(str(hour), 0)
+        weekday_anomaly = 1.0 - weekday_freq.get(str(weekday), 0)
+        month_anomaly = 1.0 - month_freq.get(str(month), 0)
+        
+        print(f"[✓] Detected anomalies for user {user_id}: location={location_anomaly}, hour={hour_anomaly}, weekday={weekday_anomaly}, month={month_anomaly} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+        logger.debug(f"Centroids length: {len(centroids)}")
+        logger.debug(f"Input coords: {input_data}, Input scaled: {input_scaled}")
+        logger.debug(f"Min distance (km): {min_distance_km}, Location anomaly: {location_anomaly}")
+        
+        return location_anomaly, hour_anomaly, weekday_anomaly, month_anomaly
+    
+    except Exception as e:
+        print(f"[✗] Error detecting anomalies for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
+        return (1.0, 1.0, 1.0, 1.0)
 
 
 def detect_user_anomalies_before(latitude, longitude, hour, weekday, month, user_id, collection=locations_collection):
