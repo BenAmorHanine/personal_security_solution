@@ -9,8 +9,8 @@ from sklearn.model_selection import KFold
 from sklearn.metrics import f1_score
 import pickle
 import os
-from .config import MONGO_URI, MODEL_DIR
-from .profiling import detect_user_anomalies #we will call it in the capture file and pass the results as parameters
+from config import MONGO_URI, MODEL_DIR
+from profiling import detect_user_anomalies #we will call it in the capture file and pass the results as parameters
 import io
 import base64
 import joblib

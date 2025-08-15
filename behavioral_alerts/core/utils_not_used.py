@@ -2,31 +2,15 @@ from pymongo import MongoClient
 from datetime import datetime
 from .config import MONGO_URI, DB_NAME
 import pandas as pd
+import base64
+import joblib
+import io
 
 # behavioral_alerts/core/data_preprocessing.py
 
 import pandas as pd
 from datetime import datetime
 
-"""def preprocess_user_data(user_id, collection, retrain_check_func, profile_builder):
-    df = pd.DataFrame(list(collection.find({"user_id": user_id})))
-    
-    if df.empty or len(df) < 10:
-        return None
-    
-    df["timestamp"] = pd.to_datetime(df["timestamp"])
-    df["hour"] = df["timestamp"].dt.hour
-    df["weekday"] = df["timestamp"].dt.dayofweek
-    df["month"] = df["timestamp"].dt.month
-    df["time_diff"] = df["timestamp"].diff().dt.total_seconds().fillna(0) / 3600
-
-    # Use injected retraining check and profile builder
-    if 'cluster' not in df.columns or retrain_check_func(collection, user_id, None):
-        df, _, _ = profile_builder(user_id, collection, save_to_mongo=True)
-    
-    return df
-#WHEN CALLING: preprocess_user_data(user_id, collection, should_retrain, build_user_profile)
-"""
 
 def preprocess_user_data(user_id, collection):
     df = pd.DataFrame(list(collection.find({"user_id": user_id})))
@@ -40,12 +24,6 @@ def preprocess_user_data(user_id, collection):
     df["time_diff"] = df["timestamp"].diff().dt.total_seconds().fillna(0) / 3600
 
     return df
-
-
-# model_utils.py
-import base64
-import joblib
-import io
 
 def serialize_model(obj):
     buffer = io.BytesIO()

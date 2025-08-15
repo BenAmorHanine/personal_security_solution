@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from datetime import datetime, timezone
 from pymongo import MongoClient
-from .capture import process_capture
+from capture import process_capture
 from .config import MONGO_URI
 
 app = FastAPI()

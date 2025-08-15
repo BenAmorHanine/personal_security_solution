@@ -12,7 +12,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import KFold
 from sklearn.metrics import f1_score
 from sklearn.preprocessing import StandardScaler
-from .config import MONGO_URI, MODEL_DIR, DEFAULT_PROB_THRESHOLD
+from config import MONGO_URI, MODEL_DIR, DEFAULT_PROB_THRESHOLD
 
 client = MongoClient(MONGO_URI)
 db = client["safety_db_hydatis"]
@@ -102,11 +102,11 @@ def optimize_incident_threshold(user_id):
 # --- 4. Save Model Locally + Optionally in MongoDB ---
 def save_incident_classifier(user_id, model, scaler, threshold, save_to_db=False):
     os.makedirs(os.path.join(MODEL_DIR, user_id), exist_ok=True)
-    model_path = os.path.join(MODEL_DIR, user_id, "threshold_model.pkl")
-    scaler_path = os.path.join(MODEL_DIR, user_id, "threshold_scaler.pkl")
+    model_path = os.path.join(MODEL_DIR, user_id, "classifer_model.pkl")
+    scaler_path = os.path.join(MODEL_DIR, user_id, "classifier_scaler.pkl")
     joblib.dump(model, model_path)
     joblib.dump(scaler, scaler_path)
-    print(f"[✓] Saved threshold model locally for user {user_id} at {os.path.abspath(model_path)} and scaler at {os.path.abspath(scaler_path)}")
+    print(f"[✓] Saved incident classifier model locally for user {user_id} at {os.path.abspath(model_path)} and scaler at {os.path.abspath(scaler_path)}")
 
     if save_to_db:
         try:

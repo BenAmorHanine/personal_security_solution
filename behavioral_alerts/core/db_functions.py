@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime, timezone
 from pymongo import MongoClient
-from .config import MONGO_URI, LOG_DIR
+from config import MONGO_URI, LOG_DIR
 import os, json
 import numpy as np
 
@@ -88,14 +88,6 @@ def update_location(user_id, device_id, latitude, longitude, timestamp=None):
     except Exception as e:
         print(f"[✗] Error updating location for user {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
         return None
-import uuid
-from datetime import datetime, timezone
-from pymongo import MongoClient
-from .config import MONGO_URI
-
-client = MongoClient(MONGO_URI)
-db = client["safety_db_hydatis"]
-locations_collection = db["locations"]
 
 def log_alert(
     user_id: str,
@@ -169,36 +161,3 @@ def log_alert(
         print(f"[✗] Error logging alert for user {user_id}: {e}")
         return None
 
-
-
-"""def log_alert(user_id, device_id, latitude, longitude, timestamp=None, ai_score=None, is_incident=None):
-    #Log an alert for a user and return the alert_id.
-    try:
-        latitude = float(latitude)
-        longitude = float(longitude)
-        # We no longer generate a separate location_id; alert_id serves as the document key
-
-        alert_id = str(uuid.uuid4())
-        if timestamp is None:
-            timestamp = datetime.now(timezone.utc)
-        alert = {
-            "location_id": alert_id,
-            "user_id": user_id,
-            "device_id": device_id,
-            "location": {
-                "type": "Point",
-                "coordinates": [longitude, latitude]
-            },
-            "timestamp": timestamp,
-            "alert": {
-                "alert_id": alert_id,
-                "ai_score": ai_score,
-                "is_incident": is_incident
-            }
-        }
-        locations_collection.insert_one(alert)
-        print(f"[✓] Logged alert {alert_id} for user {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-        return alert_id
-    except Exception as e:
-        print(f"[✗] Error logging alert for user {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
-        return None"""

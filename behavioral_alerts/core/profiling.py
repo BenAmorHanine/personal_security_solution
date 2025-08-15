@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 from sklearn.cluster import OPTICS
 from sklearn.preprocessing import StandardScaler
-from .config import MONGO_URI
+from config import MONGO_URI
 from geopy.distance import geodesic
 
 import logging
