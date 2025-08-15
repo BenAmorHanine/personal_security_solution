@@ -29,10 +29,10 @@ def prepare_incident_data(user_id, collection=locations_collection):
             "timestamp": {"$gte": three_month_ago},
             "alert.is_incident": {"$exists": True}
         }))
-        print(f"[DEBUG] Preprocessed {len(alerts)} alerts for user {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+        #print(f"[DEBUG] Preprocessed {len(alerts)} alerts for user {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
 
         if len(alerts) < 20:
-            print(f"[DEBUG] Insufficient alerts for user {user_id}: {len(alerts)} records, skipping model training at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+            #print(f"[DEBUG] Insufficient alerts for user {user_id}: {len(alerts)} records, skipping model training at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
             return None, None
 
         anomaly_features = []
@@ -46,7 +46,7 @@ def prepare_incident_data(user_id, collection=locations_collection):
             anomaly_features.append([location_anomaly, hour_anomaly, weekday_anomaly, month_anomaly])
             incident_labels.append(1 if is_incident else 0)
 
-        print(f"[DEBUG] Incident labels: {incident_labels}")
+        #print(f"[DEBUG] Incident labels: {incident_labels}")
         return np.array(anomaly_features), np.array(incident_labels)
     except Exception as e:
         print(f"[✗] Error preparing incident data for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
@@ -83,7 +83,7 @@ def train_incident_model(anomaly_features, incident_labels):
             val_labels.extend(y_val)
 
         if not val_probs:
-            print(f"[DEBUG] No valid folds for threshold optimization at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+            #print(f"[DEBUG] No valid folds for threshold optimization at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
             return None, None, None
         
         # Find optimal threshold using F1-score
@@ -106,67 +106,7 @@ def train_incident_model(anomaly_features, incident_labels):
         print(f"[✗] Error training incident model at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
         return None, None, None
 
-"""def save_incident_model(
-    user_id,
-    model,
-    scaler,
-    threshold,
-    name="Test User",
-    email=None,
-    phone="+1234567890",
-    emergency_contact_phone="+0987654321",
-    collection=users_collection,
-    save_to_db=False
-):
-    #Save the incident model, scaler, and threshold to local storage (mandatory) and optionally to MongoDB.
-    try:
-        if model is None or scaler is None or threshold is None:
-            print(f"[DEBUG] No incident model to save for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-            return
 
-        # Mandatory: Save to local storage
-        os.makedirs(os.path.join(MODEL_DIR, user_id), exist_ok=True)
-        model_path = os.path.join(MODEL_DIR, user_id, f"{user_id}_incident_model.pkl")
-        scaler_path = os.path.join(MODEL_DIR, user_id, f"{user_id}_incident_scaler.pkl")
-
-        with open(model_path, "wb") as f:
-            pickle.dump(model, f)
-        with open(scaler_path, "wb") as f:
-            pickle.dump(scaler, f)
-
-        print(f"[✓] Saved incident model locally for {user_id} at {model_path} and scaler at {scaler_path} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-
-        # Optional: Save to MongoDB
-        if save_to_db:
-            ""if email is None:
-                email = f"test_{user_id}@example.com"
-                ""
-
-            try:
-                collection.update_one(
-                    {"user_id": user_id},
-                    {"$set": {
-                        ""
-                        "user_id": user_id,
-                        "name": name,
-                        "email": email,
-                        "phone": phone,
-                        "emergency_contact_phone": emergency_contact_phone,
-                        ""
-                        "incident_saved_at": datetime.now(timezone.utc),
-                        "incident_model": pickle.dumps(model),
-                        "incident_scaler": pickle.dumps(scaler),
-                        "optimal_threshold": threshold
-                    }},
-                    upsert=True
-                )
-                print(f"[✓] Saved incident model and threshold for {user_id} to MongoDB at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-            except Exception as e:
-                print(f"[✗] Failed to save incident model to MongoDB for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
-
-    except Exception as e:
-        print(f"[✗] Error saving incident model locally for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
-"""
 def save_incident_model(
     user_id,
     model,
@@ -201,46 +141,12 @@ def save_incident_model(
                     }},
                     upsert=True
                 )
-                print(f"[✓] Saved incident model and threshold for {user_id} to MongoDB at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
+                #print(f"[✓] Saved incident model and threshold for {user_id} to MongoDB at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
             except Exception as e:
                 print(f"[✗] Failed to save incident model to MongoDB for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
     except Exception as e:
         print(f"[✗] Error saving incident model locally for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
 
-"""def load_incident_model(user_id, path=None, users_collection=users_collection):
-    #Load incident model and scaler from MongoDB or disk.
-    try:
-        if path is None:
-            doc = users_collection.find_one({"user_id": user_id})
-            if doc and "incident_model" in doc and "incident_scaler" in doc:
-                
-                model = deserialize(doc["incident_model"]["xgboost_model"])
-                scaler = deserialize(doc["incident_model"]["scaler"])
-                print(f"[✓] Loaded incident model for {user_id} from MongoDB at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-                return model, scaler
-            user_dir = os.path.join(MODEL_DIR, user_id)
-            model_path = os.path.join(user_dir, f"{user_id}_xgboost_incident_pred.pkl")
-            scaler_path = os.path.join(user_dir, f"{user_id}_xgboost_incident_pred_scaler.pkl")
-            if os.path.exists(model_path) and os.path.exists(scaler_path):
-                model = joblib.load(model_path)
-                scaler = joblib.load(scaler_path)
-                print(f"[✓] Loaded incident model for {user_id} from disk at {os.path.abspath(user_dir)} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-                return model, scaler
-            print(f"[✗] Incident model not found for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-            return None, None
-        else:
-            model_path = os.path.join(path, f"{user_id}_xgboost_incident_pred.pkl")
-            scaler_path = os.path.join(path, f"{user_id}_xgboost_incident_pred_scaler.pkl")
-            if os.path.exists(model_path) and os.path.exists(scaler_path):
-                model = joblib.load(model_path)
-                scaler = joblib.load(scaler_path)
-                print(f"[✓] Loaded incident model for {user_id} from path {path} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-                return model, scaler
-            print(f"[✗] Incident model not found for {user_id} at {path} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-            return None, None
-    except Exception as e:
-        print(f"[✗] Error loading incident model for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
-        return None, None"""
 
 def load_incident_model(user_id, path=None, users_collection=users_collection):
     try:
@@ -308,27 +214,3 @@ def deserialize(encoded_str):
                     buffer = io.BytesIO(base64.b64decode(encoded_str.encode('utf-8')))
                     return joblib.load(buffer)
 
-"""def predict_incident(user_id, latitude, longitude, hour, weekday, month)#, collection=locations_collection):
-    #Predict the probability of an incident using enriched features.
-    try:
-        
-        user = users_collection.find_one({"user_id": user_id})
-        if user is None or "incident_model" not in user or "incident_scaler" not in user:
-            print(f"[DEBUG] No incident model found for {user_id}, returning default probability 1.0 at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-            return 1.0
-
-        model = pickle.loads(user["incident_model"])
-        scaler = pickle.loads(user["incident_scaler"])
-
-        # Assuming detect_user_anomalies returns [location_anomaly, hour_anomaly, weekday_anomaly, month_anomaly]
-        anomalies = detect_user_anomalies(latitude, longitude, hour, weekday, month, user_id, collection)
-        anomaly_features = np.array([anomalies])
-        scaled_anomaly_features = scaler.transform(anomaly_features)
-        incident_probability = model.predict_proba(scaled_anomaly_features)[0][1]
-
-        print(f"[✓] Predicted incident probability for {user_id}: {incident_probability:.2f} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}")
-        return incident_probability
-    except Exception as e:
-        print(f"[✗] Error predicting incident for {user_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S CET')}: {e}")
-        return 1.0
-"""

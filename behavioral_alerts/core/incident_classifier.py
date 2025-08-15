@@ -30,7 +30,7 @@ def prepare_incident_classif_data(user_id, collection=locations_collection):
     }))
 
     if len(alerts) < 20:
-        print(f"[DEBUG] Not enough data to train threshold model for {user_id}")
+        #print(f"[DEBUG] Not enough data to train threshold model for {user_id}")
         return None, None
 
     features, labels = [], []
@@ -102,7 +102,7 @@ def optimize_incident_threshold(user_id):
 # --- 4. Save Model Locally + Optionally in MongoDB ---
 def save_incident_classifier(user_id, model, scaler, threshold, save_to_db=False):
     os.makedirs(os.path.join(MODEL_DIR, user_id), exist_ok=True)
-    model_path = os.path.join(MODEL_DIR, user_id, "classifer_model.pkl")
+    model_path = os.path.join(MODEL_DIR, user_id, "classifier_model.pkl")
     scaler_path = os.path.join(MODEL_DIR, user_id, "classifier_scaler.pkl")
     joblib.dump(model, model_path)
     joblib.dump(scaler, scaler_path)
@@ -116,50 +116,50 @@ def save_incident_classifier(user_id, model, scaler, threshold, save_to_db=False
             users_collection.update_one(
                 {"user_id": user_id},
                 {"$set": {
-                    "threshold_model": pickle.dumps(model),
-                    "threshold_scaler": pickle.dumps(scaler),
+                    "classifier_model": pickle.dumps(model),
+                    "classifier_scaler": pickle.dumps(scaler),
                     "threshold_value": threshold,
                     "threshold_updated_at": datetime.now(timezone.utc)
                 }},
                 upsert=True
             )
-            print(f"[✓] Also saved threshold model to MongoDB for user {user_id}")
+            #print(f"[✓] Also saved classifier model to MongoDB for user {user_id}")
         except Exception as e:
-            print(f"[✗] Failed to save threshold model to DB for {user_id}: {e}")
+            print(f"[✗] Failed to save classifier model to DB for {user_id}: {e}")
 
 # --- 5. Load Model (DB → fallback to local → fallback to train) ---
 
 def load_incident_classifier(user_id, fallback_to_train=True):
-    model_path = os.path.join(MODEL_DIR, user_id, "threshold_model.pkl")
-    scaler_path = os.path.join(MODEL_DIR, user_id, "threshold_scaler.pkl")
+    model_path = os.path.join(MODEL_DIR, user_id, "classifier_model.pkl")
+    scaler_path = os.path.join(MODEL_DIR, user_id, "classifier_scaler.pkl")
     if os.path.exists(model_path) and os.path.exists(scaler_path):
         try:
             model = joblib.load(model_path)
             scaler = joblib.load(scaler_path)
-            print(f"[✓] Loaded threshold model from local for {user_id} at {os.path.abspath(model_path)}")
+            #print(f"[✓] Loaded classifier model from local for {user_id} at {os.path.abspath(model_path)}")
             return model, scaler
         except Exception as e:
-            print(f"[✗] Failed to load local threshold model , trying from DB, for {user_id}: {e}")
+            print(f"[✗] Failed to load local classifier model , trying from DB, for {user_id}: {e}")
     user = users_collection.find_one({"user_id": user_id})
-    if user and "threshold_model" in user and "threshold_scaler" in user:
+    if user and "classifier_model" in user and "threshold_scaler" in user:
         try:
-            model = pickle.loads(user["threshold_model"])
-            scaler = pickle.loads(user["threshold_scaler"])
-            print(f"[✓] Loaded threshold model from MongoDB for {user_id}")
+            model = pickle.loads(user["classifier_model"])
+            scaler = pickle.loads(user["classifier_scaler"])
+            #print(f"[✓] Loaded classifier model from MongoDB for {user_id}")
             return model, scaler
         except Exception as e:
-            print(f"[✗] Failed to load threshold model from DB for {user_id}: {e}")
+            print(f"[✗] Failed to load classifier model from DB for {user_id}: {e}")
     if fallback_to_train:
-        print(f"[INFO] No threshold model found for {user_id}. Training new one...")
+        print(f"[INFO] No classifier model found for {user_id}. Training new one...")
         features, labels = prepare_incident_classif_data(user_id)
         if features is None:
             return None, None
         model, scaler = train_incident_classifier(features, labels)
         threshold = optimize_incident_threshold(user_id)
         save_incident_classifier(user_id, model, scaler, threshold, save_to_db=True)
-        print(f"[info] Retrained model and saved for user {user_id}")
+        #print(f"[info] Retrained model and saved for user {user_id}")
         return model, scaler
-    print(f"[✗] Failed to load and retrain threshold model for user {user_id}")
+    #print(f"[✗] Failed to load and retrain classifier model for user {user_id}")
     return None, None
 
 
