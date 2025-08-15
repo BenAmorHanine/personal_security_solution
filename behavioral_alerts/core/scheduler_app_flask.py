@@ -117,8 +117,8 @@ def recent_alerts():
 def home():
     return "🌐 APScheduler Flask API is running."
 
-@app.route('/sos_press/<user_id>/<device_id>/<lat>/<long>', methods=['POST'])
-def sos_press(user_id, device_id, lat, long):
+@app.route('/sos/<user_id>/<device_id>/<lat>/<long>', methods=['POST'])
+def trigger_sos(user_id, device_id, lat, long):
     """Simulate an SOS press event."""
     try:
         latitude = float(lat)
@@ -133,6 +133,17 @@ def sos_press(user_id, device_id, lat, long):
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+
+
+"""
+still lacking:
+
+@app.get("/periodic-check/{user_id}/{device_id}")  
+@app.post("/register")
+async def register_user(request: RegisterRequest): @app register device
+
+"""
 
 # -----------------------
 # MAIN STARTUP
