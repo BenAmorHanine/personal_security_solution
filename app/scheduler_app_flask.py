@@ -5,7 +5,7 @@ import os
 import sys
 import json
 from pymongo import MongoClient
-from config import MONGO_URI, LOG_DIR
+from ..behavioral_alerts.core.config import MONGO_URI, LOG_DIR
 from app.anomaly_checker import periodic_process_all_users
 #from processing import process_capture
 from ..fusion.process_capture import process_capture_all_inclusive

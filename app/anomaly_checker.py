@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 from pymongo import MongoClient
-from config import MONGO_URI
+from ..behavioral_alerts.core.config import MONGO_URI
 #from ..behavioral_alerts.core.processing import process_capture
 from ..fusion.process_capture import process_capture_all_inclusive
 from ..behavioral_alerts.core.db_functions import register_device
