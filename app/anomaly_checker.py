@@ -3,7 +3,7 @@ from pymongo import MongoClient
 from config import MONGO_URI
 #from ..behavioral_alerts.core.processing import process_capture
 from ..fusion.process_capture import process_capture_all_inclusive
-from db_functions import register_device
+from ..behavioral_alerts.core.db_functions import register_device
 import random
 
 client = MongoClient(MONGO_URI)
@@ -19,7 +19,7 @@ def periodic_process_all_users():
         latitude = random.uniform(-90, 90)
         longitude = random.uniform(-180, 180)
 
-        print(f"[i] Running process_capture for {user_id} at {datetime.now(timezone.utc)}")
+        print(f"[i] Running the process_capture for {user_id} at {datetime.now(timezone.utc)}")
         process_capture_all_inclusive(user_id, device_id, latitude, longitude, sos_pressed=False)
 
 """if __name__ == "__main__":
