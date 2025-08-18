@@ -6,8 +6,9 @@ import sys
 import json
 from pymongo import MongoClient
 from config import MONGO_URI, LOG_DIR
-from anomaly_checker import periodic_process_all_users
-from processing import process_capture
+from app.anomaly_checker import periodic_process_all_users
+#from processing import process_capture
+from ..fusion.process_capture import process_capture_all_inclusive
 
 # Add current directory to Python path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -124,7 +125,7 @@ def trigger_sos(user_id, device_id, lat, long):
         latitude = float(lat)
         longitude = float(long)
 
-        result = process_capture(user_id, device_id, latitude, longitude, sos_pressed=True)
+        result = process_capture_all_inclusive(user_id, device_id, latitude, longitude, sos_pressed=True)
 
         return jsonify({
             "status": "SOS alert processed",

@@ -1,7 +1,8 @@
 from datetime import datetime, timezone
 from pymongo import MongoClient
 from config import MONGO_URI
-from processing import process_capture
+#from ..behavioral_alerts.core.processing import process_capture
+from ..fusion.process_capture import process_capture_all_inclusive
 from db_functions import register_device
 import random
 
@@ -19,7 +20,7 @@ def periodic_process_all_users():
         longitude = random.uniform(-180, 180)
 
         print(f"[i] Running process_capture for {user_id} at {datetime.now(timezone.utc)}")
-        process_capture(user_id, device_id, latitude, longitude, sos_pressed=False)
+        process_capture_all_inclusive(user_id, device_id, latitude, longitude, sos_pressed=False)
 
 """if __name__ == "__main__":
     from apscheduler.schedulers.blocking import BlockingScheduler

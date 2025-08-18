@@ -161,3 +161,61 @@ def log_alert(
         print(f"[✗] Error logging alert for user {user_id}: {e}")
         return None
 
+
+
+
+def log_full_alert(
+    user_id: str,
+    device_id: str,
+    latitude: float,
+    longitude: float,
+    **kwargs
+) -> str:
+    """
+    Logs a comprehensive alert, capturing details from multiple analysis systems.
+    
+    This function uses **kwargs to flexibly accept any additional data from the
+    processing pipeline, such as triggers, anomaly scores, and analysis results.
+
+    Returns the generated alert_id, or None on failure.
+    """
+    try:
+        alert_id = str(uuid.uuid4())
+        timestamp = datetime.now(timezone.utc)
+
+        # The core alert document now cleanly separates metadata from the analysis payload.
+        alert_doc = {
+            "alert_id": alert_id,
+            "user_id": user_id,
+            "device_id": device_id,
+            "location": {
+                "type": "Point",
+                "coordinates": [longitude, latitude]
+            },
+            "timestamp": timestamp,
+            # All other dynamic data from process_capture is neatly stored here.
+            "analysis_payload": kwargs 
+        }
+
+        locations_collection.insert_one(alert_doc)
+        print(f" Logged alert {alert_id} for user {user_id} at {timestamp.strftime('%Y-%m-%d %H:%M:%S CET')}")
+
+        # Save a JSON-serializable version locally
+        if True: # Assuming save_locally is desired
+            os.makedirs(LOG_DIR, exist_ok=True)
+            local_path = os.path.join(LOG_DIR, f"alert_{alert_id}.json")
+            
+            # Create a copy for serialization and format the timestamp
+            serializable_doc = alert_doc.copy()
+            serializable_doc["timestamp"] = timestamp.isoformat()
+
+            with open(local_path, "w", encoding="utf-8") as f:
+                # The `default=str` handles any non-standard data types like numpy floats
+                json.dump(serializable_doc, f, ensure_ascii=False, indent=2, default=str)
+            print(f" Saved alert {alert_id} locally at {local_path}")
+
+        return alert_id
+
+    except Exception as e:
+        print(f"Error logging alert for user {user_id}: {e}")
+        return None

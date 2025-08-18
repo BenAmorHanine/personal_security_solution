@@ -42,6 +42,8 @@ def process_capture_all_inclusive(user_id, device_id, latitude, longitude, sos_p
     Returns:
         dict: A dictionary summarizing the analysis and final incident decision.
     """
+
+    # --- 1. User Anomaly Detection ---
     incident_probabiloty,is_incident,location_anomaly, threshold = process_capture(
         user_id, device_id, latitude, longitude, sos_pressed
     )
@@ -54,20 +56,45 @@ def process_capture_all_inclusive(user_id, device_id, latitude, longitude, sos_p
         geo_risk_score, geo_event_type = 0.0, 'ERROR'
 
     # --- 3. Vocal Analysis (New) ---
-    vocal_analysis_results = analyze_vocal(audio_path)
+    vocal_analysis_results = None
+    vocal_alert_triggered = False
 
-    # --- 4. Combined Incident Decision Logic (Updated) ---
+    if audio_path:
+        try:
+            # Run the vocal analysis
+            vocal_analysis_results = analyze_vocal(audio_path)
+
+            if vocal_analysis_results:
+                # --- Extract all relevant labels safely ---
+                classification = vocal_analysis_results.get('classification', {}) or {}
+                audio_features = vocal_analysis_results.get('audio_features', {}) or {}
+
+                text_class   = classification.get('label')
+                stress_label = (audio_features.get('stress') or {}).get('label')
+                rhythm_label = (audio_features.get('rhythm') or {}).get('label')
+                tone_label   = (audio_features.get('tone') or {}).get('label')
+
+                # --- Define danger signal conditions ---
+                danger_conditions = [
+                    text_class in ['danger', 'hate'],
+                    stress_label in ['ang', 'fea'],
+                    rhythm_label == 'fast',
+                    tone_label == 'fearful',
+                ]
+
+                # Trigger danger signal if any condition is True
+                vocal_alert_triggered = any(danger_conditions)
+
+        except Exception as e:
+            logger.error(f"Vocal analysis failed: {e}")
+
+
+
+    # --- 4. Combined Incident Decision Logic ---
     # An incident is triggered if ANY of the following are true.
     user_anomaly_triggered = (incident_probability >= threshold and location_anomaly > 0.6)
-    geo_risk_triggered = (geo_risk_score > 0.75) # Location is a known high-risk zone
-    
-    vocal_alert_triggered = False
-    if vocal_analysis_results:
-        text_class = vocal_analysis_results['classification']['label']
-        stress_label = vocal_analysis_results['audio_features']['stress']['label']
-        # Trigger if text is dangerous OR vocal stress indicates anger/fear.
-        if text_class in ['danger', 'hate'] or stress_label in ['ang', 'fea']:
-            vocal_alert_triggered = True
+    geo_risk_triggered = (geo_risk_score > 0.7) # Location is a known high-risk zone
+    vocal_alert_triggered = vocal_alert_triggered
 
     # Final Decision: An incident is declared if any system flags it.
     is_incident = sos_pressed or user_anomaly_triggered or geo_risk_triggered or vocal_alert_triggered
@@ -92,44 +119,15 @@ def process_capture_all_inclusive(user_id, device_id, latitude, longitude, sos_p
             "predicted_event": geo_event_type
         },
         "vocal_analysis_summary": {
+            "is_alert_triggered": vocal_alert_triggered,
             "classification": vocal_analysis_results['classification']['label'] if vocal_analysis_results else None,
-            "stress": vocal_analysis_results['audio_features']['stress']['label'] if vocal_analysis_results else None
+            "stress": vocal_analysis_results['audio_features']['stress']['label'] if vocal_analysis_results else None,
+            "rhythm": vocal_analysis_results['audio_features']['rhythm']['label'] if vocal_analysis_results else None,
+            "tone": vocal_analysis_results['audio_features']['tone']['label'] if vocal_analysis_results
+
         }
     }
-    log_alert(**alert_data)
+    log_full_alert(**alert_data)
     
     return alert_data
 
-
-# --- Example Usage ---
-if __name__ == '__main__':
-    print("--- Running Scenario 1: No audio, low-risk situation ---")
-    # Mock a normal situation
-    result1 = process_capture(
-        user_id="user_123", 
-        device_id="device_abc", 
-        latitude=35.82, 
-        longitude=10.63
-    )
-    print(f"Final Decision: {'Incident' if result1['is_incident'] else 'Normal'}\n")
-
-    print("\n--- Running Scenario 2: Audio indicates distress in a high-risk area ---")
-    # Mock a dangerous situation with audio input
-    result2 = process_capture(
-        user_id="user_456", 
-        device_id="device_xyz", 
-        latitude=36.80, 
-        longitude=10.18,
-        audio_path="/path/to/distress_call.wav" # Path is for logic, no file is actually read by the mock
-    )
-    print(f"Final Decision: {'Incident' if result2['is_incident'] else 'Normal'}\n")
-
-    print("\n--- Running Scenario 3: User presses the SOS button ---")
-    result3 = process_capture(
-        user_id="user_789", 
-        device_id="device_qwe", 
-        latitude=34.74, 
-        longitude=10.76,
-        sos_pressed=True
-    )
-    print(f"Final Decision: {'Incident' if result3['is_incident'] else 'Normal'}\n")

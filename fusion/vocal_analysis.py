@@ -76,11 +76,11 @@ def audio_features(audio_path): #ok A PART ALAHOU AALAM PROBLEME FI STRESS DETEC
     #stress
     try:
         out_prob, score, index, text_lab = stress_model2.classify_file(audio_file)
-        stress_label = text_lab[0]
+        stress_label = text_lab[0] #( anger, happiness, sadness, neutrality)
         stress_score = score
     except Exception as e:
         print(f"Stress detection failed: {e}. Using default 'neutral' and 0.0 score.")
-        stress_label, stress_score = "neutral", 0.0
+        stress_label, stress_score = "neu", 0.0
     print(f"Stress: {stress_label}, Score: {stress_score:.2f}")
 
     #rhythm
@@ -113,16 +113,16 @@ def audio_features(audio_path): #ok A PART ALAHOU AALAM PROBLEME FI STRESS DETEC
 
     return {
         "stress": {
-            "label": stress_label,
+            "label": stress_label, #neutral, ang, fea
             "score": stress_score
         },
         "rhythm": {
-            "label": rhythm,
+            "label": rhythm, #fast or slow
             "speech_rate": speech_rate,
             "pause_ratio": pause_ratio
         }, 
         "tone": {
-            "label": tone,
+            "label": tone, #fearful or calm
             "pitch_mean": float(np.mean(pitch[~np.isnan(pitch)])) if np.any(~np.isnan(pitch)) else 0.0,
             "energy": float(energy)
         }
@@ -144,6 +144,9 @@ def analyze_vocal(audio_path):
     classification = classify_text(transcription)
     return {
         "transcription": transcription,
-        "classification": classification,
-        "audio_features": features
-    }
+        "classification": classification, #classification of the transcription: normal, danger, hate
+        "audio_features": features # audio features: stress, rhythm, tone
+    } #features: 
+#features['stress']['label'] = 'neu', 'ang', 'fea'; "neu|ang|hap|sad|fea|sur",  # IEMOCAP emotion codes
+# features['rhythm']['label'] = 'fast', 'slow'
+# features['tone']['label'] = 'fearful', 'calm'
