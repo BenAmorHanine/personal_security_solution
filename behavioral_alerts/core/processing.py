@@ -60,7 +60,7 @@ def process_capture(user_id, device_id, latitude, longitude, sos_pressed=False):
     is_incident = sos_pressed or (incident_probability >= threshold and location_anomaly > 0.5)
 
 
-    log_alert(
+    """log_alert(
         user_id=user_id,
         device_id=device_id,
         latitude=latitude,
@@ -71,7 +71,7 @@ def process_capture(user_id, device_id, latitude, longitude, sos_pressed=False):
         hour_anomaly=hour_anomaly,
         weekday_anomaly=weekday_anomaly,
         month_anomaly=month_anomaly
-    )
+    )"""
     
     return {
         "incident_probability": float(incident_probability),
