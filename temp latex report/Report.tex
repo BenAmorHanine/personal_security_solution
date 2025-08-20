@@ -1,0 +1,263 @@
+\documentclass[12pt,a4paper,oneside,english]{book}
+
+\usepackage{cite}
+
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{fancyhdr}
+\usepackage{appendix}
+\usepackage{hyphenat}
+\usepackage{pdfpages}
+
+\usepackage{array,multirow,makecell}
+\newcolumntype{C}[1]{>{\arraybackslash}p{#1}}
+
+\usepackage{enumitem}
+\setlist{leftmargin=*,itemsep=0pt}
+
+\usepackage{centernot}
+\usepackage[linesnumbered,ruled,vlined,english,onelanguage]{algorithm2e}
+
+\usepackage{quotchap}
+\makeatletter
+\renewcommand{\@makechapterhead}[1]{
+ \chapterheadstartvskip
+ {\size@chapter{\sectfont\raggedright
+ {\chapnumfont
+ \ifnum \c@secnumdepth >\m@ne
+ \if@mainmatter\thechapter
+ \fi\fi
+ \par\nobreak}
+ {\raggedright\advance\leftmargin10em\interlinepenalty\@M #1\par}}
+ \nobreak\chapterheadendvskip}}
+\makeatother
+\renewcommand*{\chapterheadendvskip}{\vspace{2cm}}
+
+\usepackage{geometry}
+\geometry{hmargin=2.5cm,vmargin=2.5cm}
+
+\pagestyle{fancyplain}
+\lhead{\fancyplain{}{\nouppercase{\textit{\leftmark}}}}
+\chead{\fancyplain{}{}}
+\rhead{\fancyplain{}{}}
+\lfoot{\fancyplain{}{}}
+\cfoot{\fancyplain{}{}}
+\rfoot{\fancyplain{\thepage}{\thepage}}
+\renewcommand{\headrulewidth}{1pt}
+\renewcommand{\footrulewidth}{1pt}
+
+\renewcommand{\thesection}{\arabic{section}}
+
+\usepackage{titlesec}
+\titleformat{\paragraph}{\fontsize{11}{10}\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}{0pt}{10pt plus 2pt minus 0pt}{0pt plus 2pt minus 0pt}
+
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+
+\usepackage{array}
+\usepackage{multirow}
+%\addto\captionsfrench{\def\tablename{\textsc{Tableau}}}
+
+%\DefineBibliographyStrings{french}{urlseen = {},}
+
+\setlength{\parskip}{8pt}
+\usepackage{setspace}
+
+\usepackage{url}
+
+\usepackage{hyperref}
+% Comment before printing to remove links' colors
+\definecolor{darkblue}{rgb}{0.0, 0.0, 0.5}
+\hypersetup{
+ colorlinks,
+ linktocpage=true,
+ linkcolor={darkblue},
+ citecolor={darkblue},
+ urlcolor={blue}}
+
+\sloppy
+
+\author{You}
+\title{Rapport de PFE}
+
+\begin{document}
+\pagenumbering{gobble}
+\includepdf[pages=-]{FrontPage.pdf}
+\chapter*{Acknowledgments}
+
+\frontmatter
+\chapter*{Abstract}
+\normalsize{Write your abstract here.
+
+\medskip
+{\noindent \textbf{Keywords: ..., ... .} }
+
+\spacing{1}
+\tableofcontents{}
+\newpage 
+\listoffigures
+\newpage 
+\listoftables
+\newpage
+\spacing{1.4}
+\chapter*{List of acronyms}
+%\addcontentsline{toc}{chapter}{Liste des acronymes}
+\markboth{List of acronyms}{}
+\begin{itemize}
+\item \textbf{Abbrev.} Abbreviation
+\end{itemize}
+
+\mainmatter
+%\mtcaddchapter[Introduction générale] 
+\chapter*{Introduction}
+\addcontentsline{toc}{chapter}{Introduction}
+\markboth{Introduction}{}
+
+
+\chapter{First chapter}
+\label{ch:1er}
+\section*{Introduction}
+
+\section{Sections}
+\subsection{2nd level}
+\subsubsection{3rd level}
+\paragraph{4th level}
+
+\section{References}
+Here's a reference to an article \cite{fisher1936use}.
+
+Here's a reference to a Website \cite{insat}.
+
+\section{Lists}
+\subsection{Bullet lists}
+Here's an example of a bullet list:
+\begin{itemize}
+\item Idea 1.
+\item Idea 2.
+\end{itemize}
+\medskip \par
+
+\subsection{Enumerated lists}
+Here's an example of an enumerated list:
+\begin{enumerate}
+\item Idea 1 ;
+\item Idea 2.
+\end{enumerate}
+\medskip \par
+
+\section{Figures}
+Figure \ref{fig:exemple1} is an example of a figure.
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.3\textwidth]{images/INSAT.jpg}
+\caption{This is an example of a figure.}
+\label{fig:exemple1}
+\end{figure}
+
+Figure \ref{fig:exemple2} is an example of insertion of many images (\ref{fig:exemple21} and \ref{fig:exemple22}) in one figure.
+\begin{figure}[!h]
+\begin{center}
+\subfloat[]{\includegraphics[width=0.2\textwidth]{images/INSAT.jpg}\label{fig:exemple21}}\quad 
+\subfloat[]{\includegraphics[width=0.3\textwidth]{images/INSAT.jpg}\label{fig:exemple22}}
+\caption{This is an example of a multi-figure: (a) small sub-figure and (b) large sub-figure.}
+\label{fig:exemple2}
+\end{center}
+\end{figure}
+
+\section{Tables}
+Table \ref{tab:exemple1} is an example of a table with fixed columns.
+
+\begin{table}[!h]
+\caption{This is an example of a table} 
+\label{tab:exemple1}
+\centering
+\renewcommand{\arraystretch}{1.65}
+\begin{tabular}{| C{.11\textwidth} || C{.35\textwidth} | p{.45\textwidth} |} 
+\hline
+\textbf{a} & \textbf{b} & \textbf{c} \\ 
+\hline 
+\hline 
+1 & \nohyphens{No hyphens avoids cutting the words.} & \nohyphens{...} \\ 
+\hline 
+2 & \nohyphens{...} & \nohyphens{...} \\ 
+\hline 
+\end{tabular}
+\end{table}
+
+Table \ref{tab:exemple2} is an example of a table where columns' widths adapt to the content.
+
+\begin{table}[!h]
+\caption{This is an example of a table with multilines et multicolumns} 
+\label{tab:exemple2}
+\centering
+\renewcommand{\arraystretch}{1.65}
+\begin{tabular}{|l||c|c|c|}
+\cline{2-4}
+\multicolumn{1}{c|}{\nohyphens{}} & a & b & c\\
+\hline
+\hline
+1 & \nohyphens{...} & \nohyphens{...} & \nohyphens{...}\\ 
+\hline 
+2 & \multicolumn{2}{c|}{\nohyphens{...}} & \nohyphens{...}\\ 
+\hline 
+\multirow{2}*{3} & ... & ... & ... \\
+\cline{2-4}
+& \nohyphens{...} & \nohyphens{...} & \nohyphens{...}\\ 
+\hline 
+\end{tabular}
+\end{table}
+
+\section{Algorithms}
+Algorithm \ref{algo:exemple} is an example. 
+\begin{algorithm}[!h]
+\setstretch{1.15}
+ \caption{Process}
+ \label{algo:exemple}
+ \SetKwInOut{Input}{Input}
+ \SetKwInOut{Output}{Output}
+ \Input{$X= \{x_{i} \in\mathbb{R}^{d}\}_{i=1}^{n}$ : data matrix dimensioned $d \times n $\\
+$Y = \{y_{i} \in\{1, ..., c\}\}_{i=1}^{n}$ : vector of $n$ labels\\}
+\Output{$T$ : processed matrix}
+
+... $\gets$ ...\;
+\For{$i\gets 1$ \KwTo $n$ }{
+\eIf{\textsf{...}}
+ {
+ ...\;
+ }
+ {
+ \eIf{\textsf{\upshape ...}}
+ {
+ ...\;
+ }
+ {
+ ...\;
+ }
+ ...
+ }				 
+ }
+ $T \gets$ ...
+\end{algorithm}
+
+\section*{Conclusion}
+
+\chapter*{Conclusion and perspectives}
+\addcontentsline{toc}{chapter}{Conclusion and perspectives}
+\markboth{Conclusion and perspectives}{}
+
+\begin{appendix}
+\chapter{Appendix 1}
+Insert your appendixes here if you need.
+\end{appendix}
+
+%\spacing{1}
+\bibliographystyle{unsrt}
+\bibliography{references}
+\end{document}
