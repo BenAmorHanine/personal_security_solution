@@ -255,6 +255,7 @@ INPUT C:\Users\user\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symb
 INPUT C:\Users\user\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
 INPUT C:\Users\user\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm7.tfm
 OUTPUT Report.toc
+INPUT C:\Users\user\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmti12.tfm
 INPUT .\Report.lof
 INPUT .\Report.lof
 INPUT Report.lof
@@ -281,9 +282,15 @@ INPUT .\images\Expertise_hydatis.png
 INPUT .\images\Expertise_hydatis.png
 INPUT .\images\Expertise_hydatis.png
 INPUT .\images\Expertise_hydatis.png
-INPUT C:\Users\user\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmti12.tfm
 INPUT C:\Users\user\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmr12.tfm
 INPUT C:\Users\user\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx12.tfm
+INPUT .\images\services_hydatis.png
+INPUT .\images\services_hydatis.png
+INPUT .\images\services_hydatis.png
+INPUT .\images\services_hydatis.png
+INPUT .\images\services_hydatis.png
+INPUT .\images\services_hydatis.png
+INPUT .\images\services_hydatis.png
 INPUT .\Report.bbl
 INPUT .\Report.bbl
 INPUT Report.bbl
