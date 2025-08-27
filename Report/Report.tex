@@ -56,7 +56,7 @@
 \renewcommand{\headrulewidth}{1pt}
 \renewcommand{\footrulewidth}{1pt}
 
-\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesection}{\Roman{section}} % Set section numbering to Roman numerals % previously \arabic{section}
 
 \usepackage{titlesec}
 \titleformat{\paragraph}{\fontsize{11}{10}\bfseries}{\theparagraph}{1em}{}
@@ -96,7 +96,7 @@
 \includepdf[pages=-]{FrontPage.pdf}
 \chapter*{Acknowledgments}
 
-\frontmatter
+\frontmatter %here yothhrou les num des pages en bas 
 \chapter*{Abstract}
 \normalsize{Write your abstract here.
 
@@ -118,8 +118,8 @@
 \item \textbf{Abbrev.} Abbreviation
 \end{itemize}
 
-\mainmatter
-%\frontmatter %to have roman page numbering in the beginning
+\frontmatter %here yothhrou les num des pages fl contnent
+%\frontmatter  %to have roman page numbering in the beginning
 %\mtcaddchapter[Introduction g�n�rale]
 
 
@@ -131,7 +131,8 @@
 \chapter{Company Presentation}
 \label{ch:1er}
 \section{Overview and History}
-\section{Sector of Activities}
+
+\section{Sector of Activities}%and services offered
 \section{Organizational structure and Human Capital}
 
 \chapter{Theoritical Foundations and State of the Art}
@@ -155,7 +156,8 @@
 
 \chapter{Results and Discussion}
 
-
+\section{Evaluation and Results}
+\section{Discussion}
 
 
 
@@ -165,7 +167,7 @@
 
 
 %\section*{Conclusion}
-\section{Conclusion}
+%\section{Conclusion}
 \chapter*{Conclusion and perspectives}
 \addcontentsline{toc}{chapter}{Conclusion and perspectives}
 \markboth{Conclusion and perspectives}{}

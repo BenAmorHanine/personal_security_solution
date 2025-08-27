@@ -267,9 +267,6 @@ INPUT C:\Users\user\AppData\Local\Programs\MiKTeX\fonts\tfm\jknappen\ec\tcrm1200
 INPUT C:\Users\user\AppData\Local\Programs\MiKTeX\fonts\enc\dvips\cm-super\cm-super-ts1.enc
 INPUT C:\Users\user\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmr17.tfm
 INPUT C:\Users\user\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx12.tfm
-INPUT C:\Users\user\AppData\Local\Programs\MiKTeX\fonts\vf\adobe\bookman\pbkd7t.vf
-INPUT C:\Users\user\AppData\Local\Programs\MiKTeX\fonts\tfm\adobe\bookman\pbkd8r.tfm
-INPUT C:\Users\user\AppData\Local\Programs\MiKTeX\fonts\enc\dvips\base\8r.enc
 INPUT C:\Users\user\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmr12.tfm
 INPUT C:\Users\user\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx12.tfm
 INPUT .\Report.bbl
@@ -286,5 +283,3 @@ INPUT C:\Users\user\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm
 INPUT C:\Users\user\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmr17.pfb
 INPUT C:\Users\user\AppData\Local\Programs\MiKTeX\fonts\type1\public\cm-super\sfrm1200.pfb
 INPUT C:\Users\user\AppData\Local\Programs\MiKTeX\fonts\type1\public\cm-super\sfrm1200.pfb
-INPUT C:\Users\user\AppData\Local\Programs\MiKTeX\fonts\type1\urw\bookman\ubkd8a.pfb
-INPUT C:\Users\user\AppData\Local\Programs\MiKTeX\fonts\type1\urw\bookman\ubkd8a.pfb
