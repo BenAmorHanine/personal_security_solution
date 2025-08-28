@@ -44,7 +44,7 @@
 
 
 \usepackage{geometry}
-\geometry{hmargin=2.5cm,vmargin=2.5cm}
+\geometry{hmargin=2cm,vmargin=2cm}
 
 \pagestyle{fancyplain}
 \lhead{\fancyplain{}{\nouppercase{\textit{\leftmark}}}}
@@ -185,10 +185,10 @@ Crime is a major social problem in Tunisia, threatening public safety and disrup
  
 Traditional safety solutions such as manual reporting or basic wearable alarms have served as a foundational step in personal security. However they %struggle
 suffer from critical limitations: 
-Relying on the binary nature of a simple button press is usually unsufficient to distinguish between 
+The binary nature of a simple button press is usually unsufficient to distinguish between 
 a genuine, life-threatening emergency,a false alarm, or a low-priority situation.
 Additionally, the lack of contextual awarness results in inaccurate alerts and overwhelming emergency services with false positives. %Inaccuracy and Context Deficiency:
-Thus, due to the limited resources of emergency services (police, paramedics), false alarms divert critical attention away from genuine crises, incurring unnecessary costs and potentially delaying responses to real incidents. %Resource Depletion:
+Giving the limited resources of emergency services (police, paramedics), false alarms divert critical attention away from genuine crises, incurring unnecessary costs and potentially delaying responses to real incidents. %Resource Depletion:
 
 
 %The binary nature of a simple button press: unsufficient to distinguish between 
@@ -196,10 +196,37 @@ Thus, due to the limited resources of emergency services (police, paramedics), f
 %high rate of false positives.
 
 %  This gap hits home for Hydatis, the motivation behind this work is clear: we need to move beyond simple, reactive triggers
-% and build smarter, faster ways to protect people by qualifying alerts with precision. 
+% and build smarter, faster ways to protect people by qualifying alerts with precision.
+\subsection{Market Context and Existing Solutions}
 
+Several commercial solutions exist in the personal safety market, including panic button apps like 
+bSafe, location-sharing platforms like Life360, and wearable devices such as personal alarms. However,
+ these solutions typically operate independently and lack the intelligent analysis needed to 
+ differentiate between genuine emergencies and false alarms and ensure fast response to threats. 
+ %, leading to the limitations described above.
+Therefore, there is a clear need for an intelligent safety system that can analyze multiple data 
+streams—location, audio, and behavioral patterns—to provide accurate, context-aware emergency 
+detection while minimizing false positives.
+
+%In State of the Art, you can include:
+%Existing products (apps, devices, services → e.g., SOS apps, smartwatches with panic buttons, crime reporting platforms).
+%Research/technical approaches (papers on anomaly detection, crime prediction models, wearable safety devices).
+%Limitations of these (false positives, lack of contextual awareness, poor adoption, battery issues, limited reach, etc.).
+
+%Detailed technical comparisons
+%Algorithm discussions
+%Academic literature reviews
+%In-depth analysis of existing methods
+
+%todo: reduce space in the footer ( especially see this page!)
 
 \section{Description}% or scope : the "What." A high-level overview of the solution.
+My role focuses on developing an AI-powered module that fuses geospatial data, 
+vocal analysis, and behavioral patterns to detect danger accurately—aiming 
+for over 85\% reliability. Inspired by Hydatis’ mission to innovate 
+with data intelligence, this project seeks to transform personal safety, 
+offering a lifeline where traditional methods falter, and setting 
+the stage for scalable solutions across Tunisia and beyond.
 \section{Core mission and main objectives} %goals
 My role focuses on developing an AI-powered module that fuses geospatial data, 
 vocal analysis, and behavioral patterns to detect danger accurately—aiming 

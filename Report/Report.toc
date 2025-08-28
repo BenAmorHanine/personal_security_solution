@@ -7,8 +7,9 @@
 \contentsline {section}{\numberline {III}Organizational structure and Human Capital}{iv}{section.0.3}%
 \contentsline {chapter}{Internship Context and Objectives}{v}{chapter*.12}%
 \contentsline {section}{\numberline {IV}Problem Statement and Motivation}{v}{section.0.4}%
+\contentsline {subsection}{\numberline {IV.1}Market Context and Existing Solutions}{v}{subsection.0.4.1}%
 \contentsline {section}{\numberline {V}Description}{v}{section.0.5}%
-\contentsline {section}{\numberline {VI}Core mission and main objectives}{v}{section.0.6}%
+\contentsline {section}{\numberline {VI}Core mission and main objectives}{vi}{section.0.6}%
 \contentsline {section}{\numberline {VII}expected Results}{vi}{section.0.7}%
 \contentsline {section}{\numberline {VIII}Internship timeline }{vi}{section.0.8}%
 \contentsline {chapter}{Theoritical Foundations and State of the Art}{vii}{chapter*.13}%
