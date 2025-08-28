@@ -71,7 +71,9 @@
 
 %\DefineBibliographyStrings{french}{urlseen = {},}
 
-\setlength{\parskip}{8pt}
+\setlength{\parskip}{0pt}%was 8 : space between paragraphs
+\setlength{\parindent}{1.5em}%was 1.5 : indentation of paragraphs
+
 \usepackage{setspace}
 
 \usepackage{url}
@@ -128,7 +130,8 @@
 \markboth{Introduction}{}
 
 
-\chapter{Company Presentation}
+\chapter{Company Presentation} % we should metion that there are a lot of spacing between title of chapter and sctions
+
 \label{ch:1er}
 \section{Overview}
 Founded in 2020, and located in both Meudon la forêt , Meudonn France and tunis, Tunisia, 
@@ -175,8 +178,62 @@ Hydatis with a flat organizational structure that reflects its startup studio ro
 From AI specialists shaping cutting-edge products to strategists securing partnerships, and sicne its launch in 2020, these folks, with their varied backgrounds, suceeded to make Hydatis a powerhouse in the startup ecosystem.
 
 
-\chapter{Theoritical Foundations and State of the Art}
+\chapter{Internship Context and Objectives}
 \label{ch:2eme}
+\section{Problem Statement and Motivation} %Why
+Crime is a major social problem in Tunisia, threatening public safety and disrupting the economy,ranging from theft to harassment, often leaving individuals vulnerable, especially at night or in isolated spots.
+ 
+Traditional safety solutions such as manual reporting or basic wearable alarms have served as a foundational step in personal security. However they %struggle
+suffer from critical limitations: 
+
+Basically, the binary nature of a simple button press: unsufficient to distinguish between 
+a genuine, life-threatening emergency,a false alarm, or a low-priority situation.
+Additionally, the lack of contextual awarness results in inaccurate alerts and overwhelming emergency services with false positives. %Inaccuracy and Context Deficiency:
+Thus, due to the limited resources of emergency services (police, paramedics), false alarms divert critical attention away from genuine crises, incurring unnecessary costs and potentially delaying responses to real incidents. %Resource Depletion:
+
+
+%The binary nature of a simple button press: unsufficient to distinguish between 
+%a genuine, life-threatening emergency,a false alarm, or a low-priority situation. This leads to an unacceptably 
+%high rate of false positives.
+
+%  This gap hits home for Hydatis, the motivation behind this work is clear: we need to move beyond simple, reactive triggers
+% and build smarter, faster ways to protect people by qualifying alerts with precision. 
+
+
+\section{Description}% or scope : the "What." A high-level overview of the solution.
+\section{Core mission and main objectives} %goals
+My role focuses on developing an AI-powered module that fuses geospatial data, 
+vocal analysis, and behavioral patterns to detect danger accurately—aiming 
+for over 85\% reliability. Inspired by Hydatis’ mission to innovate 
+with data intelligence, this project seeks to transform personal safety, 
+offering a lifeline where traditional methods falter, and setting 
+the stage for scalable solutions across Tunisia and beyond.
+
+
+This project is motivated by the clear need to bridge this intelligence gap. 
+The core motivation is to move beyond simple, reactive triggers and develop a 
+proactive, intelligent system capable of automatically qualifying the 
+severity of a situation. By harnessing the power of Artificial Intelligence 
+to fuse multiple data streams—including geospatial context, user behavior, 
+and real-time vocal analysis—this project aims to create a more reliable, 
+accurate, and ultimately more effective personal safety solution. The goal 
+is to build a system that not only responds to alerts but also understands 
+them, ensuring that help is dispatched efficiently and effectively when it 
+gis needed most.
+
+
+\section{expected Results} % what success looks like.
+\section{Internship timeline }% or planning %professionalism and project management skills.%%%%%often a Gantt chart)
+
+
+
+
+
+\chapter{Theoritical Foundations and State of the Art}
+\label{ch:3eme}
+
+% normalement we should put here:  State of the Art and Market Solutions section
+% or subsection in the motivation and problem statement section: Existing Solutions and Limitations”
 \section{Geospatical Analysis for Risk Prediction}
 \subsection{Anomaly Detection in Geographical Information Systems}
 %create abstract GIS 
@@ -186,7 +243,7 @@ From AI specialists shaping cutting-edge products to strategists securing partne
 
 
 \chapter{Design and implementation}
-\label{ch:3eme}
+\label{ch:4eme}
 \section{System Architecture and Data management}
 \section{Implementation of the Geospatial Analysis Module}
 \section{Implementation of the Vocal Signal Processing Pipeline}
