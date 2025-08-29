@@ -15,18 +15,22 @@
 \contentsline {subsection}{\numberline {VI.3}Expected Results}{vii}{subsection.0.6.3}%
 \contentsline {section}{\numberline {VII}Internship timeline }{vii}{section.0.7}%
 \contentsline {chapter}{Theoritical Foundations and State of the Art}{viii}{chapter*.13}%
-\contentsline {section}{\numberline {VIII}Geospatical Analysis for Risk Prediction}{viii}{section.0.8}%
-\contentsline {subsection}{\numberline {VIII.1}Anomaly Detection in Geographical Information Systems}{viii}{subsection.0.8.1}%
-\contentsline {section}{\numberline {IX} Vocal Signal Processing for Distress Detection}{viii}{section.0.9}%
-\contentsline {section}{\numberline {X}Machine Learning for Behavioral Anomaly Detection}{viii}{section.0.10}%
-\contentsline {chapter}{Design and implementation}{ix}{chapter*.14}%
-\contentsline {section}{\numberline {XI}System Architecture and Data management}{ix}{section.0.11}%
-\contentsline {section}{\numberline {XII}Implementation of the Geospatial Analysis Module}{ix}{section.0.12}%
-\contentsline {section}{\numberline {XIII}Implementation of the Vocal Signal Processing Pipeline}{ix}{section.0.13}%
-\contentsline {section}{\numberline {XIV}Implementation of the Behavioral Profiling Module}{ix}{section.0.14}%
-\contentsline {section}{\numberline {XV}Final Decision Engine and System Integration}{ix}{section.0.15}%
-\contentsline {chapter}{Results and Discussion}{x}{chapter*.15}%
-\contentsline {section}{\numberline {XVI}Evaluation and Results}{x}{section.0.16}%
-\contentsline {section}{\numberline {XVII}Discussion}{x}{section.0.17}%
-\contentsline {chapter}{Conclusion and perspectives}{xi}{chapter*.16}%
-\contentsline {chapter}{Appendix 1}{xii}{appendix*.17}%
+\contentsline {section}{\numberline {VIII}Geospatical Analysis for Risk Prediction}{ix}{section.0.8}%
+\contentsline {subsection}{\numberline {VIII.1}Anomaly Detection in Geographical Information Systems}{ix}{subsection.0.8.1}%
+\contentsline {subsection}{\numberline {VIII.2}Crime Hotspot Detection and Spatial Analysis}{ix}{subsection.0.8.2}%
+\contentsline {subsection}{\numberline {VIII.3}GIS-Based Crime Hotspot Analysis and Spatial Patterns}{ix}{subsection.0.8.3}%
+\contentsline {subsection}{\numberline {VIII.4}Density-Based Clustering for Spatial Data}{ix}{subsection.0.8.4}%
+\contentsline {subsection}{\numberline {VIII.5}Real-time Risk Assessment Systems}{ix}{subsection.0.8.5}%
+\contentsline {section}{\numberline {IX} Vocal Signal Processing for Distress Detection}{ix}{section.0.9}%
+\contentsline {section}{\numberline {X}Machine Learning for Behavioral Anomaly Detection}{ix}{section.0.10}%
+\contentsline {chapter}{Design and implementation}{x}{chapter*.14}%
+\contentsline {section}{\numberline {XI}System Architecture and Data management}{x}{section.0.11}%
+\contentsline {section}{\numberline {XII}Implementation of the Geospatial Analysis Module}{x}{section.0.12}%
+\contentsline {section}{\numberline {XIII}Implementation of the Vocal Signal Processing Pipeline}{x}{section.0.13}%
+\contentsline {section}{\numberline {XIV}Implementation of the Behavioral Profiling Module}{x}{section.0.14}%
+\contentsline {section}{\numberline {XV}Final Decision Engine and System Integration}{x}{section.0.15}%
+\contentsline {chapter}{Results and Discussion}{xi}{chapter*.15}%
+\contentsline {section}{\numberline {XVI}Evaluation and Results}{xi}{section.0.16}%
+\contentsline {section}{\numberline {XVII}Discussion}{xi}{section.0.17}%
+\contentsline {chapter}{Conclusion and perspectives}{xii}{chapter*.16}%
+\contentsline {chapter}{Appendix 1}{xiii}{appendix*.17}%

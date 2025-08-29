@@ -124,11 +124,9 @@
 %\frontmatter  %to have roman page numbering in the beginning
 %\mtcaddchapter[Introduction g�n�rale]
 
-
 \chapter*{Introduction}
 \addcontentsline{toc}{chapter}{Introduction}
 \markboth{Introduction}{}
-
 
 \chapter{Company Presentation} % we should metion that there are a lot of spacing between title of chapter and sctions
 
@@ -285,17 +283,46 @@ This project is structured over my two-month internship period at Hydatis, devid
     \item \textbf{Weeks 7-8:} Final system integration, testing, optimization, and documentation.
 \end{itemize}
 
-
+%todo: label the sections and subsections
+%todo: diagramme de gantt!!!!
 
 \chapter{Theoritical Foundations and State of the Art}
 \label{ch:3eme}
 
 % normalement we should put here:  State of the Art and Market Solutions section
 % or subsection in the motivation and problem statement section: Existing Solutions and Limitations”
+\section*{Introdunction}
+This chapter presents the theoretical foundations underlying the multi-modal safety system developed in this project. 
+The system integrates three distinct yet complementary technologies: geospatial analysis for location-based risk assessment, vocal signal processing for distress detection, and machine learning techniques for behavioral anomaly detection.
+The first section examines GIS-based approaches to crime hotspot analysis and spatial pattern recognition, providing the foundation for our geospatial risk module. 
+The second section explores density-based clustering algorithms, particularly DBSCAN and OPTICS, which form the core of our location risk assessment methodology. 
+Finally, the third section reviews real-time geospatial risk assessment systems and their practical implementation challenges.
+Together, these theoretical foundations establish the scientific basis for the integrated approach adopted in this project and position our 
+work within the current state of research in intelligent safety systems.
+%ghalt il faut revoir !
 \section{Geospatical Analysis for Risk Prediction}
+\label{sec:geospatial_theory}
+
+%todo introooooo?? for chapter and sections too ?
+
+
 \subsection{Anomaly Detection in Geographical Information Systems}
 %create abstract GIS 
 %the subsections will be discussed later
+\subsection{Crime Hotspot Detection and Spatial Analysis}%or crime hotsport forecasting or the principe of crime hotspot analysis
+% Geographic crime patterns, spatial autocorrelation, hotspot theory
+%if we merge the  2 :
+\subsection{GIS-Based Crime Hotspot Analysis and Spatial Patterns}
+
+
+\subsection{Density-Based Clustering for Spatial Data}%or for geographic data
+% DBSCAN and OPTICS algorithms, parameter selection, advantages for geographic data
+\subsection{Real-time Risk Assessment Systems}%or relevance to risk prediction
+% Current approaches, GPS-based risk scoring, challenges in real-time implementation
+
+
+
+
 \section { Vocal Signal Processing for Distress Detection}
 \section{Machine Learning for Behavioral Anomaly Detection}
 
