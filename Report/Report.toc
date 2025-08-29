@@ -9,7 +9,7 @@
 \contentsline {section}{\numberline {IV}Problem Statement and Motivation}{v}{section.0.4}%
 \contentsline {subsection}{\numberline {IV.1}Market Context and Existing Solutions}{v}{subsection.0.4.1}%
 \contentsline {section}{\numberline {V}Description}{v}{section.0.5}%
-\contentsline {section}{\numberline {VI}Core Mission and Main Objectives}{vi}{section.0.6}%
+\contentsline {section}{\numberline {VI}Core Mission, Objectives and Expected Results}{vi}{section.0.6}%
 \contentsline {subsection}{\numberline {VI.1}Core Mission}{vi}{subsection.0.6.1}%
 \contentsline {subsection}{\numberline {VI.2}Main Objectives}{vi}{subsection.0.6.2}%
 \contentsline {subsection}{\numberline {VI.3}Expected Results}{vii}{subsection.0.6.3}%
