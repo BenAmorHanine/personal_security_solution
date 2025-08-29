@@ -220,14 +220,24 @@ detection while minimizing false positives.
 
 %todo: reduce space in the footer ( especially see this page!)
 
-\section{Description}% or scope : the "What." A high-level overview of the solution.
-My role focuses on developing an AI-powered module that fuses geospatial data, 
-vocal analysis, and behavioral patterns to detect danger accurately—aiming 
-for over 85\% reliability. Inspired by Hydatis’ mission to innovate 
-with data intelligence, this project seeks to transform personal safety, 
-offering a lifeline where traditional methods falter, and setting 
-the stage for scalable solutions across Tunisia and beyond.
-\section{Core mission and main objectives} %goals
+\section{Description}% or scope : the "What." and "how" A high-level overview of the solution.
+
+This project involves designing an AI-powered module for a Smart wearable Solution, aimed at enhancing personal safety through automated incident detection during my Summer internship at Hydatis.
+The module integrates four key data streams: 
+\begin{itemize}
+    \item \textbf{Geospatial Analysis:} geospatial data derived from Tunisian crime datasets to identify high-risk areas.
+    \item \textbf{Vocal Signal Processing:}  real-time vocal analysis to detect distress signals or key words such as calls for help.
+    \item \textbf{Behavioral Profiling:} behavioral patterns to flag anomalies in user activitythat may indicate danger.
+    \item \textbf{Decision Engine:} later, these components are fused into a cohesive system that processes and combines 
+insights from each stream, offering a foundation for reliable alert qualification.
+\end{itemize}
+Though, detailed implementation will be explored in later sections.
+
+
+
+
+\section{Core mission and main objectives} %goals "why" and "what to achieve
+
 My role focuses on developing an AI-powered module that fuses geospatial data, 
 vocal analysis, and behavioral patterns to detect danger accurately—aiming 
 for over 85\% reliability. Inspired by Hydatis’ mission to innovate 
@@ -247,8 +257,11 @@ is to build a system that not only responds to alerts but also understands
 them, ensuring that help is dispatched efficiently and effectively when it 
 gis needed most.
 
+To develop an AI module that accurately qualifies alerts with over 85\% reliability.
 
-\section{expected Results} % what success looks like.
+\section{expected Results} % what success looks like.% en chiffres 
+Expected Results: A functional AI engine delivered as a set of Python scripts, an API for 
+scoring alerts, and a final performance report showing that the 85\% reliability target was met. (This is exactly what the Cahier des Charges calls "Livrables").
 \section{Internship timeline }% or planning %professionalism and project management skills.%%%%%often a Gantt chart)
 
 
