@@ -1,3 +1,15 @@
-\begin{thebibliography}{}
+\begin{thebibliography}{1}
+
+\bibitem{chen2019exploring}
+Tongxin Chen, Tao Cheng, and Yang Zhang.
+\newblock Exploring the homogeneity of offenders in crime hotspots.
+\newblock In {\em Proceedings of the 27th GIS Research UK (GISRUK)}, 2019.
+
+\bibitem{zhuang2017crime}
+Yong Zhuang, Matthew Almeida, Melissa Morabito, and Wei Ding.
+\newblock Crime hot spot forecasting: A recurrent model with spatial and
+  temporal information.
+\newblock In {\em 2017 IEEE International Conference on Big Knowledge (ICBK)},
+  pages 143--150, 2017.
 
 \end{thebibliography}

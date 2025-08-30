@@ -299,6 +299,7 @@ This project is structured over my two-month internship period at Hydatis, devid
 % normalement we should put here:  State of the Art and Market Solutions section
 % or subsection in the motivation and problem statement section: Existing Solutions and Limitations”
 \section*{Introdunction}
+%todo update this! aslan fiha klem ghalt
 This chapter presents the theoretical foundations underlying the multi-modal safety system developed in this project. 
 The system integrates three distinct yet complementary technologies: geospatial analysis for location-based risk assessment, vocal signal processing for distress detection, and machine learning techniques for behavioral anomaly detection.
 The first section examines GIS-based approaches to crime hotspot analysis and spatial pattern recognition, providing the foundation for our geospatial risk module. 
@@ -306,30 +307,50 @@ The second section explores density-based clustering algorithms, particularly DB
 Finally, the third section reviews real-time geospatial risk assessment systems and their practical implementation challenges.
 Together, these theoretical foundations establish the scientific basis for the integrated approach adopted in this project and position our 
 work within the current state of research in intelligent safety systems.
-%ghalt il faut revoir !
 \section{Geospatical Analysis for Risk Prediction}
 \label{sec:geospatial_theory}
 
-%todo introooooo?? for chapter and sections too ?
+%todo introooooo?? for chapter and sections too ? lel sections juste jomla thnin
 
 
-%\subsection{Anomaly Detection in Geographical Information Systems}
-%create abstract GIS 
-%the subsections will be discussed later
-%Discarded will be a sentence in the coming subsec
-\subsection{Crime Hotspot Forecasting and Spatial Analysis}%or crime hotsport forecasting or the principe of crime hotspot analysis
-% Geographic crime patterns, spatial autocorrelation, hotspot theory
-Crime hotspot detection is a specific application of spatial anomaly detection, 
-a GIS technique used to identify unusual concentrations of events in a geographic area.
+\subsection{Crime Hotspot Forecasting and Spatial Analysis}
 
-%if we merge the  2 :
-\subsection{GIS-Based Crime Hotspot Analysis and Spatial Patterns}
+
+%Geospatial anomaly detection leverages Geographical Information Systems (GIS) to identify unusual patterns in spatial data, 
+%a critical step in predicting crime hotspots. GIS integrates spatial datasets—such as crime locations, demographic details, 
+%and environmental factors—into a unified framework for analysis [El-Fishawy et al., 2024]. 
+%W ANTED TO PUT IT HERE
+
+The foundational principle of crime hotspot analysis is that criminal activity is not randomly 
+distributed, but rather concentrated in specific areas known as 'hotspots'
+This involves analyzing geographic patterns where crime incidents cluster,
+often influenced by factors like urban density or offender homogeneity \cite{chen2019exploring}.
+Hotspot theory posits that such clusters represent areas of elevated risk, necessitating targeted interventions  \cite{zhuang2017crime} .
+With the ever-increasing ability of states and organizations to collect and store detailed data tracking crime occurrence, a significant amount of data with spatial and temporal information has been collected
+In this context, these hotspots, defined as deviations from expected spatial-temporal behavior, can be treated as a form of spatial anomaly and can be detected using statistical and machine learning techniques, enabling the identification of high-risk areas.
+
+%todo: refer to the papers:
+% References:
+% [El-Fishawy et al., 2024] - A survey of anomaly detection techniques.pdf
+% [Chen et al., 2019] - GISRUK_2019_paper_56 Chen Cheng Yang.pdf
+% [Zhuang et al., 2017] - Crime Hot Spot Forecasting.pdf
+
+
+%papers: crime hotspot forecasting !! + gisruk2019
+
+
 
 
 \subsection{Density-Based Clustering for Spatial Data}%or for geographic data
 % DBSCAN and OPTICS algorithms, parameter selection, advantages for geographic data
+%Asurveyofanomalydetectiontechniques!!!! page14
+%crime hotspot forecasting
+%girusk2019 !!
 \subsection{Real-time Risk Assessment Systems}%or relevance to risk prediction
 % Current approaches, GPS-based risk scoring, challenges in real-time implementation
+
+%crime hotspot forecasting
+%Asurveyofanomalydetectiontechniques
 
 
 
