@@ -255,7 +255,6 @@ INPUT C:\Users\user\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symb
 INPUT C:\Users\user\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
 INPUT C:\Users\user\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm7.tfm
 OUTPUT Report.toc
-INPUT C:\Users\user\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmti12.tfm
 INPUT .\Report.lof
 INPUT .\Report.lof
 INPUT Report.lof
@@ -291,6 +290,7 @@ INPUT .\images\services_hydatis.png
 INPUT .\images\services_hydatis.png
 INPUT .\images\services_hydatis.png
 INPUT .\images\services_hydatis.png
+INPUT C:\Users\user\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmti12.tfm
 INPUT .\Report.bbl
 INPUT .\Report.bbl
 INPUT Report.bbl

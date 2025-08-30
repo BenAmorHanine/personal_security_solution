@@ -15,12 +15,11 @@
 \contentsline {subsection}{\numberline {VI.3}Expected Results}{vii}{subsection.0.6.3}%
 \contentsline {section}{\numberline {VII}Internship timeline }{vii}{section.0.7}%
 \contentsline {chapter}{Theoritical Foundations and State of the Art}{viii}{chapter*.13}%
-\contentsline {section}{\numberline {VIII}Geospatical Analysis for Risk Prediction}{ix}{section.0.8}%
-\contentsline {subsection}{\numberline {VIII.1}Anomaly Detection in Geographical Information Systems}{ix}{subsection.0.8.1}%
-\contentsline {subsection}{\numberline {VIII.2}Crime Hotspot Detection and Spatial Analysis}{ix}{subsection.0.8.2}%
-\contentsline {subsection}{\numberline {VIII.3}GIS-Based Crime Hotspot Analysis and Spatial Patterns}{ix}{subsection.0.8.3}%
-\contentsline {subsection}{\numberline {VIII.4}Density-Based Clustering for Spatial Data}{ix}{subsection.0.8.4}%
-\contentsline {subsection}{\numberline {VIII.5}Real-time Risk Assessment Systems}{ix}{subsection.0.8.5}%
+\contentsline {section}{\numberline {VIII}Geospatical Analysis for Risk Prediction}{viii}{section.0.8}%
+\contentsline {subsection}{\numberline {VIII.1}Crime Hotspot Forecasting and Spatial Analysis}{viii}{subsection.0.8.1}%
+\contentsline {subsection}{\numberline {VIII.2}GIS-Based Crime Hotspot Analysis and Spatial Patterns}{ix}{subsection.0.8.2}%
+\contentsline {subsection}{\numberline {VIII.3}Density-Based Clustering for Spatial Data}{ix}{subsection.0.8.3}%
+\contentsline {subsection}{\numberline {VIII.4}Real-time Risk Assessment Systems}{ix}{subsection.0.8.4}%
 \contentsline {section}{\numberline {IX} Vocal Signal Processing for Distress Detection}{ix}{section.0.9}%
 \contentsline {section}{\numberline {X}Machine Learning for Behavioral Anomaly Detection}{ix}{section.0.10}%
 \contentsline {chapter}{Design and implementation}{x}{chapter*.14}%
