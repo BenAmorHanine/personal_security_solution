@@ -18,7 +18,7 @@
 \contentsline {section}{\numberline {VIII}Geospatical Analysis for Risk Prediction}{viii}{section.0.8}%
 \contentsline {subsection}{\numberline {VIII.1}Crime Hotspot Forecasting and Spatial Analysis}{viii}{subsection.0.8.1}%
 \contentsline {subsection}{\numberline {VIII.2}Density-Based Clustering for Spatial Data}{ix}{subsection.0.8.2}%
-\contentsline {subsection}{\numberline {VIII.3}Real-time Risk Assessment Systems}{x}{subsection.0.8.3}%
+\contentsline {subsection}{\numberline {VIII.3}Real-time Risk Assessment Systems}{ix}{subsection.0.8.3}%
 \contentsline {section}{\numberline {IX} Vocal Signal Processing for Distress Detection}{x}{section.0.9}%
 \contentsline {section}{\numberline {X}Machine Learning for Behavioral Anomaly Detection}{x}{section.0.10}%
 \contentsline {chapter}{Design and implementation}{xi}{chapter*.15}%
