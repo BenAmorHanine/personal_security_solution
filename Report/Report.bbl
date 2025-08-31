@@ -1,9 +1,11 @@
 \begin{thebibliography}{1}
 
 \bibitem{chen2019exploring}
-Tongxin Chen, Tao Cheng, and Yang Zhang.
+Tao Cheng, Tianfeng Chen, and Yang Zhang.
 \newblock Exploring the homogeneity of offenders in crime hotspots.
-\newblock In {\em Proceedings of the 27th GIS Research UK (GISRUK)}, 2019.
+\newblock In {\em Geographical Information Science Research- UK (GISRUK) 2019
+  Proceedings}, Newcastle, UK, 2019.
+\newblock Green open access.
 
 \bibitem{zhuang2017crime}
 Yong Zhuang, Matthew Almeida, Melissa Morabito, and Wei Ding.
@@ -11,5 +13,10 @@ Yong Zhuang, Matthew Almeida, Melissa Morabito, and Wei Ding.
   temporal information.
 \newblock In {\em 2017 IEEE International Conference on Big Knowledge (ICBK)},
   pages 143--150, 2017.
+
+\bibitem{BIRANT2007208dbscan}
+Derya Birant and Alp Kut.
+\newblock St-dbscan: An algorithm for clustering spatial-temporal data.
+\newblock {\em Data \& Knowledge Engineering}, 60(1):208--221, 2007.
 
 \end{thebibliography}

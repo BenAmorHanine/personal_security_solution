@@ -324,28 +324,53 @@ work within the current state of research in intelligent safety systems.
 The foundational principle of crime hotspot analysis is that criminal activity is not randomly 
 distributed, but rather concentrated in specific areas known as 'hotspots'
 This involves analyzing geographic patterns where crime incidents cluster,
-often influenced by factors like urban density or offender homogeneity \cite{chen2019exploring}.
+often influenced by factors like urban density or offender homogeneity \cite{chen2019exploring}. 
 Hotspot theory posits that such clusters represent areas of elevated risk, necessitating targeted interventions  \cite{zhuang2017crime} .
 With the ever-increasing ability of states and organizations to collect and store detailed data tracking crime occurrence, a significant amount of data with spatial and temporal information has been collected
 In this context, these hotspots, defined as deviations from expected spatial-temporal behavior, can be treated as a form of spatial anomaly and can be detected using statistical and machine learning techniques, enabling the identification of high-risk areas.
 
-%todo: refer to the papers:
-% References:
-% [El-Fishawy et al., 2024] - A survey of anomaly detection techniques.pdf
-% [Chen et al., 2019] - GISRUK_2019_paper_56 Chen Cheng Yang.pdf
-% [Zhuang et al., 2017] - Crime Hot Spot Forecasting.pdf
-
-
-%papers: crime hotspot forecasting !! + gisruk2019
-
-
-
-
+%todo pleaseee the introoo
 \subsection{Density-Based Clustering for Spatial Data}%or for geographic data
-% DBSCAN and OPTICS algorithms, parameter selection, advantages for geographic data
-%Asurveyofanomalydetectiontechniques!!!! page14
-%crime hotspot forecasting
-%girusk2019 !!
+\label{sec:dbscan_theory}
+Crime data is inherently noisy and unevenly distributed, making it challenging to identify meaningful patterns using simple statistical methods. Clustering techniques are therefore employed to detect areas 
+where incidents concentrate, which often correspond to crime hotspots.
+%Spatial clustering is a process of grouping objects based on their spatial similarity. 
+
+Among the available clustering algorithms, density-based methods such as DBSCAN \textbf{(Density-Based Spatial Clustering of Applications with Noise) } \cite{BIRANT2007208dbscan} are particularly effective for spatial data, a method well-suited for irregular,
+ non-spherical patterns.
+ \\
+DBSCAN groups data points that are closely packed together and marks outliers as noise based on their density in the feature space.
+Unlike other methods of clustering such as K-Means, it performs well in handling real-world data irregularities such as:
+\begin{itemize}
+    \item Arbitrary-Shaped Clusters: Clusters can take any shape not just circular or convex.
+    \item Noise and Outliers: It effectively identifies and handles noise points without assigning them to any cluster.
+\end{itemize}
+
+\begin{figure}[h!] % placement options: h=here, t=top, b=bottom, p=page
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/dbscanVSkmeans.png}
+    \captionsetup{width=0.6\textwidth}
+    \caption{A comparison showing DBSCAN's ability to identify non-spherical clusters, in contrast to K-Means.}
+    %\caption{DBSCAN Clustering Compared to K-Means: DBSCAN can identify clusters of arbitrary shapes and effectively handle noise, while K-Means tends to form spherical clusters and is sensitive to outliers.}
+    \label{fig:dbscan_vs_kmeans}
+\end{figure}
+
+Key Parameters in DBSCAN:
+\begin{itemize}
+    \item eps ($\epsilon$): The maximum distance between two samples for one to be considered as in the neighborhood of the other.
+    \item MinPts: This is the minimum number of points required within the eps radius to form a dense region. 
+\end{itemize}
+%1. eps: defines the radius of the neighborhood around a data point. Commonly determined with a k-distance graph Analysis. 
+%Choosing the ips is Critical: If eps is too small most points will be classified as noise and if it is too large clusters may merge and the algorithm may fail to distinguish between them.
+%2. MinPts: This is the minimum number of points required within the eps radius to form a dense region. 
+%For most cases a minimum value of MinPts = 3 is recommended
+
+
+These characteristics make DBSCAN exceptionally well-suited for analyzing real-world crime pattern.
+This approach is validated by recent research: Chen et al. \cite{chen2019exploring} successfully utilized an extension of DBSCAN to detect crime hotspots from historical theft records %, validating its effectiveness in this domain
+
+
+
 \subsection{Real-time Risk Assessment Systems}%or relevance to risk prediction
 % Current approaches, GPS-based risk scoring, challenges in real-time implementation
 
