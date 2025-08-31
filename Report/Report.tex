@@ -299,7 +299,6 @@ This project is structured over my two-month internship period at Hydatis, devid
 % normalement we should put here:  State of the Art and Market Solutions section
 % or subsection in the motivation and problem statement section: Existing Solutions and Limitations”
 \section*{Introdunction}
-%todo update this! aslan fiha klem ghalt
 This chapter presents the theoretical foundations underlying the proposed multi-modal safety system, which integrates three distinct yet complementary technologies:
 
 First, the principles of geospatial analysis for risk prediction will be examined. 
@@ -334,7 +333,6 @@ Hotspot theory posits that such clusters represent areas of elevated risk, neces
 With the ever-increasing ability of states and organizations to collect and store detailed data tracking crime occurrence, a significant amount of data with spatial and temporal information has been collected
 In this context, these hotspots, defined as deviations from expected spatial-temporal behavior, can be treated as a form of spatial anomaly and can be detected using statistical and machine learning techniques, enabling the identification of high-risk areas.
 
-%todo pleaseee the introoo
 \subsection{Density-Based Clustering for Spatial Data}%or for geographic data
 \label{sec:dbscan_theory}
 Crime data is inherently noisy and unevenly distributed, making it challenging to identify meaningful patterns using simple statistical methods. Clustering techniques are therefore employed to detect areas 
@@ -384,10 +382,76 @@ While traditional approaches rely on static crime databases and predetermined ri
 
 
 
-\section { Vocal Signal Processing for Distress Detection}
+
+
+% --- Main Section Title ---
 
 
 
+\section{Vocal Signal Processing for Distress Detection}
+\label{vocal_processing_theory}
+
+% In this introductory paragraph, you'll briefly state that the vocal analysis
+% module uses a parallel, multi-modal approach. Raw audio is processed
+% simultaneously to extract both the spoken words (via ASR) and the underlying
+% emotion (via SER), with the resulting text then analyzed for intent (via NLP).
+In real world emergencies, vocal cues such as tone, pitch, and specific keywords can provide critical 
+insights into a person's state of distress. This section explores the pathways of vocal signal processing: 
+Speech Emotion Recognition (SER) for detecting 
+emotional states from audio signals, Automatic Speech Recognition (ASR) for transcribing spoken words and Natural Language Processing (NLP) for analyzing the transcribed text for intent and risk assessment.
+Together, these technologies form a comprehensive approach to analyzing vocal distress 
+signals.
+
+\subsection{Automatic Speech Recognition (ASR)}
+\label{asr}
+
+% Purpose: Explain the theory of converting speech into text.
+%
+% What to write:
+% 1. Define Automatic Speech Recognition (ASR) as the first analytical pathway 🎤➡️📝.
+% 2. Discuss the state-of-the-art using large-scale, pre-trained Transformer
+%    models, introducing Whisper as a prime example of this architecture.
+% 3. Explain the specific scientific challenges of ASR for low-resource and
+%    code-switched dialects like Tunisian Arabic.
+%
+% Papers needed for this subsection:
+% - Main model theory: "Robust Speech Recognition via Large-Scale Weak Supervision" (whisper.pdf)
+% - Specific application context: "Leveraging Data Collection and Unsupervised Learning..." (tunisian_arabic-speech_recognition.pdf)
+
+
+% --- Subsection 2: Speech Emotion Recognition (SER) ---
+\subsection{Speech Emotion Recognition (SER)}
+\label{sec:ser}
+
+% Purpose: Explain the theory of classifying emotion directly from audio signals.
+%
+% What to write:
+% 1. Define Speech Emotion Recognition (SER) as the second, parallel analytical pathway 🗣️➡️😠😢😨.
+% 2. Explain that SER focuses on acoustic properties (prosody, spectral features)
+%    and that feature extraction (using tools like Librosa) is a foundational concept.
+% 3. Discuss the theory behind state-of-the-art self-supervised models that learn
+%    rich representations from raw audio, using Wav2Vec 2.0 as the key example.
+%
+% Paper needed for this subsection:
+% - Main model theory: "A FINE-TUNED WAV2VEC 2.0/HUBERT BENCHMARK..." (AFINETUNEDWAV2VEC2.0...)
+
+
+% --- Subsection 3: NLP for Intent Analysis ---
+\subsection{Natural Language Processing (NLP) for Intent Analysis}
+\label{sec:nlp_intent}
+
+% Purpose: Explain the theory of analyzing the transcribed text for meaning and risk.
+%
+% What to write:
+% 1. Define Natural Language Processing (NLP) as the final stage of the pipeline,
+%    which analyzes the output of the ASR module 🧠.
+% 2. Discuss the theory behind Transformer-based language models like BERT for text
+%    classification and the specific task of Intent Analysis.
+% 3. Introduce TunBERT as a state-of-the-art application of this theory, fine-tuned
+%    on culturally specific datasets to understand the nuances of the Tunisian dialect.
+%
+% Paper needed for this subsection:
+% - Dataset and context: "T-HSAB: A Tunisian Hate Speech and Abusive Dataset" (New_Icalp_2019.pdf)
 
 \section{Machine Learning for Behavioral Anomaly Detection}
 
