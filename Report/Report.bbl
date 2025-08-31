@@ -19,4 +19,23 @@ Derya Birant and Alp Kut.
 \newblock St-dbscan: An algorithm for clustering spatial-temporal data.
 \newblock {\em Data \& Knowledge Engineering}, 60(1):208--221, 2007.
 
+\bibitem{librosa}
+Brian McFee et~al.
+\newblock Librosa: Python library for audio and music analysis.
+\newblock https://librosa.org/, 2015.
+\newblock Accessed: 2025-08-26.
+
+\bibitem{NEURIPS2020_92d1e1ebWav2Vec}
+Alexei Baevski, Yuhao Zhou, Abdelrahman Mohamed, and Michael Auli.
+\newblock wav2vec 2.0: A framework for self-supervised learning of speech
+  representations.
+\newblock In H.~Larochelle, M.~Ranzato, R.~Hadsell, M.F. Balcan, and H.~Lin,
+  editors, {\em Advances in Neural Information Processing Systems}, volume~33,
+  pages 12449--12460. Curran Associates, Inc., 2020.
+
+\bibitem{wang2022finetunedwav2vec20hubertbenchmark}
+Yingzhi Wang, Abdelmoumene Boumadane, and Abdelwahab Heba.
+\newblock A fine-tuned wav2vec 2.0/hubert benchmark for speech emotion
+  recognition, speaker verification and spoken language understanding, 2022.
+
 \end{thebibliography}

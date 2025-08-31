@@ -402,13 +402,24 @@ Speech Emotion Recognition (SER) for emotional states detection %for detecting e
 and Natural Language Processing (NLP) for intent analysis. %for analyzing the transcribed text for intent and risk assessment.
 
 
-\subsection{Automatic Speech Recognition (ASR)}
+\subsection{Speech Emotion Recognition (SER)}%emotion recognition from speech
+\label{ser}
+Speech contains important information beyond the words themselves, such as the speacker's emotion, pitch and tone.
+Speech Emotion Recognition (SER) is the field of study focused on automatically identifying the emotional state of a speaker from their voice by analyzing acoustic and prosodic features—such as pitch, tone, and energy—to classify emotions like anger, happiness, or fear.
+\\The process begins with feature extraction, a foundational concept, where meaningful data is derived from the raw audio signal, often using preprocessing  tools like \textbf{Librosa} \cite{librosa}.%todo cite it
+\\Modern SER systems employ transformer-based architectures like \textbf{Wav2Vec 2.0} \cite{NEURIPS2020_92d1e1ebWav2Vec} 
+which is a self-supervised model that demonstrates superior performance through pre-training on diverse audio data followed by task-specific fine-tuning.
+\\For instance, research has shown that Wav2Vec 2.0 can reach an accuracy of 79.58\% on the IEMOCAP benchmark\cite{wang2022finetunedwav2vec20hubertbenchmark},% [Wang et al., 2022], %todo here we cite the paper fl okhrin we cite the offical documentation
+validating its selection as a robust theoretical foundation for the distress detection module.
+
+
+\subsection{Automatic Speech Recognition (ASR)}%speech-to-text conversion
 \label{asr}
 
 % Purpose: Explain the theory of converting speech into text.
 %
 % What to write:
-% 1. Define Automatic Speech Recognition (ASR) as the first analytical pathway 🎤➡️📝.
+% 1. Define Automatic Speech Recognition (ASR) as the first analytical pathway.
 % 2. Discuss the state-of-the-art using large-scale, pre-trained Transformer
 %    models, introducing Whisper as a prime example of this architecture.
 % 3. Explain the specific scientific challenges of ASR for low-resource and
@@ -419,32 +430,14 @@ and Natural Language Processing (NLP) for intent analysis. %for analyzing the tr
 % - Specific application context: "Leveraging Data Collection and Unsupervised Learning..." (tunisian_arabic-speech_recognition.pdf)
 
 
-% --- Subsection 2: Speech Emotion Recognition (SER) ---
-\subsection{Speech Emotion Recognition (SER)}
-\label{sec:ser}
-
-% Purpose: Explain the theory of classifying emotion directly from audio signals.
-%
-% What to write:
-% 1. Define Speech Emotion Recognition (SER) as the second, parallel analytical pathway 🗣️➡️😠😢😨.
-% 2. Explain that SER focuses on acoustic properties (prosody, spectral features)
-%    and that feature extraction (using tools like Librosa) is a foundational concept.
-% 3. Discuss the theory behind state-of-the-art self-supervised models that learn
-%    rich representations from raw audio, using Wav2Vec 2.0 as the key example.
-%
-% Paper needed for this subsection:
-% - Main model theory: "A FINE-TUNED WAV2VEC 2.0/HUBERT BENCHMARK..." (AFINETUNEDWAV2VEC2.0...)
-
-
-% --- Subsection 3: NLP for Intent Analysis ---
-\subsection{Natural Language Processing (NLP) for Intent Analysis}
+\subsection{Natural Language Processing (NLP) for Intent Analysis}% intent analysis from transcribed speech
 \label{sec:nlp_intent}
 
 % Purpose: Explain the theory of analyzing the transcribed text for meaning and risk.
 %
 % What to write:
 % 1. Define Natural Language Processing (NLP) as the final stage of the pipeline,
-%    which analyzes the output of the ASR module 🧠.
+%    which analyzes the output of the ASR module .
 % 2. Discuss the theory behind Transformer-based language models like BERT for text
 %    classification and the specific task of Intent Analysis.
 % 3. Introduce TunBERT as a state-of-the-art application of this theory, fine-tuned
@@ -452,6 +445,17 @@ and Natural Language Processing (NLP) for intent analysis. %for analyzing the tr
 %
 % Paper needed for this subsection:
 % - Dataset and context: "T-HSAB: A Tunisian Hate Speech and Abusive Dataset" (New_Icalp_2019.pdf)
+
+\subsection{Integration of SER, ASR, and NLP for Distress Detection}%or multi-modal vocal analysis nhbbklmt pipeline : max 3 jomlett.
+\label{integration_ser_asr_nlp}
+%todo this is only a draft
+The integration of Speech Emotion Recognition (SER), Automatic Speech Recognition (ASR), and Natural Language Processing (NLP) forms a comprehensive vocal analysis pipeline for distress detection.
+This multi-modal approach leverages the strengths of each component to provide a robust assessment of vocal distress signals.
+\\The SER module analyzes the emotional tone of the speech, identifying signs of fear or anxiety that may indicate distress.
+Sim ultaneously, the ASR module transcribes the spoken words into text, capturing the explicit content of the communication.
+Finally, the NLP module processes the transcribed text to extract intent and context, identifying keywords or phrases that suggest an emergency situation.
+By combining emotional cues with linguistic analysis, this integrated pipeline enhances the accuracy and reliability of distress detection, ensuring that both the emotional state and the verbal content are considered in the assessment.
+
 
 \section{Machine Learning for Behavioral Anomaly Detection}
 
