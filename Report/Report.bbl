@@ -38,4 +38,14 @@ Yingzhi Wang, Abdelmoumene Boumadane, and Abdelwahab Heba.
 \newblock A fine-tuned wav2vec 2.0/hubert benchmark for speech emotion
   recognition, speaker verification and spoken language understanding, 2022.
 
+\bibitem{pmlr-v139-radford21aWhisper}
+Alec Radford, Jong~Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh,
+  Sandhini Agarwal, Girish Sastry, Amanda Askell, Pamela Mishkin, Jack Clark,
+  Gretchen Krueger, and Ilya Sutskever.
+\newblock Learning transferable visual models from natural language
+  supervision.
+\newblock In Marina Meila and Tong Zhang, editors, {\em Proceedings of the 38th
+  International Conference on Machine Learning}, volume 139 of {\em Proceedings
+  of Machine Learning Research}, pages 8748--8763. PMLR, 18--24 Jul 2021.
+
 \end{thebibliography}
