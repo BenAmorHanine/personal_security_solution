@@ -554,6 +554,43 @@ For continuous safety monitoring, the system relies on a server-side scheduling 
 This is implemented using a cron job that sends a POST request to the same /process endpoint.
 
 \subsection{Technical stack and tools used}
+The system leverages a robust technical stack to enable real-time distress detection:
+%This section provides an overview of the key frameworks, libraries, and tools used, grouped by their functional role within the project's architecture.
+
+%\subsubsection{Backend Development and API}
+\textbf{Backend :}
+\begin{itemize}
+    \item Python 3.9: The core programming language for backend logic, including data processing, model inference, and API handling, selected for its extensive ecosystem of data science and machine learning libraries.
+    \item Flask: A micro web framework used to build and serve RESTful API endpoints, chosen for its lightweight, modular design ideal for mobile integration.
+\end{itemize}
+
+\textbf{Database :}
+\begin{itemize}
+\item MongoDB: A NoSQL document-oriented database for storing semi-structured data like user profiles and location histories, with native geospatial query support for real-time analysis.
+\item PyMongo: The official Python driver used to interact with the MongoDB database.
+\end{itemize}
+
+\textbf{Machine Learning and Data Science :}
+% The core AI capabilities of the system were built using a suite of industry-standard data science libraries from data preprocessing to the training and deployment of the final classification models.
+
+\begin{itemize}
+
+\item Scikit-learn: The foundational machine learning library, used for implementing both the DBSCAN for density-based clustering and the RandomForestClassifier for incident prediction.
+\item PyTorch: A deep learning framework used to fine-tune advanced models in the vocal analysis pipeline, such as Wav2Vec 2.0.
+\item NumPy \& Pandas: The workhorse libraries for all numerical computation and data manipulation, used in data preprocessing and feature engineering.
+\item Librosa: A specialized library for audio analysis, used for preprocessing audio files for the vocal processing module.
+\end{itemize}
+
+\textbf{Specialized AI Models :}
+% In addition to foundational libraries, the project integrated state-of-the-art, pre-trained models to handle the most complex tasks, leveraging the extensive work of the broader AI research community.
+\begin{itemize}
+\item OpenAI's Whisper: The model used for robust Automatic Speech Recognition.
+%\item Hugging Face Transformers: The library used to access and implement pre-trained models like \textbf{Wav2Vec 2.0 }for Speech Emotion Recognition and \textbf{TunBERT} for NLP-based intent analysis.
+\item Wav2Vec 2.0: A self-supervised Hugging Face Transformer used for SER, levaraged to detect emotional states from vocal patterns.
+\item TunBERT: A BERT-based Hugging Face Transformer fine-tuned on Tunisian Arabic datasets for NLP-based intent analysis.%model
+
+\end{itemize}
+
 \subsection{Data Management and Preprocessing}
 \subsection{Final Decision Engine Design }
 
