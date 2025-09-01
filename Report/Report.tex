@@ -16,6 +16,8 @@
 \usepackage{appendix}
 \usepackage{hyphenat}
 \usepackage{pdfpages}
+\usepackage{svg}
+
 %\usepackage{tocloft} % For TOC customization ( table of contents )
 \usepackage{array,multirow,makecell}
 \newcolumntype{C}[1]{>{\arraybackslash}p{#1}}
@@ -476,11 +478,14 @@ By combining emotional cues with linguistic analysis, this integrated pipeline e
 \label{sec:system_architecture}
 This section outlines the overall architecture of the multi-modal safety system, detailing the technical stack, data management strategies, and the design of the final decision engine.
 \subsection{Overall System Architecture}
-
-
-
-
-
+This system integrates three AI modules: geospatial analysis, vocal signal processing, and behavioral profiling, into a cohesive framework. 
+Each module processes its respective data stream and combined, they form a unified risk assessment platform, as shown in figure \ref{fig:architecture}.
+\begin{figure}[h!] % placement options: h=here, t=top, b=bottom, p=page
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/diag5.png}
+    \caption{Architecture Diagram of the System}
+    \label{fig:architecture}
+\end{figure}
 
 
 \subsection{System Integration and API Design}

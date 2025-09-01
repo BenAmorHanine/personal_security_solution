@@ -52,3 +52,10 @@ draftt
 **/cache/
 **.log
 **/logs/
+
+papers__docs
+papers__docs/**
+REPORT/draft
+REPORT/draftt
+REPORT/images_to_include.rdf
+REPORT/images_to_include
