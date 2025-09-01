@@ -615,26 +615,41 @@ The preprocessing includes: \\
 %Key challenges includesparse Tunisian geospatial data and complexities in Arabic NLP processing, requiring specialized handling approaches.
 
 %\subsubsection{Data Storage}
-The system uses \textbf{MongoDB} for all data persistence.
+%The system uses \textbf{MongoDB} for all data persistence.
 %This choice was driven by its flexible schema, which is ideal for storing varied user data, and critically, its native support for high-performance \textbf{geospatial queries}, a core requirement for the location-based analysis modules. The primary database collections include:
 %This choice was driven by its ideal characteristics, as discussed in \ref{technical}.
 %The database collections include:
 
-
 %\subsection{Final Decision Engine Design }
 
 \section{Implementation of the Geospatial Analysis Module}
-\subsubsection{Geospatial Data Preprocessing}
-The geospatial risk model was trained on a dataset of crime incidents in Tunisia. 
-The preprocessing pipeline involved cleansing of the dataset to extract latitude and longitude pairs, and normalisation using a \texttt{StandardScaler} from the \texttt{Scikit-learn} library to prepare them for the clustering algorithms.
+\label{geospatial_implementation}
+\subsection{Data acquisition and Preprocessing}
+Due to outdated National Police Crime Statistics(2015), the geospatial risk model was trained on a dataset of crime incidents in Tunisia, called ACLED \cite{raleigh2010acled} specific to Tunisia.
+
+Preprocessing involved cleansing to extract latitude and longitude pairs, removing outliers with null values, and normalizing data using \texttt{StandardScaler} from \texttt{scikit-learn} library.
+
+\subsection{Spatial Clustering Implementation} %or Model Training and Algorithm Selection
+
+\subsection{Geospatial Risk Score and Integration}%or Integration and Performance Evaluation
+%How cluster outputs are translated into risk scores.
+%How these scores feed into the decision engine.
+%Any performance or edge-case considerations.
+%\subsection{Integration and Performance Evaluation}
+
+
+%todo: win nhott tasswiret tounes ????????
+
+
+
 
 \section{Implementation of the Vocal Signal Processing Pipeline}
-\subsubsection{Vocal Data Preprocessing}
+\subsection{Vocal Data Preprocessing}
 All incoming audio data requires a critical preprocessing step to ensure compatibility with the pre-trained analysis models. Using the \textbf{Librosa} library, each audio file is loaded and resampled to a consistent \textbf{16kHz} format, matching the required input specifications of the Whisper and Wav2Vec 2.0 models.
 
 \section{Implementation of the Behavioral Profiling Module} % or the Behavioral Anomaly Detection Module or the Machine Learning Module
 
-\subsubsection{Behavioral Data Preprocessing}
+\subsection{Behavioral Data Preprocessing}
 The behavioral module's data is prepared in two distinct stages:
 \begin{itemize}
     \item \textbf{For User Profiling}: To build a user's behavioral profile, their historical location data is fetched from the \texttt{locations\_collection} and filtered to include events from the last 30 days.

@@ -48,4 +48,10 @@ Alec Radford, Jong~Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh,
   International Conference on Machine Learning}, volume 139 of {\em Proceedings
   of Machine Learning Research}, pages 8748--8763. PMLR, 18--24 Jul 2021.
 
+\bibitem{raleigh2010acled}
+Clionadh Raleigh, Andrew Linke, Håvard Hegre, and Joakim Karlsen.
+\newblock Introducing acled: An armed conflict location and event dataset.
+\newblock {\em Journal of Peace Research}, 47(5):651--660, 2010.
+\newblock Reprinted 2023.
+
 \end{thebibliography}
