@@ -507,6 +507,13 @@ Each module processes its respective data stream and combined, they form a unifi
     \label{fig:architecture}
 \end{figure}
 
+
+\subsection{Final Decision Engine Design}
+The decision engine integrates outputs from AI modules and non-AI inputs to declare incidents. It uses a \textbf{rule-based} approach: 
+An incident is triggered if any condition is met :
+%`user_anomaly_triggered` (incident_probability ≥ threshold and location_anomaly > 0.6), `geo_risk_triggered` (geo_risk_score > 0.7), `vocal_alert_triggered`, or `sos_pressed`.
+\textit{SOS button pressed manually, Detected behavioral anomaly exceeding threshold, User is in a high-risk geospatial zone, Emotional distress detected in voice.}
+
 \subsection{System Integration and API Design}
 To integrate the AI-based backend with the user-facing mobile application, 
 a well-defined API was designed in order to decouple the internal AI logic from the client-side application.
