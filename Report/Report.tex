@@ -429,23 +429,32 @@ validating its selection as a robust theoretical foundation for the distress det
 
 \subsection{Automatic Speech Recognition (ASR)}%speech-to-text conversion
 \label{asr}
-
-% Purpose: Explain the theory of converting speech into text.
-%
-% What to write:
-% 1. Define Automatic Speech Recognition (ASR) as the first analytical pathway.
-% 2. Discuss the state-of-the-art using large-scale, pre-trained Transformer
-%    models, introducing Whisper as a prime example of this architecture.
-% 3. Explain the specific scientific challenges of ASR for low-resource and
-%    code-switched dialects like Tunisian Arabic.
-%
-% Papers needed for this subsection:
-% - Main model theory: "Robust Speech Recognition via Large-Scale Weak Supervision" (whisper.pdf)
-% - Specific application context: "Leveraging Data Collection and Unsupervised Learning..." (tunisian_arabic-speech_recognition.pdf)
 Automatic Speech Recognition (ASR) is the process of converting spoken language into written text, enabling machines to understand and process human speech.
-\\Modern ASR systems leverage large-scale, pre-trained Transformer models that enable robust speech-to-text conversion across diverse languages and accents.
-One prominent example is \textbf{Whisper} \cite{pmlr-v139-radford21aWhisper}
-%todo not finished+ we need at least one pic
+The Progress in speech recognition has been energized by the development of unsupervised pre-training techniques exemplified by Wav2Vec 2.0 \cite{NEURIPS2020_92d1e1ebWav2Vec} (See \ref{ser}).  
+This suggests that while unsupervised pre-training has improved the quality of audio encoders dramatically, the lack
+of an equivalently high-quality pre-trained decoder, combined with a recommended protocol of dataset-specific fine
+tuning, is a crucial weakness which limits their usefulness and robustness.  
+
+For this, OpenAI implemented \textbf{Whipser}, \cite{pmlr-v139-radford21aWhisper} a Transformer-based model trained on a massive 680,000 hours of diverse audio, enabling it to perform robustly in a zero-shot setting without  
+Reaserchers have also worked on a bench of versions of Whisper focusing on more epochs while adding, SpecAugment Stochastic Depth, or BPE Dropout, forming a family of Tiny, Medium, Large architectures\dots \cite{pmlr-v139-radford21aWhisper}
+
+%Whisper models, which are trained on a broad and diverse distribution of audio and evaluated in a zero-shot setting,  
+Whisper models could potentially match human behavior much better than existing systems.
+To assert their efficiency, comparaisons between  Whisper models with both human performance
+ and standard fine-tuned ML models were done. Whisper showed better transcription over all ML models and was close to that of professional human transcribers.
+\begin{figure}[h!] % placement options: h=here, t=top, b=bottom, p=page
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/whisper_vs_others.png}
+    %\captionsetup{width=0.6\textwidth}
+    \caption{Whisper's performance is close to that of professional human transcribers.}
+    \label{fig:whisper_vs_others}
+\end{figure}
+\\In this context, it is important to note that Whisper, fine-tuned with Arabic datasets, showed impressive performance: 
+It reached a WER of  81.8 on the TARIC dataset (vs95.3 for Wav2vec2.0), and 74.1 and 85.9 on respectively Tun SO and TunCS datasets.\cite{abdallah2023leveragingdatacollectionunsupervised}
+
+
+
+
 \subsection{Natural Language Processing (NLP) for Intent Analysis}% intent analysis from transcribed speech
 \label{sec:nlp_intent}
 %todo
@@ -462,15 +471,6 @@ One prominent example is \textbf{Whisper} \cite{pmlr-v139-radford21aWhisper}
 % Paper needed for this subsection:
 % - Dataset and context: "T-HSAB: A Tunisian Hate Speech and Abusive Dataset" (New_Icalp_2019.pdf)
 
-\subsection{Integration of SER, ASR, and NLP for Distress Detection}%or multi-modal vocal analysis nhbbklmt pipeline : max 3 jomlett.
-\label{integration_ser_asr_nlp}
-%todo this is only a draft
-The integration of Speech Emotion Recognition (SER), Automatic Speech Recognition (ASR), and Natural Language Processing (NLP) forms a comprehensive vocal analysis pipeline for distress detection.
-This multi-modal approach leverages the strengths of each component to provide a robust assessment of vocal distress signals.
-\\The SER module analyzes the emotional tone of the speech, identifying signs of fear or anxiety that may indicate distress.
-Sim ultaneously, the ASR module transcribes the spoken words into text, capturing the explicit content of the communication.
-Finally, the NLP module processes the transcribed text to extract intent and context, identifying keywords or phrases that suggest an emergency situation.
-By combining emotional cues with linguistic analysis, this integrated pipeline enhances the accuracy and reliability of distress detection, ensuring that both the emotional state and the verbal content are considered in the assessment.
 
 
 \section{Machine Learning for Behavioral Anomaly Detection}
@@ -630,7 +630,7 @@ Figure \ref{fig:Clusters_heatmap} illustrates the cluster distribution over Tuni
 
 
 %\subsection{Geospatial Risk Score and Integration}%or Integration and Performance Evaluation
-\subsection{Risk Score Calculation}
+\subsection{Risk Score Calculation and Integration}
 %How cluster outputs are translated into risk scores.
 %How these scores feed into the decision engine.
 %Any performance or edge-case considerations.
@@ -646,16 +646,24 @@ The \textit{geo\_risk\_score} is then calculated using a distance-decay function
 
 The model achieved 82\% precision on a test set with latency compatible with our project's real-time alert requirements.
 
-
-
-
-
 \section{Implementation of the Vocal Signal Processing Pipeline}
 \subsection{Vocal Data Preprocessing}
 All incoming audio data requires a critical preprocessing step to ensure compatibility with the pre-trained analysis models. Using the \textbf{Librosa} library, each audio file is loaded and resampled to a consistent \textbf{16kHz} format, matching the required input specifications of the Whisper and Wav2Vec 2.0 models.
 
-\section{Implementation of the Behavioral Profiling Module} % or the Behavioral Anomaly Detection Module or the Machine Learning Module
 
+\subsection{Integration of SER, ASR, and NLP for Distress Detection}%or multi-modal vocal analysis nhbbklmt pipeline : max 3 jomlett.
+\label{integration_ser_asr_nlp}
+%todo this is only a draft was in the sota chapter
+The integration of Speech Emotion Recognition (SER), Automatic Speech Recognition (ASR), and Natural Language Processing (NLP) forms a comprehensive vocal analysis pipeline for distress detection.
+This multi-modal approach leverages the strengths of each component to provide a robust assessment of vocal distress signals.
+\\The SER module analyzes the emotional tone of the speech, identifying signs of fear or anxiety that may indicate distress.
+Sim ultaneously, the ASR module transcribes the spoken words into text, capturing the explicit content of the communication.
+Finally, the NLP module processes the transcribed text to extract intent and context, identifying keywords or phrases that suggest an emergency situation.
+By combining emotional cues with linguistic analysis, this integrated pipeline enhances the accuracy and reliability of distress detection, ensuring that both the emotional state and the verbal content are considered in the assessment.
+
+
+
+\section{Implementation of the Behavioral Profiling Module} % or the Behavioral Anomaly Detection Module or the Machine Learning Module
 \subsection{Behavioral Data Preprocessing}
 The behavioral module's data is prepared in two distinct stages:
 \begin{itemize}

@@ -48,6 +48,11 @@ Alec Radford, Jong~Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh,
   International Conference on Machine Learning}, volume 139 of {\em Proceedings
   of Machine Learning Research}, pages 8748--8763. PMLR, 18--24 Jul 2021.
 
+\bibitem{abdallah2023leveragingdatacollectionunsupervised}
+Ahmed Amine~Ben Abdallah, Ata Kabboudi, Amir Kanoun, and Salah Zaiem.
+\newblock Leveraging data collection and unsupervised learning for
+  code-switched tunisian arabic automatic speech recognition, 2023.
+
 \bibitem{raleigh2010acled}
 Clionadh Raleigh, Andrew Linke, Håvard Hegre, and Joakim Karlsen.
 \newblock Introducing acled: An armed conflict location and event dataset.
