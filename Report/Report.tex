@@ -67,6 +67,26 @@
 \setcounter{secnumdepth}{4}
 \setcounter{tocdepth}{4}
 
+%%%%%
+\usepackage{listings}
+\usepackage{xcolor} % Required for colors
+
+% Define a custom style for JSON
+\lstdefinestyle{jsonstyle-compact}{
+    language=Java, % listings doesn't have a JSON language, but Java is close enough
+    basicstyle=\footnotesize\ttfamily, % Use a smaller font
+    keywordstyle=\color{blue},
+    stringstyle=\color{black},
+    commentstyle=\color{green},
+    morestring=[b]",
+    showstringspaces=false,
+    breaklines=true,
+    frame=none, % Remove the frame/rectangle
+    backgroundcolor= \color{gray!5} %{gray!10}
+}
+%%%
+
+
 \usepackage{array}
 \usepackage{multirow}
 %\addto\captionsfrench{\def\tablename{\textsc{Tableau}}}
@@ -487,8 +507,52 @@ Each module processes its respective data stream and combined, they form a unifi
     \label{fig:architecture}
 \end{figure}
 
-
 \subsection{System Integration and API Design}
+To integrate the AI-based backend with the user-facing mobile application, 
+a well-defined API was designed in order to decouple the internal AI logic from the client-side application.
+
+The system exposes a RESTful API. It supports two primary modes of operation: a single, on demand analysis for
+  discrete or high-priority events, and a continuous periodic mode for ongoing safety assurance.
+
+%the /process: which listens for incoming data "capture" events from user devices, orchestrates the entire analysis pipeline, and returns a final, consolidated risk assessment.
+
+\subsubsection{On-demand API Endpoint}
+This API is designed to handle high-priority events, such as when a user presses an SOS button on their device.%wearable
+The user presses the button in a genuine emergency, triggering an immediate analysis of their current context.
+The API endpoint expects a POST request with a JSON body formatted as follows:
+\textbf{Endpoint:} \verb|POST /sos/<user_id>/<device_id>/<lat>/<long> |
+\begin{lstlisting}[style=jsonstyle-compact]
+{
+  "user_id": "string",
+  "device_id": "string",
+  "latitude": "float",
+  "longitude": "float",
+  "audio_file_path": "string",
+  "sos_pressed": "boolean"
+}
+\end{lstlisting}
+
+\subsubsection{API Response Body}
+Upon successful analysis, the API returns a JSON object with the final risk assessment:
+
+\begin{lstlisting}[style=jsonstyle-compact]
+{
+  "incident_probability": 0.92,
+  "is_incident": true,
+  "geospatial_risk": 0.85,
+  "vocal_distress_probability": 0.95,
+  "behavioral_anomaly_score": {
+    "location": 0.98,
+    "hour": 0.75,
+    "weekday": 0.20
+  }
+}
+\end{lstlisting}
+
+\subsubsection{Automated Periodic Risk Assessment}
+For continuous safety monitoring, the system relies on a server-side scheduling mechanism to regularly trigger a check for each user at regular intervals (every 15 minutes).
+This is implemented using a cron job that sends a POST request to the same /process endpoint.
+
 \subsection{Technical stack and tools used}
 \subsection{Data Management and Preprocessing}
 \subsection{Final Decision Engine Design }

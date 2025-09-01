@@ -31,16 +31,19 @@
 \contentsline {chapter}{Design and implementation}{xii}{chapter*.15}%
 \contentsline {section}{\numberline {XI}System Architecture, Integration, and Decision Engine Overview}{xii}{section.0.11}%
 \contentsline {subsection}{\numberline {XI.1}Overall System Architecture}{xii}{subsection.0.11.1}%
-\contentsline {subsection}{\numberline {XI.2}System Integration and API Design}{xiii}{subsection.0.11.2}%
-\contentsline {subsection}{\numberline {XI.3}Technical stack and tools used}{xiii}{subsection.0.11.3}%
-\contentsline {subsection}{\numberline {XI.4}Data Management and Preprocessing}{xiii}{subsection.0.11.4}%
-\contentsline {subsection}{\numberline {XI.5}Final Decision Engine Design }{xiii}{subsection.0.11.5}%
-\contentsline {section}{\numberline {XII}Implementation of the Geospatial Analysis Module}{xiii}{section.0.12}%
-\contentsline {section}{\numberline {XIII}Implementation of the Vocal Signal Processing Pipeline}{xiii}{section.0.13}%
-\contentsline {section}{\numberline {XIV}Implementation of the Behavioral Profiling Module}{xiii}{section.0.14}%
-\contentsline {section}{\numberline {XV}Final Decision Engine and System Integration}{xiii}{section.0.15}%
-\contentsline {chapter}{Results and Discussion}{xiv}{chapter*.17}%
-\contentsline {section}{\numberline {XVI}Evaluation and Results}{xiv}{section.0.16}%
-\contentsline {section}{\numberline {XVII}Discussion}{xiv}{section.0.17}%
-\contentsline {chapter}{Conclusion and perspectives}{xv}{chapter*.18}%
-\contentsline {chapter}{Appendix 1}{xvi}{appendix*.19}%
+\contentsline {subsection}{\numberline {XI.2}System Integration and API Design}{xii}{subsection.0.11.2}%
+\contentsline {subsubsection}{\numberline {XI.2.1}On-demand API Endpoint}{xiii}{subsubsection.0.11.2.1}%
+\contentsline {subsubsection}{\numberline {XI.2.2}API Response Body}{xiii}{subsubsection.0.11.2.2}%
+\contentsline {subsubsection}{\numberline {XI.2.3}Automated Periodic Risk Assessment}{xiii}{subsubsection.0.11.2.3}%
+\contentsline {subsection}{\numberline {XI.3}Technical stack and tools used}{xiv}{subsection.0.11.3}%
+\contentsline {subsection}{\numberline {XI.4}Data Management and Preprocessing}{xiv}{subsection.0.11.4}%
+\contentsline {subsection}{\numberline {XI.5}Final Decision Engine Design }{xiv}{subsection.0.11.5}%
+\contentsline {section}{\numberline {XII}Implementation of the Geospatial Analysis Module}{xiv}{section.0.12}%
+\contentsline {section}{\numberline {XIII}Implementation of the Vocal Signal Processing Pipeline}{xiv}{section.0.13}%
+\contentsline {section}{\numberline {XIV}Implementation of the Behavioral Profiling Module}{xiv}{section.0.14}%
+\contentsline {section}{\numberline {XV}Final Decision Engine and System Integration}{xiv}{section.0.15}%
+\contentsline {chapter}{Results and Discussion}{xv}{chapter*.17}%
+\contentsline {section}{\numberline {XVI}Evaluation and Results}{xv}{section.0.16}%
+\contentsline {section}{\numberline {XVII}Discussion}{xv}{section.0.17}%
+\contentsline {chapter}{Conclusion and perspectives}{xvi}{chapter*.18}%
+\contentsline {chapter}{Appendix 1}{xvii}{appendix*.19}%
