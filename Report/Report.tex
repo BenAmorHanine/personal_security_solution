@@ -115,12 +115,14 @@
 \spacing{1.4}
 \chapter*{List of acronyms}
 %\addcontentsline{toc}{chapter}{Liste des acronymes}
-\markboth{List of acronyms}{}
+\markboth{List of acronyms}{}%abbrev
 \begin{itemize}
 \item \textbf{AI} Artificial Intelligence
 \item \textbf{ML} Machine Learning
 \item \textbf{API} Application Programming Interface
 \item \textbf{ASR} Automatic Speech Recognition
+\item \textbf{SER} Speech Emotion Recognition
+\item  \textbf{NLP} Natural Language Processing
 \item \textbf{DBSCAN} Density-Based Spatial Clustering of Applications with Noise
 \item \textbf{GIS} Geographical Information System
 \item \textbf{GPS} Global Positioning System
@@ -390,11 +392,6 @@ While traditional approaches rely on static crime databases and predetermined ri
 
 \section{Vocal Signal Processing for Distress Detection}
 \label{vocal_processing_theory}
-
-% In this introductory paragraph, you'll briefly state that the vocal analysis
-% module uses a parallel, multi-modal approach. Raw audio is processed
-% simultaneously to extract both the spoken words (via ASR) and the underlying
-% emotion (via SER), with the resulting text then analyzed for intent (via NLP).
 In real world emergencies, vocal cues such as tone, pitch, and specific keywords can provide critical 
 insights into a person's state of distress. This section explores the theoretical foundations of vocal signal processing: 
 Speech Emotion Recognition (SER) for emotional states detection %for detecting emotional states from audio signals, 
@@ -428,8 +425,9 @@ validating its selection as a robust theoretical foundation for the distress det
 % Papers needed for this subsection:
 % - Main model theory: "Robust Speech Recognition via Large-Scale Weak Supervision" (whisper.pdf)
 % - Specific application context: "Leveraging Data Collection and Unsupervised Learning..." (tunisian_arabic-speech_recognition.pdf)
-
-
+Automatic Speech Recognition (ASR) is the process of converting spoken language into written text, enabling machines to understand and process human speech.
+\\Modern ASR systems leverage large-scale, pre-trained Transformer models that enable robust speech-to-text conversion across diverse languages and accents.
+One prominent example is \textbf{Whisper} \cite{radford2023Whisper}
 \subsection{Natural Language Processing (NLP) for Intent Analysis}% intent analysis from transcribed speech
 \label{sec:nlp_intent}
 
