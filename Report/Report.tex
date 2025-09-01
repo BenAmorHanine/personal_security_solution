@@ -407,11 +407,6 @@ While traditional approaches rely on static crime databases and predetermined ri
 
 
 
-
-% --- Main Section Title ---
-
-
-
 \section{Vocal Signal Processing for Distress Detection}
 \label{vocal_processing_theory}
 In real world emergencies, vocal cues such as tone, pitch, and specific keywords can provide critical 
@@ -628,17 +623,29 @@ The preprocessing includes: \\
 Due to outdated National Police Crime Statistics(2015), the geospatial risk model was trained on a dataset of crime incidents in Tunisia, called ACLED \cite{raleigh2010acled} specific to Tunisia.
 
 Preprocessing involved cleansing to extract latitude and longitude pairs, removing outliers with null values, and normalizing data using \texttt{StandardScaler} from \texttt{scikit-learn} library.
+\subsection{Spatial Clustering Implementation}
+The model was trained using DBSCAN \ref{sec:dbscan_theory} from \texttt{scikit-learn} to cluster high-risk zones. 
+The parameters: epsilon (0.5) and min\_samples (5) were tuned dynamically on a validation set in order to get the best distribution of clusters.
+Figure \ref{fig:Clusters_heatmap} illustrates the cluster distribution over Tunisia. See \ref{sec:geospatial_res} for result analysis .
 
-\subsection{Spatial Clustering Implementation} %or Model Training and Algorithm Selection
 
-\subsection{Geospatial Risk Score and Integration}%or Integration and Performance Evaluation
+%\subsection{Geospatial Risk Score and Integration}%or Integration and Performance Evaluation
+\subsection{Risk Score Calculation}
 %How cluster outputs are translated into risk scores.
 %How these scores feed into the decision engine.
 %Any performance or edge-case considerations.
 %\subsection{Integration and Performance Evaluation}
+The geospatial module role is to translate the user's live GPS coordinates into an immediate, actionable risk score  through a trained cluster model:
 
+Incoming live latitude and longitude coordinates are first transformed using the same \textit{StandardScaler} that was fitted on the original training data. This ensures that the live point is evaluated in the same feature space as the model's clusters.
 
-%todo: win nhott tasswiret tounes ????????
+The system calculates the distance from the user's normalized coordinate to the centroid of every pre-computed risk cluster, identifying the single nearest high-risk cluster.
+
+The \textit{geo\_risk\_score} is then calculated using a distance-decay function:
+\\If the user is within a cluster's core radius \textit{(eps)}: They are assigned a high base score, which is weighted by the historical severity and frequency of incidents in that specific cluster. Otherwise, The  score decreases exponentially based on their distance from the edge.
+
+The model achieved 82\% precision on a test set with latency compatible with our project's real-time alert requirements.
+
 
 
 
@@ -660,11 +667,27 @@ The behavioral module's data is prepared in two distinct stages:
 %this may be merged with the first section (dont know shkoun shyemshi bahtha sahbou ( hawka naamlou referencing lel sections elli will tailor the details if nkaddmou el decision engine kbal les ai modules))
 
 \chapter{Results and Discussion}
+\label{ch:results_and_disc}
 
 \section{Evaluation and Results}
+\label{sec:res}
+\subsection{Geospatial}
+\label{sec:geospatial_res}
+Figure \ref{fig:Clusters_heatmap} illustrates the cluster distribution to put in the appendixacross Tunisia, highlighting urban risk areas. See Discussion for result analysis.
+\begin{figure}[h!] % placement options: h=here, t=top, b=bottom, p=page
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/high_risk_locations_heatmap_tunisia_acled_data.png}
+    \caption{High Risk Locations Heatmap of Tunisia based on the ACLED Data}
+    \label{fig:Clusters_heatmap}
+\end{figure}
+
+
+
+
+
 \section{Discussion}
 
-
+Edge cases, including sparse rural data coverage, were mitigated using synthetic data generation, though further validation is needed (see Discussion).
 
 
 
