@@ -483,9 +483,19 @@ This allows learning a user's unique temporal "pattern of life \cite{1339268patt
 
 \subsection{ Anomaly Scoring as a Measure of Deviation}
 \label{sec:anomaly_scoring}
+Anomaly scoring quantifies the degree of deviation from established behavioral baselines. The theoretical foundation involves measuring statistical distance between observed behaviors and learned normal patterns across multiple dimensions.
+
+Spatial anomaly detection employs \textbf{distance-based} metrics, including \textbf{Euclidean} and \textbf{geodesic} distance measures, to assess positional deviations from routine locations %todo\cite{chandola2009anomaly}.
+
+Temporal anomalies are typically identified through \textbf{statistical} approaches using \textbf{probability distributions}, where events occurring during periods of historically low frequency receive higher anomaly scores.
+
+State-of-the-art techniques incorporate dynamic thresholding to adapt to evolving user patterns, addressing the challenge of concept drift in behavioral modeling  by enhancing detection accuracy in dynamic environments%todo \cite{goldstein2016comparative}[Goldstein and Uchida, 2016].
+
+
 \subsection{Supervised Classification for Incident Prediction}
 \label{sec:supervised_classification}
-
+Supervised classification predicts incidents from labeled data, leveraging ensemble methods like Random Forest or XGBoost to handle imbalanced datasets [Breiman, 2001; Chen and Guestrin, 2016]. 
+These techniques adapt to real-time challenges, such as sparse incident data, using adaptive thresholding to improve accuracy in evolving user behavior contexts, critical for safety monitoring.
 
 \chapter{Design and implementation}
 \label{ch:4eme}
@@ -689,7 +699,15 @@ while frequency distributions in `db\_functions.py` model temporal
 patterns (e.g., weekday mornings), building a "pattern of life" for anomaly detection.
 
 
-
+\subsection{Anomaly Scoring }
+Anomaly scoring, the 2nd stage of the behavioral analysis, quantifies the degree of deviation of a new, live event from the user's established profile. This is accomplished by calculating an anomaly score—a numerical
+ value representing how "unusual" an event is. This score is not a single value, but rather a vector of scores, with each element corresponding to a different dimension of the user's behavior.
+For spatial deviations, the score is derived from the geometric distance between a user's current coordinates and the centroids of their known routine locations. A greater distance corresponds to a 
+higher anomaly score, indicating the user is in a location they frequent less often.
+For temporal deviations, the score is based on the principle of inverse frequency. 
+An event's timestamp (e.g., the hour of the day) is compared against the learned frequency distributions from the user's profile. Activities occurring at times with low historical probability 
+(e.g., being active at 3 AM for a user who is typically home) are assigned a significantly higher anomaly score. By combining these scores, the system creates a rich, multi-dimensional feature vector that 
+captures the full context of a user's deviation from their normal "pattern of life."
 
 %\section{Final Decision Engine and System Integration}
 %this may be merged with the first section (dont know shkoun shyemshi bahtha sahbou ( hawka naamlou referencing lel sections elli will tailor the details if nkaddmou el decision engine kbal les ai modules))

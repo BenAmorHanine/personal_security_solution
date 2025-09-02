@@ -26,30 +26,31 @@
 \contentsline {section}{\numberline {X}Machine Learning for Behavioral Anomaly Detection}{xii}{section.0.10}%
 \contentsline {subsection}{\numberline {X.1}Unsupervised Profiling of User Routines}{xii}{subsection.0.10.1}%
 \contentsline {subsection}{\numberline {X.2} Anomaly Scoring as a Measure of Deviation}{xii}{subsection.0.10.2}%
-\contentsline {subsection}{\numberline {X.3}Supervised Classification for Incident Prediction}{xii}{subsection.0.10.3}%
-\contentsline {chapter}{Design and implementation}{xiii}{chapter*.16}%
-\contentsline {section}{\numberline {XI}System Architecture, Integration, and Decision Engine Overview}{xiii}{section.0.11}%
-\contentsline {subsection}{\numberline {XI.1}Overall System Architecture}{xiii}{subsection.0.11.1}%
-\contentsline {subsection}{\numberline {XI.2}Final Decision Engine Design}{xiii}{subsection.0.11.2}%
-\contentsline {subsection}{\numberline {XI.3}System Integration and API Design}{xiv}{subsection.0.11.3}%
-\contentsline {subsubsection}{\numberline {XI.3.1}On-demand API Endpoint}{xiv}{subsubsection.0.11.3.1}%
-\contentsline {subsubsection}{\numberline {XI.3.2}API Response Body}{xiv}{subsubsection.0.11.3.2}%
-\contentsline {subsubsection}{\numberline {XI.3.3}Automated Periodic Risk Assessment}{xv}{subsubsection.0.11.3.3}%
-\contentsline {subsection}{\numberline {XI.4}Technical stack and tools used}{xv}{subsection.0.11.4}%
-\contentsline {subsection}{\numberline {XI.5}Data Management and Preprocessing}{xvi}{subsection.0.11.5}%
-\contentsline {section}{\numberline {XII}Implementation of the Geospatial Analysis Module}{xvi}{section.0.12}%
-\contentsline {subsection}{\numberline {XII.1}Data acquisition and Preprocessing}{xvi}{subsection.0.12.1}%
-\contentsline {subsection}{\numberline {XII.2}Spatial Clustering Implementation}{xvi}{subsection.0.12.2}%
-\contentsline {subsection}{\numberline {XII.3}Risk Score Calculation and Integration}{xvi}{subsection.0.12.3}%
-\contentsline {section}{\numberline {XIII}Implementation of the Vocal Signal Processing Pipeline}{xvii}{section.0.13}%
-\contentsline {subsection}{\numberline {XIII.1}Vocal Data Preprocessing}{xvii}{subsection.0.13.1}%
-\contentsline {subsection}{\numberline {XIII.2}Integration of SER, ASR, and NLP for Distress Detection}{xvii}{subsection.0.13.2}%
-\contentsline {section}{\numberline {XIV}Implementation of the Behavioral Profiling Module}{xviii}{section.0.14}%
-\contentsline {subsection}{\numberline {XIV.1}Behavioral Data Preprocessing}{xviii}{subsection.0.14.1}%
-\contentsline {subsection}{\numberline {XIV.2}Implementation of Unsupervised Profiling}{xviii}{subsection.0.14.2}%
-\contentsline {chapter}{Results and Discussion}{xix}{chapter*.18}%
-\contentsline {section}{\numberline {XV}Evaluation and Results}{xix}{section.0.15}%
-\contentsline {subsection}{\numberline {XV.1}Geospatial}{xix}{subsection.0.15.1}%
-\contentsline {section}{\numberline {XVI}Discussion}{xix}{section.0.16}%
-\contentsline {chapter}{Conclusion and perspectives}{xx}{chapter*.20}%
-\contentsline {chapter}{Appendix 1}{xxi}{appendix*.21}%
+\contentsline {subsection}{\numberline {X.3}Supervised Classification for Incident Prediction}{xiii}{subsection.0.10.3}%
+\contentsline {chapter}{Design and implementation}{xiv}{chapter*.16}%
+\contentsline {section}{\numberline {XI}System Architecture, Integration, and Decision Engine Overview}{xiv}{section.0.11}%
+\contentsline {subsection}{\numberline {XI.1}Overall System Architecture}{xiv}{subsection.0.11.1}%
+\contentsline {subsection}{\numberline {XI.2}Final Decision Engine Design}{xiv}{subsection.0.11.2}%
+\contentsline {subsection}{\numberline {XI.3}System Integration and API Design}{xv}{subsection.0.11.3}%
+\contentsline {subsubsection}{\numberline {XI.3.1}On-demand API Endpoint}{xv}{subsubsection.0.11.3.1}%
+\contentsline {subsubsection}{\numberline {XI.3.2}API Response Body}{xv}{subsubsection.0.11.3.2}%
+\contentsline {subsubsection}{\numberline {XI.3.3}Automated Periodic Risk Assessment}{xvi}{subsubsection.0.11.3.3}%
+\contentsline {subsection}{\numberline {XI.4}Technical stack and tools used}{xvi}{subsection.0.11.4}%
+\contentsline {subsection}{\numberline {XI.5}Data Management and Preprocessing}{xvii}{subsection.0.11.5}%
+\contentsline {section}{\numberline {XII}Implementation of the Geospatial Analysis Module}{xvii}{section.0.12}%
+\contentsline {subsection}{\numberline {XII.1}Data acquisition and Preprocessing}{xvii}{subsection.0.12.1}%
+\contentsline {subsection}{\numberline {XII.2}Spatial Clustering Implementation}{xvii}{subsection.0.12.2}%
+\contentsline {subsection}{\numberline {XII.3}Risk Score Calculation and Integration}{xvii}{subsection.0.12.3}%
+\contentsline {section}{\numberline {XIII}Implementation of the Vocal Signal Processing Pipeline}{xviii}{section.0.13}%
+\contentsline {subsection}{\numberline {XIII.1}Vocal Data Preprocessing}{xviii}{subsection.0.13.1}%
+\contentsline {subsection}{\numberline {XIII.2}Integration of SER, ASR, and NLP for Distress Detection}{xviii}{subsection.0.13.2}%
+\contentsline {section}{\numberline {XIV}Implementation of the Behavioral Profiling Module}{xix}{section.0.14}%
+\contentsline {subsection}{\numberline {XIV.1}Behavioral Data Preprocessing}{xix}{subsection.0.14.1}%
+\contentsline {subsection}{\numberline {XIV.2}Implementation of Unsupervised Profiling}{xix}{subsection.0.14.2}%
+\contentsline {subsection}{\numberline {XIV.3}Anomaly Scoring }{xix}{subsection.0.14.3}%
+\contentsline {chapter}{Results and Discussion}{xx}{chapter*.18}%
+\contentsline {section}{\numberline {XV}Evaluation and Results}{xx}{section.0.15}%
+\contentsline {subsection}{\numberline {XV.1}Geospatial}{xx}{subsection.0.15.1}%
+\contentsline {section}{\numberline {XVI}Discussion}{xx}{section.0.16}%
+\contentsline {chapter}{Conclusion and perspectives}{xxi}{chapter*.20}%
+\contentsline {chapter}{Appendix 1}{xxii}{appendix*.21}%
