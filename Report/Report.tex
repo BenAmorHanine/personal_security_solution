@@ -461,9 +461,26 @@ The theory behind NLP for intent analysis relies on Transformer-based language m
 
 \section{Machine Learning for Behavioral Anomaly Detection}
 \label{sec:behavioral_theory}
-%todo: use the paper: a suvey on ...
+Behavioral anomaly detection levarages ML to create a personnalized model to identify deviations in a user's routine, indicating dangerous situations. This approach enables real-time safety in Tunisian context. The following section explores unsupervised profiling, anomaly scoring and supervised classification techniques.
+
 \subsection{Unsupervised Profiling of User Routines}
 \label{sec:unsupervised_profiling}
+The foundation of the behavioral analysis module is the unsupervised profiling of a user's routines from raw spatiotemporal data. 
+This process aims to build a personalized baseline of "normal" behavior without requiring any pre-labeled examples of incidents. 
+The state-of-the-art approach for this task involves two key theoretical concepts:
+
+Spatial Dimension:density-based clustering identifies geographically significant locations. The \textbf{OPTICS} (Ordering Points To Identify the Clustering Structure) \cite{304187OPTICS}
+ algorithm is a powerful, state-of-the-art method for this task :
+ \\ Unlike older methods like K-Means, OPTICS does not require the number of clusters to be  known beforehand. 
+ It excels at discovering clusters of arbitrary shape, can handle noise, and adapt to varying point densities--
+making it ideal for GPS traces in order to identify a user's routine "hotspots" such as home, work,\dots.
+
+
+Temporal dimension: routines are modeled using frequency distributions. 
+By analyzing the timestamps of a user's location history, the system builds probability models at different time scales:time of day,  the day of the week. 
+This allows learning a user's unique temporal "pattern of life \cite{1339268pattern}," establishing a baseline for detecting unusual activity when a user deviates from their learned routine.%todo citation ib bib file 
+
+
 \subsection{ Anomaly Scoring as a Measure of Deviation}
 \label{sec:anomaly_scoring}
 \subsection{Supervised Classification for Incident Prediction}
@@ -473,7 +490,6 @@ The theory behind NLP for intent analysis relies on Transformer-based language m
 \chapter{Design and implementation}
 \label{ch:4eme}
 %todo we need an intro here 
-
 %\section{System Architecture and Data management}
 \section{System Architecture, Integration, and Decision Engine Overview}
 \label{sec:system_architecture}
@@ -657,6 +673,23 @@ The behavioral module's data is prepared in two distinct stages:
     \item \textbf{For User Profiling}: To build a user's behavioral profile, their historical location data is fetched from the \texttt{locations\_collection} and filtered to include events from the last 30 days.
     \item \textbf{For Incident Classification}: To train the final \texttt{RandomForestClassifier}, a labeled dataset is created from past alerts. For each alert, a feature vector is constructed from the four anomaly scores (location, hour, weekday, month), and the target label is set based on the \texttt{is\_incident} field.
 \end{itemize}
+%todo le faite quon a synthetisé de la data pour new users ? si je me rappelle bien, en t cas comment we handled new users
+\subsection{Implementation of Unsupervised Profiling}
+\label{sec:unsupervised_implementation}
+%todo this is a draft
+% Purpose: Detail the practical execution of unsupervised profiling.
+%
+% What to write:
+% 1. Describe data source (`locations_collection`) and processing.
+% 2. Explain applying DBSCAN/OPTICS to identify hotspots (e.g., home, work).
+% 3. Mention frequency distribution use in `db_functions.py`.
+Unsupervised profiling in Hydatis uses locations\_collection` GPS data, processed via 
+DBSCAN to identify routine hotspots like home or work. OPTICS handles arbitrary shapes, 
+while frequency distributions in `db\_functions.py` model temporal 
+patterns (e.g., weekday mornings), building a "pattern of life" for anomaly detection.
+
+
+
 
 %\section{Final Decision Engine and System Integration}
 %this may be merged with the first section (dont know shkoun shyemshi bahtha sahbou ( hawka naamlou referencing lel sections elli will tailor the details if nkaddmou el decision engine kbal les ai modules))

@@ -70,6 +70,21 @@ Hatem Haddad, Hala Mulki, and Asma Oueslati.
   Theory to Practice}, pages 251--263, Cham, 2019. Springer International
   Publishing.
 
+\bibitem{304187OPTICS}
+Mihael Ankerst, Markus~M. Breunig, Hans-Peter Kriegel, and J\"{o}rg Sander.
+\newblock Optics: ordering points to identify the clustering structure.
+\newblock In {\em Proceedings of the 1999 ACM SIGMOD International Conference
+  on Management of Data}, SIGMOD '99, pages 49--60, New York, NY, USA, 1999.
+  Association for Computing Machinery.
+
+\bibitem{1339268pattern}
+Jian Pei, Jiawei Han, B.~Mortazavi-Asl, Jianyong Wang, H.~Pinto, Qiming Chen,
+  U.~Dayal, and Mei-Chun Hsu.
+\newblock Mining sequential patterns by pattern-growth: the prefixspan
+  approach.
+\newblock {\em IEEE Transactions on Knowledge and Data Engineering},
+  16(11):1424--1440, 2004.
+
 \bibitem{raleigh2010acled}
 Clionadh Raleigh, Andrew Linke, Håvard Hegre, and Joakim Karlsen.
 \newblock Introducing acled: An armed conflict location and event dataset.
