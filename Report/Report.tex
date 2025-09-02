@@ -454,13 +454,10 @@ It reached a WER of  81.8 on the TARIC dataset (vs95.3 for Wav2vec2.0), and 74.1
 
 \subsection{Natural Language Processing (NLP) for Intent Analysis}% intent analysis from transcribed speech
 \label{sec:nlp_intent}
-Natural Language Processing (NLP) is the final stage of the vocal analysis pipeline, tasked with analyzing the transcribed text from 
-the ASR module to determine user intent in order to assess risk for distress detection.
-The theory behind NLP for intent analysis relies on Transformer-based language models, notably \textbf{BERT} (Bidirectional Encoder 
-Representations from Transformers), proven with highly effectiveness for text classification\cite{devlin-etal-2019-bert}.
-BERT's architecture enables fine-tuning for specific tasks like intent recognition, where it identifies keywords or phrases 
-indicative of distress.
-A state of the art example is \textbf{TunBERT}, a model created by fine-tuning BERT on a culturally specific dataset : The T-HSAB dataset: the first Tunisian Hate Speech and Abusive dataset \cite{10.1007/978-3-030-32959-4_18THSAB}, enabling it to classify dialect-specific expressions, enhancing intent analysis for Tunisian Speech.
+Natural Language Processing (NLP) is the final stage of the vocal analysis pipeline, tasked with analyzing the transcribed text from the ASR module to determine user intent in order to assess risk for distress detection.
+The theory behind NLP for intent analysis relies on Transformer-based language models, notably \textbf{BERT} (Bidirectional Encoder Representations from Transformers), proven with highly effectiveness for text classification\cite{devlin-etal-2019-bert}.
+\\BERT's architecture enables fine-tuning for specific tasks like intent recognition, where it identifies keywords or phrases indicative of distress.
+\\A state of the art example is \textbf{TunBERT}, a model created by fine-tuning BERT on a culturally specific dataset : The T-HSAB dataset: the first Tunisian Hate Speech and Abusive dataset \cite{10.1007/978-3-030-32959-4_18THSAB}, enabling it to classify dialect-specific expressions, enhancing intent analysis for Tunisian Speech.
 
 \section{Machine Learning for Behavioral Anomaly Detection}
 \label{sec:behavioral_theory}
