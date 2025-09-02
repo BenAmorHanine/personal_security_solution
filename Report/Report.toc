@@ -23,32 +23,32 @@
 \contentsline {subsection}{\numberline {IX.1}Speech Emotion Recognition (SER)}{x}{subsection.0.9.1}%
 \contentsline {subsection}{\numberline {IX.2}Automatic Speech Recognition (ASR)}{x}{subsection.0.9.2}%
 \contentsline {subsection}{\numberline {IX.3}Natural Language Processing (NLP) for Intent Analysis}{xi}{subsection.0.9.3}%
-\contentsline {section}{\numberline {X}Machine Learning for Behavioral Anomaly Detection}{xi}{section.0.10}%
-\contentsline {subsection}{\numberline {X.1}Unsupervised Profiling of User Routines}{xi}{subsection.0.10.1}%
-\contentsline {subsection}{\numberline {X.2} Anomaly Scoring as a Measure of Deviation}{xi}{subsection.0.10.2}%
-\contentsline {subsection}{\numberline {X.3}Supervised Classification for Incident Prediction}{xi}{subsection.0.10.3}%
-\contentsline {chapter}{Design and implementation}{xii}{chapter*.16}%
-\contentsline {section}{\numberline {XI}System Architecture, Integration, and Decision Engine Overview}{xii}{section.0.11}%
-\contentsline {subsection}{\numberline {XI.1}Overall System Architecture}{xii}{subsection.0.11.1}%
-\contentsline {subsection}{\numberline {XI.2}Final Decision Engine Design}{xii}{subsection.0.11.2}%
-\contentsline {subsection}{\numberline {XI.3}System Integration and API Design}{xiii}{subsection.0.11.3}%
-\contentsline {subsubsection}{\numberline {XI.3.1}On-demand API Endpoint}{xiii}{subsubsection.0.11.3.1}%
-\contentsline {subsubsection}{\numberline {XI.3.2}API Response Body}{xiii}{subsubsection.0.11.3.2}%
-\contentsline {subsubsection}{\numberline {XI.3.3}Automated Periodic Risk Assessment}{xiv}{subsubsection.0.11.3.3}%
-\contentsline {subsection}{\numberline {XI.4}Technical stack and tools used}{xiv}{subsection.0.11.4}%
-\contentsline {subsection}{\numberline {XI.5}Data Management and Preprocessing}{xv}{subsection.0.11.5}%
-\contentsline {section}{\numberline {XII}Implementation of the Geospatial Analysis Module}{xv}{section.0.12}%
-\contentsline {subsection}{\numberline {XII.1}Data acquisition and Preprocessing}{xv}{subsection.0.12.1}%
-\contentsline {subsection}{\numberline {XII.2}Spatial Clustering Implementation}{xv}{subsection.0.12.2}%
-\contentsline {subsection}{\numberline {XII.3}Risk Score Calculation and Integration}{xv}{subsection.0.12.3}%
-\contentsline {section}{\numberline {XIII}Implementation of the Vocal Signal Processing Pipeline}{xvi}{section.0.13}%
-\contentsline {subsection}{\numberline {XIII.1}Vocal Data Preprocessing}{xvi}{subsection.0.13.1}%
-\contentsline {subsection}{\numberline {XIII.2}Integration of SER, ASR, and NLP for Distress Detection}{xvi}{subsection.0.13.2}%
-\contentsline {section}{\numberline {XIV}Implementation of the Behavioral Profiling Module}{xvii}{section.0.14}%
-\contentsline {subsection}{\numberline {XIV.1}Behavioral Data Preprocessing}{xvii}{subsection.0.14.1}%
-\contentsline {chapter}{Results and Discussion}{xviii}{chapter*.18}%
-\contentsline {section}{\numberline {XV}Evaluation and Results}{xviii}{section.0.15}%
-\contentsline {subsection}{\numberline {XV.1}Geospatial}{xviii}{subsection.0.15.1}%
-\contentsline {section}{\numberline {XVI}Discussion}{xviii}{section.0.16}%
-\contentsline {chapter}{Conclusion and perspectives}{xix}{chapter*.20}%
-\contentsline {chapter}{Appendix 1}{xx}{appendix*.21}%
+\contentsline {section}{\numberline {X}Machine Learning for Behavioral Anomaly Detection}{xii}{section.0.10}%
+\contentsline {subsection}{\numberline {X.1}Unsupervised Profiling of User Routines}{xii}{subsection.0.10.1}%
+\contentsline {subsection}{\numberline {X.2} Anomaly Scoring as a Measure of Deviation}{xii}{subsection.0.10.2}%
+\contentsline {subsection}{\numberline {X.3}Supervised Classification for Incident Prediction}{xii}{subsection.0.10.3}%
+\contentsline {chapter}{Design and implementation}{xiii}{chapter*.16}%
+\contentsline {section}{\numberline {XI}System Architecture, Integration, and Decision Engine Overview}{xiii}{section.0.11}%
+\contentsline {subsection}{\numberline {XI.1}Overall System Architecture}{xiii}{subsection.0.11.1}%
+\contentsline {subsection}{\numberline {XI.2}Final Decision Engine Design}{xiii}{subsection.0.11.2}%
+\contentsline {subsection}{\numberline {XI.3}System Integration and API Design}{xiv}{subsection.0.11.3}%
+\contentsline {subsubsection}{\numberline {XI.3.1}On-demand API Endpoint}{xiv}{subsubsection.0.11.3.1}%
+\contentsline {subsubsection}{\numberline {XI.3.2}API Response Body}{xiv}{subsubsection.0.11.3.2}%
+\contentsline {subsubsection}{\numberline {XI.3.3}Automated Periodic Risk Assessment}{xv}{subsubsection.0.11.3.3}%
+\contentsline {subsection}{\numberline {XI.4}Technical stack and tools used}{xv}{subsection.0.11.4}%
+\contentsline {subsection}{\numberline {XI.5}Data Management and Preprocessing}{xvi}{subsection.0.11.5}%
+\contentsline {section}{\numberline {XII}Implementation of the Geospatial Analysis Module}{xvi}{section.0.12}%
+\contentsline {subsection}{\numberline {XII.1}Data acquisition and Preprocessing}{xvi}{subsection.0.12.1}%
+\contentsline {subsection}{\numberline {XII.2}Spatial Clustering Implementation}{xvi}{subsection.0.12.2}%
+\contentsline {subsection}{\numberline {XII.3}Risk Score Calculation and Integration}{xvi}{subsection.0.12.3}%
+\contentsline {section}{\numberline {XIII}Implementation of the Vocal Signal Processing Pipeline}{xvii}{section.0.13}%
+\contentsline {subsection}{\numberline {XIII.1}Vocal Data Preprocessing}{xvii}{subsection.0.13.1}%
+\contentsline {subsection}{\numberline {XIII.2}Integration of SER, ASR, and NLP for Distress Detection}{xvii}{subsection.0.13.2}%
+\contentsline {section}{\numberline {XIV}Implementation of the Behavioral Profiling Module}{xviii}{section.0.14}%
+\contentsline {subsection}{\numberline {XIV.1}Behavioral Data Preprocessing}{xviii}{subsection.0.14.1}%
+\contentsline {chapter}{Results and Discussion}{xix}{chapter*.18}%
+\contentsline {section}{\numberline {XV}Evaluation and Results}{xix}{section.0.15}%
+\contentsline {subsection}{\numberline {XV.1}Geospatial}{xix}{subsection.0.15.1}%
+\contentsline {section}{\numberline {XVI}Discussion}{xix}{section.0.16}%
+\contentsline {chapter}{Conclusion and perspectives}{xx}{chapter*.20}%
+\contentsline {chapter}{Appendix 1}{xxi}{appendix*.21}%

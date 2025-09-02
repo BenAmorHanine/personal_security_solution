@@ -148,7 +148,7 @@
 \item \textbf{DBSCAN} Density-Based Spatial Clustering of Applications with Noise
 \item \textbf{GIS} Geographical Information System
 \item \textbf{GPS} Global Positioning System
-
+\item \textbf{BERT} Bidirectional Encoder Representations from Transformers
 \end{itemize}
 
 \frontmatter %here yothhrou les num des pages fl contnent
@@ -452,26 +452,15 @@ To assert their efficiency, comparaisons between  Whisper models with both human
 \\In this context, it is important to note that Whisper, fine-tuned with Arabic datasets, showed impressive performance: 
 It reached a WER of  81.8 on the TARIC dataset (vs95.3 for Wav2vec2.0), and 74.1 and 85.9 on respectively Tun SO and TunCS datasets.\cite{abdallah2023leveragingdatacollectionunsupervised}
 
-
-
-
 \subsection{Natural Language Processing (NLP) for Intent Analysis}% intent analysis from transcribed speech
 \label{sec:nlp_intent}
-%todo
-% Purpose: Explain the theory of analyzing the transcribed text for meaning and risk.
-%
-% What to write:
-% 1. Define Natural Language Processing (NLP) as the final stage of the pipeline,
-%    which analyzes the output of the ASR module .
-% 2. Discuss the theory behind Transformer-based language models like BERT for text
-%    classification and the specific task of Intent Analysis.
-% 3. Introduce TunBERT as a state-of-the-art application of this theory, fine-tuned
-%    on culturally specific datasets to understand the nuances of the Tunisian dialect.
-%
-% Paper needed for this subsection:
-% - Dataset and context: "T-HSAB: A Tunisian Hate Speech and Abusive Dataset" (New_Icalp_2019.pdf)
-
-
+Natural Language Processing (NLP) is the final stage of the vocal analysis pipeline, tasked with analyzing the transcribed text from 
+the ASR module to determine user intent in order to assess risk for distress detection.
+The theory behind NLP for intent analysis relies on Transformer-based language models, notably \textbf{BERT} (Bidirectional Encoder 
+Representations from Transformers), proven with highly effectiveness for text classification\cite{devlin-etal-2019-bert}.
+BERT's architecture enables fine-tuning for specific tasks like intent recognition, where it identifies keywords or phrases 
+indicative of distress.
+A state of the art example is \textbf{TunBERT}, a model created by fine-tuning BERT on a culturally specific dataset : The T-HSAB dataset: the first Tunisian Hate Speech and Abusive dataset \cite{10.1007/978-3-030-32959-4_18THSAB}, enabling it to classify dialect-specific expressions, enhancing intent analysis for Tunisian Speech.
 
 \section{Machine Learning for Behavioral Anomaly Detection}
 \label{sec:behavioral_theory}
@@ -649,7 +638,8 @@ The model achieved 82\% precision on a test set with latency compatible with our
 \section{Implementation of the Vocal Signal Processing Pipeline}
 \subsection{Vocal Data Preprocessing}
 All incoming audio data requires a critical preprocessing step to ensure compatibility with the pre-trained analysis models. Using the \textbf{Librosa} library, each audio file is loaded and resampled to a consistent \textbf{16kHz} format, matching the required input specifications of the Whisper and Wav2Vec 2.0 models.
-
+ thsab: This dataset contains thousands of manually annotated Tunisian comments from social media, capturing the specific vocabulary 
+and expressions used in high-stress or abusive contexts
 
 \subsection{Integration of SER, ASR, and NLP for Distress Detection}%or multi-modal vocal analysis nhbbklmt pipeline : max 3 jomlett.
 \label{integration_ser_asr_nlp}

@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{chen2019exploring}
 Tao Cheng, Tianfeng Chen, and Yang Zhang.
@@ -52,6 +52,23 @@ Alec Radford, Jong~Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh,
 Ahmed Amine~Ben Abdallah, Ata Kabboudi, Amir Kanoun, and Salah Zaiem.
 \newblock Leveraging data collection and unsupervised learning for
   code-switched tunisian arabic automatic speech recognition, 2023.
+
+\bibitem{devlin-etal-2019-bert}
+Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova.
+\newblock {BERT}: Pre-training of deep bidirectional transformers for language
+  understanding.
+\newblock In Jill Burstein, Christy Doran, and Thamar Solorio, editors, {\em
+  Proceedings of the 2019 Conference of the North {A}merican Chapter of the
+  Association for Computational Linguistics: Human Language Technologies,
+  Volume 1 (Long and Short Papers)}, pages 4171--4186, Minneapolis, Minnesota,
+  June 2019. Association for Computational Linguistics.
+
+\bibitem{10.1007/978-3-030-32959-4_18THSAB}
+Hatem Haddad, Hala Mulki, and Asma Oueslati.
+\newblock T-hsab: A tunisian hate speech and abusive dataset.
+\newblock In Kamel Sma{\"i}li, editor, {\em Arabic Language Processing: From
+  Theory to Practice}, pages 251--263, Cham, 2019. Springer International
+  Publishing.
 
 \bibitem{raleigh2010acled}
 Clionadh Raleigh, Andrew Linke, Håvard Hegre, and Joakim Karlsen.
