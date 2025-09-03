@@ -682,9 +682,12 @@ See \ref{subsec:nlp_tunbert_implementation} for details on NLP-specific preproce
 
 \subsection{Speech Emotion Recognition (SER)}
 \label{subsec:ser_implementation}
-The SER module is implemented within the \texttt{audio\_features} function. It first utilizes the \textbf{Librosa} library to load the input audio file and resample it to the required 16kHz. The core 
-of the module is the pre-trained \textbf{\texttt{speechbrain/emotion-recognition-wav2vec2-IEMOCAP}} model, which is loaded using the \texttt{EncoderClassifier} class from the SpeechBrain library. 
-This model directly processes the raw waveform to classify the speaker's emotional state (e.g., "Fear," "Anger," "Neutral").
+The SER module is implemented within the \texttt{audio\_features} function. It first utilizes the \textbf{Librosa} library to load the input audio file and resample it to the required 16kHz. 
+The core of the module is the pre-trained \textbf{\texttt{speechbrain/emotion-recognition-wav2vec2-IEMOCAP}} model, loaded using the \texttt{EncoderClassifier} class from the SpeechBrain library. 
+%This model directly processes the raw waveform to classify the speaker's emotional state (e.g., "Fear," "Anger," "Neutral").
+ When the \texttt{classify\_audio\_file} method is called on the audio, the model processes the raw waveform and returns a tensor of output probabilities, representing the likelihood of each potential emotion ("Fear," "Anger," "Neutral").
+Finally, the emotion corresponding to the highest probability is classified as the speaker's emotional state and is used as an input feature in the analysis pipeline .
+%This classification is subsequently used as an input feature in the main vocal analysis pipeline.
 
 \subsection{Automatic Speech Recognition (ASR)}
 \label{subsec:asr_implementation}
@@ -742,10 +745,10 @@ By combining emotional cues with linguistic analysis, this integrated pipeline e
 The pipeline integrates SER emotion scores, ASR transcripts, and NLP intent analysis for distress detection. A rule-based system, enhanced by machine learning, triggers alerts on high 
 emotion and urgent intent. Real-time performance is maintained via `main.py`'s scheduler.
 
-\begin{thebibliography}{9}
-\bibitem{schuller2018}
-Schuller, B., "Speech Emotion Recognition: Two Decades in a Nutshell," Frontiers in Digital Humanities, 2018.
-\end{thebibliography}
+%\begin{thebibliography}{9}
+%\bibitem{schuller2018}
+%Schuller, B., "Speech Emotion Recognition: Two Decades in a Nutshell," Frontiers in Digital Humanities, 2018.
+%\end{thebibliography}
 
 
 
