@@ -623,8 +623,8 @@ The system leverages a robust technical stack to enable real-time distress detec
 Data management and preprocessing support the systems data pipeline for real-time analysis.
 The data storage is handled by MongoDB, chosen for its ideal characteristics mentioned in \ref{technical}, with two main collections:
 \begin{itemize}
-    \item \texttt{users\_collection}: Stores user information, such as profiles and registered devices.
-    \item \texttt{locations\_collection}: Acts as the main event log, storing capture events with their: timestamp, location, and payload from the decision engine.
+    \item \textit{users\_collection}: Stores user information, such as profiles and registered devices.
+    \item \textit{locations\_collection}: Acts as the main event log, storing capture events with their: timestamp, location, and payload from the decision engine.
 \end{itemize}
 %MongoDB serves as the primary database, storing user profiles and event logs through dedicated collections managed via custom database functions.
 
@@ -647,9 +647,9 @@ The preprocessing includes: \\
 \subsection{Data acquisition and Preprocessing}
 Due to outdated National Police Crime Statistics(2015), the geospatial risk model was trained on a dataset of crime incidents in Tunisia, called ACLED \cite{raleigh2010acled} specific to Tunisia.
 
-Preprocessing involved cleansing to extract latitude and longitude pairs, removing outliers with null values, and normalizing data using \texttt{StandardScaler} from \texttt{scikit-learn} library.
+Preprocessing involved cleansing to extract latitude and longitude pairs, removing outliers with null values, and normalizing data using \textit{StandardScaler} from \textit{scikit-learn} library.
 \subsection{Spatial Clustering Implementation}
-The model was trained using DBSCAN \ref{sec:dbscan_theory} from \texttt{scikit-learn} to cluster high-risk zones. 
+The model was trained using DBSCAN \ref{sec:dbscan_theory} from \textit{scikit-learn} to cluster high-risk zones. 
 The parameters: epsilon (0.5) and min\_samples (5) were tuned dynamically on a validation set in order to get the best distribution of clusters.
 Figure \ref{fig:Clusters_heatmap} illustrates the cluster distribution over Tunisia. See \ref{sec:geospatial_res} for result analysis .
 
@@ -682,10 +682,10 @@ See \ref{sec:nlp_tunbert_implementation} for details on NLP-specific preprocessi
 
 \subsection{Speech Emotion Recognition (SER)}
 \label{subsec:ser_implementation}
-The SER module is implemented within the \texttt{audio\_features} function. It first utilizes the \textbf{Librosa} library to load the input audio file and resample it to the required 16kHz. 
-The core of the module is the pre-trained \textbf{\texttt{speechbrain/emotion-recognition-wav2vec2-IEMOCAP}} model, loaded using the \texttt{EncoderClassifier} class from the SpeechBrain library. 
+The SER module is implemented within the \textit{audio\_features} function. It first utilizes the \textbf{Librosa} library to load the input audio file and resample it to the required 16kHz. 
+The core of the module is the pre-trained \textbf{\textit{speechbrain/emotion-recognition-wav2vec2-IEMOCAP}} model, loaded using the \textit{EncoderClassifier} class from the SpeechBrain library. 
 %This model directly processes the raw waveform to classify the speaker's emotional state (e.g., "Fear," "Anger," "Neutral").
- When the \texttt{classify\_audio\_file} method is called on the audio, the model processes the raw waveform and returns a tensor of output probabilities, representing the likelihood of each potential emotion ("Fear," "Anger," "Neutral").
+ When the \textit{classify\_audio\_file} method is called on the audio, the model processes the raw waveform and returns a tensor of output probabilities, representing the likelihood of each potential emotion ("Fear," "Anger," "Neutral").
 Finally, the emotion corresponding to the highest probability is classified as the speaker's emotional state and is used as an input feature in the analysis pipeline .
 %This classification is subsequently used as an input feature in the main vocal analysis pipeline.
 
@@ -707,31 +707,31 @@ For this task, \textbf{TunBERT} was selected, a BERT variant for Tunisian Arabic
 \subsubsection{Fine-tuning and Dataset Preparation}
 \label{sec:finetuning tunbert}
 The core of the implementation was fine-tuning the base TunBERT model for the specific task of distress detection. This process, documented in the \textit{fineTune\_TunBERT.ipynb} notebook, 
-utilized the \textit{AutoTokenizer} and \textit{AutoModelForSequenceClassification} classes from the \texttt{transformers} library. 
+utilized the \textit{AutoTokenizer} and \textit{AutoModelForSequenceClassification} classes from the \textit{transformers} library. 
 The T- HSAB \ref{sec:nlp_intent}, a dataset of Tunisian dialect phrases related to distress scenarios was chosen, tokenized and split into training and validation sets, during this process. 
 \subsubsection{Training Configuration and Inference}
 \label{sec:training tunbert}
-The fine-tuning loop was managed using the PyTorch \texttt{Trainer} and \texttt{TrainingArguments} classes from the \texttt{transformers} library. This allowed for the precise configuration of 
-hyperparameters, including a low learning rate, a batch size of 16, and weight decay to prevent overfitting. For real-time prediction, the \texttt{classify\_text} function in \texttt{vocal\_analysis.py} 
+The fine-tuning loop was managed using the PyTorch \textit{Trainer} and \textit{TrainingArguments} classes from the \textit{transformers} library. This allowed for the precise configuration of 
+hyperparameters, including a low learning rate, a batch size of 16, and weight decay to prevent overfitting. For real-time prediction, the \textit{classify\_text} function in \textit{vocal\_analysis.py} 
 loads the resulting fine-tuned model and its tokenizer. It takes the text string from the ASR module as input, tokenizes it, and passes the resulting tensors to the model to get the final intent 
 classification (e.g., "Distress," "Normal").
 
-For live prediction, the \texttt{classify\_text} function loads the fine-tuned TunBERT model and its tokenizer. It takes the text string from the ASR module as input, tokenizes it, and passes the 
+For live prediction, the \textit{classify\_text} function loads the fine-tuned TunBERT model and its tokenizer. It takes the text string from the ASR module as input, tokenizes it, and passes the 
 resulting tensors to the model to get the final intent classification (e.g., "Distress," "Normal").
 
 \subsubsection{Training Configuration and Inference}
 \label{sec:training_tunbert}
 
 The fine-tuning process was managed using the PyTorch \textit{Trainer} and \textit{TrainingArguments} classes from the \textit{transformers} library, which provided precise control over the training loop and its hyperparameters, accelerated on a Google Colab \textbf{TPU}. 
-Key settings were chosen to ensure stable and effective training, including a low learning rate (\texttt{2e-5}), 
+Key settings were chosen to ensure stable and effective training, including a low learning rate (\textit{2e-5}), 
 a batch size of 16, weight decay to prevent overfitting, and a set number of training \textbf{epochs} (5).
 
-For live prediction, the \texttt{classify\_text} function loads the fine-tuned TunBERT model and its tokenizer. It takes the transcribed text string from the ASR module as input, tokenizes it, and passes the 
+For live prediction, the \textit{classify\_text} function loads the fine-tuned TunBERT model and its tokenizer. It takes the transcribed text string from the ASR module as input, tokenizes it, and passes the 
 resulting tensors to the model to get the final intent classification (e.g., "Distress," "Normal").
 
 \subsection{Integration of SER, ASR, and NLP for Distress Detection}%or multi-modal vocal analysis nhbbklmt pipeline : max 3 jomlett.
 \label{integration_ser_asr_nlp}
-The individual modules are integrated into a cohesive workflow orchestrated by the main \texttt{analyze\_vocal} function in \texttt{vocal\_analysis.py}. Upon receiving an audio file, this function 
+The individual modules are integrated into a cohesive workflow orchestrated by the main \textit{analyze\_vocal} function in \textit{vocal\_analysis.py}. Upon receiving an audio file, this function 
 executes the ASR/NLP and SER sub-pipelines in parallel to determine the user's intent and emotional state. The final outputs—the intent classification from TunBERT and the emotion classification from 
 the SpeechBrain model—are then combined into a single, structured JSON object, providing a comprehensive analysis of the vocal signal, Figure \ref{fig:vocal_pipe} dhows a visual representation of the vocal analysis Pipeline.
 \\The pipeline uses \textit{try...except} blocks for ASR, SER, and NLP to handle failures (e.g., corrupted audio, model issues) gracefully, returning partial results or error messages to ensure stability.
@@ -744,50 +744,51 @@ the SpeechBrain model—are then combined into a single, structured JSON object,
 \end{figure}
 
 \section{Implementation of the Behavioral Anomaly Detection Module} % or the Behavioral Anomaly Detection Module or the Machine Learning Module
+%todo all of it is almost AI generated
+
 \subsection{Data Preparation for Behavioral Analysis}
 \label{sec:Data_behav}
-The behavioral module prepares data from \texttt{locations\_collection} in two stages:
+The behavioral module prepares data from \textit{locations\_collection} in two stages:
 \begin{itemize}
-\item \textbf{User Profiling}: Historical GPS and timestamp data (last 30 days) builds routine profiles through \texttt{preprocess\_data.py}. For new users, k-means clustering on population averages generates synthetic profiles until real data is available.
+\item \textbf{User Profiling}: Historical GPS and timestamp data (last 30 days) builds routine profiles through \textit{preprocess\_data.py}. For new users, k-means clustering on population averages generates synthetic profiles until real data is available.
 \item \textbf{Incident Classification}: A labeled dataset from past alerts trains the \textit{RandomForestClassifier}. Feature vectors contain four anomaly scores (location, hour, weekday, month) with \textit{is\_incident} labels indicating true\/false incidents. For new users, synthetic data, generated via k-means clustering of population averages in \textit{preprocess\_data.py}, initializes profiles until sufficient real data is collected.
 \end{itemize}
 This dual approach enables both unsupervised routine learning and supervised incident prediction while handling the cold-start problem for new users.
 
  \subsection{Implementation of Unsupervised User Profiling}
 \label{sec:unsupervised_implementation}
-%todo this is a draft
-% Purpose: Detail the practical execution of unsupervised profiling.
-%
-% What to write:
-% 1. Describe data source (`locations_collection`) and processing.
-% 2. Explain applying DBSCAN/OPTICS to identify hotspots (e.g., home, work).
-% 3. Mention frequency distribution use in `db_functions.py`.
-Unsupervised profiling in Hydatis uses locations\_collection` GPS data, processed via 
-DBSCAN to identify routine hotspots like home or work. OPTICS handles arbitrary shapes, 
-while frequency distributions in `db\_functions.py` model temporal 
-patterns (e.g., weekday mornings), building a "pattern of life" for anomaly detection.
+%The unsupervised profiling process is implemented through the \textit{build\_user\_profile} function in \textit{profiling.py}, which constructs a personalized "pattern of life" from historical user data.
+%The function begins by fetching the user's location history from the textit{locations\_collection} in MongoDB, typically spanning the last 30 days. This data feeds into two complementary profiling components:
+%\\\textbf{Spatial Profiling:} The OPTICS clustering algorithm from \textit{scikit\-learn} identifies significant locations from GPS coordinates. A key hyperparameter, min\_samples, set to 5, was configured to define the minimum number of location points required to form a dense region, effectively filtering out noise and random movements. 
+%OPTICS was selected for its ability to discover clusters of varying densities without requiring predetermined cluster numbers, making it ideal for identifying routine locations such as home and workplace. The centroids of identified clusters are then extracted and stored.
+%\\\textbf{Temporal Profiling:} The system analyzes timestamps from historical events to model temporal routines. Frequency distributions are calculated and stored for the hour of the day, day of the week, and month of the year.
+%\\The combined profile—spatial centroids and temporal frequency distributions—is saved to the user's MongoDB document, establishing the baseline for real-time anomaly detection.
+The \textit{build\_user\_profile} function in \textit{profiling.py} creates a "pattern of life" by fetching 30-day location data from \textit{locations\_collection} in MongoDB. 
+It uses OPTICS from \textit{scikit-learn} (min\_samples=5) to cluster GPS coordinates, identifying routine locations (e.g., home, work) by handling varying densities. 
+Temporal profiling computes frequency distributions (hour, weekday, month) from timestamps. 
+The combined profile—centroids and distributions—is saved to the user's MongoDB document using \textit{pymongo} for real-time anomaly detection.
 
 
-\subsection{Ream-Time Anomaly Scoring Implementation}
+\subsection{Real-Time Anomaly Scoring Implementation}
 \label{sec:anomaly_scoring_impl}
-Anomaly scoring, the 2nd stage of the behavioral analysis, quantifies the degree of deviation of a new, live event from the user's established profile. This is accomplished by calculating an anomaly score—a numerical
- value representing how "unusual" an event is. This score is not a single value, but rather a vector of scores, with each element corresponding to a different dimension of the user's behavior.
-For spatial deviations, the score is derived from the geometric distance between a user's current coordinates and the centroids of their known routine locations. A greater distance corresponds to a 
-higher anomaly score, indicating the user is in a location they frequent less often.
-For temporal deviations, the score is based on the principle of inverse frequency. 
-An event's timestamp (e.g., the hour of the day) is compared against the learned frequency distributions from the user's profile. Activities occurring at times with low historical probability 
-(e.g., being active at 3 AM for a user who is typically home) are assigned a significantly higher anomaly score. By combining these scores, the system creates a rich, multi-dimensional feature vector that 
-captures the full context of a user's deviation from their normal "pattern of life."
 
+The \textit{detect\_user\_anomalies} function in \textit{profiling.py} calculates a vector of four anomaly scores for a new event by quantifying its deviation from the user's established profile.
+
+The spatial anomaly score is derived from the \textbf{geodesic distance} in kilometers (via the \textit{geopy} library) to the nearest routine location and is then normalized by a \textbf{2.0 km threshold}. The temporal scores (for hour, weekday, and month) are calculated based on the principle of \textbf{inverse frequency} (\textit{1.0 - probability}).
+\\A critical edge case is the handling of new users with insufficient historical data (a "cold start"). In this scenario, the function implements a conservative strategy by returning a default maximum anomaly score of \textit{1.0} for all features, enabing \textit{Safety-first} Strategy.
+\\The final output is a feature vector containing the four scores,passed to the incident classifier.
+%Activities occurring at times with low historical probability  (e.g., being active at 3 AM for a user who is typically home) are assigned a significantly higher anomaly score.
 \subsection{Supervised Incident Classifier Implementation}
 \label{sec:Incident_class_impl}
 
+The final stage of the behavioral module is a supervised classifier, implemented in \texttt{incident\_classifier.py}, that predicts the probability of a genuine incident from the four anomaly scores. For each user, a personalized model is trained on their historical alerts from the \texttt{locations\_collection}.
 
-\subsection{le tout peut etre}
-\label{}
+The \texttt{train\_incident\_classifier} function utilizes a \textbf{\texttt{RandomForestClassifier}} from Scikit-learn, training it on a feature vector of the four anomaly scores after they have been normalized with a \texttt{StandardScaler}. To optimize for the highly imbalanced nature of safety data, the \texttt{optimize\_incident\_threshold} function uses K-Fold cross-validation to determine the decision threshold that maximizes the \textbf{\texttt{f1\_score}}.
 
-%\section{Final Decision Engine and System Integration}
-%this may be merged with the first section (dont know shkoun shyemshi bahtha sahbou ( hawka naamlou referencing lel sections elli will tailor the details if nkaddmou el decision engine kbal les ai modules))
+Finally, the trained model, scaler, and optimized threshold are serialized using \texttt{joblib} and stored in the user's MongoDB document. In a live scenario, the \texttt{predict\_incident} function loads these personalized artifacts, scales the incoming anomaly scores, and uses the model's \texttt{predict\_proba} method to return the final, real-time incident probability.
+%todo normalement fama partie okhra lel pipeline kolha
+
+
 
 \chapter{Results and Discussion}
 \label{ch:results_and_disc}

@@ -49,14 +49,13 @@
 \contentsline {subsubsection}{\numberline {XIII.4.1}Model Selection and Architecture}{xix}{subsubsection.0.13.4.1}%
 \contentsline {subsubsection}{\numberline {XIII.4.2}Fine-tuning and Dataset Preparation}{xix}{subsubsection.0.13.4.2}%
 \contentsline {subsubsection}{\numberline {XIII.4.3}Training Configuration and Inference}{xix}{subsubsection.0.13.4.3}%
-\contentsline {subsubsection}{\numberline {XIII.4.4}Training Configuration and Inference}{xx}{subsubsection.0.13.4.4}%
+\contentsline {subsubsection}{\numberline {XIII.4.4}Training Configuration and Inference}{xix}{subsubsection.0.13.4.4}%
 \contentsline {subsection}{\numberline {XIII.5}Integration of SER, ASR, and NLP for Distress Detection}{xx}{subsection.0.13.5}%
 \contentsline {section}{\numberline {XIV}Implementation of the Behavioral Anomaly Detection Module}{xx}{section.0.14}%
 \contentsline {subsection}{\numberline {XIV.1}Data Preparation for Behavioral Analysis}{xx}{subsection.0.14.1}%
 \contentsline {subsection}{\numberline {XIV.2}Implementation of Unsupervised User Profiling}{xxi}{subsection.0.14.2}%
-\contentsline {subsection}{\numberline {XIV.3}Ream-Time Anomaly Scoring Implementation}{xxi}{subsection.0.14.3}%
-\contentsline {subsection}{\numberline {XIV.4}Supervised Incident Classifier Implementation}{xxii}{subsection.0.14.4}%
-\contentsline {subsection}{\numberline {XIV.5}le tout peut etre}{xxii}{subsection.0.14.5}%
+\contentsline {subsection}{\numberline {XIV.3}Real-Time Anomaly Scoring Implementation}{xxi}{subsection.0.14.3}%
+\contentsline {subsection}{\numberline {XIV.4}Supervised Incident Classifier Implementation}{xxi}{subsection.0.14.4}%
 \contentsline {chapter}{Results and Discussion}{xxiii}{chapter*.19}%
 \contentsline {section}{\numberline {XV}Evaluation and Results}{xxiii}{section.0.15}%
 \contentsline {subsection}{\numberline {XV.1}Geospatial}{xxiii}{subsection.0.15.1}%
