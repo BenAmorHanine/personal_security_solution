@@ -85,6 +85,16 @@ Jian Pei, Jiawei Han, B.~Mortazavi-Asl, Jianyong Wang, H.~Pinto, Qiming Chen,
 \newblock {\em IEEE Transactions on Knowledge and Data Engineering},
   16(11):1424--1440, 2004.
 
+\bibitem{chandola2009anomaly}
+Varun Chandola.
+\newblock {\em Anomaly detection for symbolic sequences and time series data}.
+\newblock University of Minnesota, 2009.
+
+\bibitem{Breiman2001RF}
+Leo Breiman.
+\newblock Random forests.
+\newblock {\em Machine Learning}, 45(1):5--32, 2001.
+
 \bibitem{raleigh2010acled}
 Clionadh Raleigh, Andrew Linke, Håvard Hegre, and Joakim Karlsen.
 \newblock Introducing acled: An armed conflict location and event dataset.

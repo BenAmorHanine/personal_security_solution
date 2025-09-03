@@ -491,11 +491,24 @@ Temporal anomalies are typically identified through \textbf{statistical} approac
 
 State-of-the-art techniques incorporate dynamic thresholding to adapt to evolving user patterns, addressing the challenge of concept drift in behavioral modeling  by enhancing detection accuracy in dynamic environments%todo \cite{goldstein2016comparative}[Goldstein and Uchida, 2016].
 
-
 \subsection{Supervised Classification for Incident Prediction}
 \label{sec:supervised_classification}
-Supervised classification predicts incidents from labeled data, leveraging ensemble methods like Random Forest or XGBoost to handle imbalanced datasets [Breiman, 2001; Chen and Guestrin, 2016]. 
-These techniques adapt to real-time challenges, such as sparse incident data, using adaptive thresholding to improve accuracy in evolving user behavior contexts, critical for safety monitoring.
+
+A prominent approach in anomaly detection is \textbf{classification-based}: A technique that frames the problem as a binary classification task where models learn decision boundaries between normal and anomalous classes \cite{chandola2009anomaly}. This method is particularly powerful when historical data with reliable labels is available.
+
+\textbf{Ensemble learning} methods represent state-of-the-art approaches due to their accuracy and robustness. An ensemble model combines the predictions of multiple models to produce a more reliable and accurate final prediction.
+\\A prime example is \textbf{Random Forest} \cite{Breiman2001RF}, which builds numerous decision trees during training and outputs the the majority class (classification). This approach mitigates overfitting and can capture complex, non-linear relationships in anomaly features.
+Given the high imbalance in Personal Safety data, with genuine incidents being rare, Accuracy alone is misleading. Metrics like Precision, Recall, and F1-Score are preferred to reliably evaluate performance on critical events.
+
+%todo add figure of random forest illustration 
+%todo add some numbers that illustrate la puissance desmodels : cette subsec et li foukha ( from the papers mteahom )
+%Models such as \textbf{Random Forest} \cite{breiman2001random} frequently appear in this context, combining multiple weak learners (such as decision trees) to form robust predictive models. 
+%With their capability to capture complex, non-linear patterns, these models acheive high performance in distinguishing subtle anomalies from normal behavior.
+
+%Class imbalance is a major challenge, as genuine incidents are far rarer than normal events. Therefore, metrics like Precision, Recall, and F1-Score are preferred over accuracy.
+% By combining predictions from multiple models, ensembles produce more reliable results than individual models. 
+
+
 
 \chapter{Design and implementation}
 \label{ch:4eme}
