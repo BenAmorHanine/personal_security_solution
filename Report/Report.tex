@@ -678,7 +678,7 @@ The model achieved 82\% precision on a test set with latency compatible with our
 \label{sec:vocal_preprocess}
 All incoming audio data undergoes a critical preprocessing step using the \textbf{Librosa} library to ensure suitability with the pre-trained models.  
 Audio is resampled to a consistent \textbf{16kHz} format to standardize inputs and ensure compatibility with Whisper ASR and Wav2Vec 2.0 SER models.  
-See \ref{subsec:nlp_tunbert_implementation} for details on NLP-specific preprocessing.%todo verify ref later
+See \ref{sec:nlp_tunbert_implementation} for details on NLP-specific preprocessing.%todo verify ref later
 
 \subsection{Speech Emotion Recognition (SER)}
 \label{subsec:ser_implementation}
@@ -694,43 +694,23 @@ Finally, the emotion corresponding to the highest probability is classified as t
 The \textit{transcribe\_audio} function handles the ASR task. It instantiates a pipeline object from the Hugging Face \textbf{\textit{transformers}} library, specifically configured for the \textit{"automatic-speech-recognition"} task using OpenAI's \textbf{Whisper} model.
 \\The \textit{base} version of the model was chosen as it offers an optimal balance between high transcription accuracy and the real-time performance, configured on \textit{Arabic} language.
 \\The pipeline was configured to run on the CPU to ensure broad deployment compatibility. 
-This setup performs robust, zero-shot transcription, converting the user's speech into a text string that is then passed to the NLP module for intent analysis.
-
+This setup performs robust transcription of the user's speech into a text string that is then passed to the NLP module for intent analysis.
 
 \subsection{Natural Language Processing (TunBERT Focus)}
-\label{subsec:nlp_tunbert_implementation}
+\label{sec:nlp_tunbert_implementation}
+The NLP module determines user intent from the transcribed text, accomplished by fine-tuning and implementing a specialized Transformer model.
 
-\textbf{Model Selection and Fine-tuning:} The NLP module uses a fine-tuned version of \textbf{TunBERT}, a BERT variant for Tunisian Arabic. The fine-tuning process, documented in the \texttt{fineTuneTunBERT.ipynb} notebook, was implemented using the \texttt{AutoTokenizer} and \texttt{AutoModelForSequenceClassification} classes from the \texttt{transformers} library. The model was trained on a custom-built, labeled dataset of Tunisian distress-related phrases.
+\subsubsection{Model Selection and Architecture}
+For this task, \textbf{TunBERT} was selected, a BERT variant for Tunisian Arabic. This provides a strong foundation for understanding the nuances, slang, and code-switching present in the local dialect.
 
-\textbf{Real-Time Inference:} For live prediction, the \texttt{classify\_text} function loads the fine-tuned TunBERT model and its tokenizer. It takes the text string from the ASR module as input, tokenizes it, and passes the resulting tensors to the model to get the final intent classification (e.g., "Distress," "Normal").
-\textbf{Model Selection and Architecture}: TunBERT, a BERT variant for Tunisian Arabic, is selected for intent analysis.
-\label{subsubsec:tunbert_finetuning}
-\textbf{Fine-tuning and Dataset Preparation}: Fine-tuned on a custom Tunisian distress dataset, preprocessed for context.
-\label{subsubsec:tunbert_training}
-\textbf{Training Configuration}: Optimized with low learning rates and batch processing for efficiency.
-
-
-\textbf{Model Selection and Fine-tuning:} The NLP module uses a fine-tuned version of \textbf{TunBERT}, a BERT variant for Tunisian Arabic. The fine-tuning process, documented in the \texttt{fineTuneTunBERT.ipynb} notebook, was implemented using the \texttt{AutoTokenizer} and \texttt{AutoModelForSequenceClassification} classes from the \texttt{transformers} library. The model was trained on a custom-built, labeled dataset of Tunisian distress-related phrases.
-
-\textbf{Real-Time Inference:} For live prediction, the \texttt{classify\_text} function loads the fine-tuned TunBERT model and its tokenizer. It takes the text string from the ASR module as input, tokenizes it, and passes the resulting tensors to the model to get the final intent classification (e.g., "Distress," "Normal").
-
-
-
-\subsubsection{Natural Language Processing (TunBERT Focus)}
-\label{subsec:nlp_implementation}
-
-The NLP module is responsible for the final stage of analysis: determining user intent from the transcribed text. This was accomplished by fine-tuning and implementing a specialized Transformer model.
-
-\paragraph{Model Selection and Architecture}
-For this task, \textbf{TunBERT} was selected, which is a BERT-based model specifically pre-trained on a large corpus of Tunisian Arabic. This provides a strong foundation for understanding the nuances, slang, and code-switching present in the local dialect.
-
-\paragraph{Fine-tuning and Dataset Preparation}
-The core of the implementation was fine-tuning the base TunBERT model for the specific task of distress detection. This process, documented in the \texttt{fineTuneTunBERT.ipynb} notebook, utilized the \texttt{AutoTokenizer} and \texttt{AutoModelForSequenceClassification} classes from the Hugging Face \texttt{transformers} library. A custom dataset of Tunisian dialect phrases related to distress scenarios was collected, manually labeled, and cleaned. This dataset was then tokenized and split into training and validation sets.
-
-\paragraph{Training Configuration and Inference}
+\subsubsection{Fine-tuning and Dataset Preparation}
+The core of the implementation was fine-tuning the base TunBERT model for the specific task of distress detection. This process, documented in the \textit{fineTune\_TunBERT.ipynb} notebook, 
+utilized the \textit{AutoTokenizer} and \textit{AutoModelForSequenceClassification} classes from the \texttt{transformers} library. 
+The T- HSAB \ref{sec:nlp_intent}, a dataset of Tunisian dialect phrases related to distress scenarios was chosen, tokenized and split into training and validation sets, during this process. 
+\subsubsection{Training Configuration and Inference}
 The fine-tuning loop was managed using the PyTorch \texttt{Trainer} and \texttt{TrainingArguments} classes from the \texttt{transformers} library. This allowed for the precise configuration of hyperparameters, including a low learning rate, a batch size of 16, and weight decay to prevent overfitting. For real-time prediction, the \texttt{classify\_text} function in \texttt{vocal\_analysis.py} loads the resulting fine-tuned model and its tokenizer. It takes the text string from the ASR module as input, tokenizes it, and passes the resulting tensors to the model to get the final intent classification (e.g., "Distress," "Normal").
 
-
+For live prediction, the \texttt{classify\_text} function loads the fine-tuned TunBERT model and its tokenizer. It takes the text string from the ASR module as input, tokenizes it, and passes the resulting tensors to the model to get the final intent classification (e.g., "Distress," "Normal").
 
 
 
