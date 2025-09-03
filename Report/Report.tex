@@ -672,20 +672,84 @@ The \textit{geo\_risk\_score} is then calculated using a distance-decay function
 The model achieved 82\% precision on a test set with latency compatible with our project's real-time alert requirements.
 
 \section{Implementation of the Vocal Signal Processing Pipeline}
+\label{sec:vocal_pipeline_implementation}
+
 \subsection{Vocal Data Preprocessing}
-All incoming audio data requires a critical preprocessing step to ensure compatibility with the pre-trained analysis models. Using the \textbf{Librosa} library, each audio file is loaded and resampled to a consistent \textbf{16kHz} format, matching the required input specifications of the Whisper and Wav2Vec 2.0 models.
- thsab: This dataset contains thousands of manually annotated Tunisian comments from social media, capturing the specific vocabulary 
-and expressions used in high-stress or abusive contexts
+\label{sec:vocal_preprocess}
+All incoming audio data undergoes a critical preprocessing step using the \textbf{Librosa} library to ensure suitability with the pre-trained models.  
+Audio is resampled to a consistent \textbf{16kHz} format to standardize inputs and ensure compatibility with Whisper ASR and Wav2Vec 2.0 SER models.  
+See \ref{subsec:nlp_tunbert_implementation} for details on NLP-specific preprocessing.%todo verify ref later
+
+\subsection{Speech Emotion Recognition (SER)}
+\label{subsec:ser_implementation}
+The SER module is implemented within the \texttt{audio\_features} function. It first utilizes the \textbf{Librosa} library to load the input audio file and resample it to the required 16kHz. The core 
+of the module is the pre-trained \textbf{\texttt{speechbrain/emotion-recognition-wav2vec2-IEMOCAP}} model, which is loaded using the \texttt{EncoderClassifier} class from the SpeechBrain library. 
+This model directly processes the raw waveform to classify the speaker's emotional state (e.g., "Fear," "Anger," "Neutral").
+
+\subsection{Automatic Speech Recognition (ASR)}
+\label{subsec:asr_implementation}
+The \texttt{transcribe\_audio} function handles the ASR task. It instantiates a pipeline object from the Hugging Face \textbf{\texttt{transformers}} library, specifically configured for \texttt{"automatic-speech-recognition"}. This pipeline leverages OpenAI's \textbf{Whisper} model (the \texttt{base} version) to perform robust, zero-shot transcription on the audio file, converting the user's speech into a text string for the NLP module.
+
+\subsection{Natural Language Processing (TunBERT Focus)}
+\label{subsec:nlp_tunbert_implementation}
+
+\textbf{Model Selection and Fine-tuning:} The NLP module uses a fine-tuned version of \textbf{TunBERT}, a BERT variant for Tunisian Arabic. The fine-tuning process, documented in the \texttt{fineTuneTunBERT.ipynb} notebook, was implemented using the \texttt{AutoTokenizer} and \texttt{AutoModelForSequenceClassification} classes from the \texttt{transformers} library. The model was trained on a custom-built, labeled dataset of Tunisian distress-related phrases.
+
+\textbf{Real-Time Inference:} For live prediction, the \texttt{classify\_text} function loads the fine-tuned TunBERT model and its tokenizer. It takes the text string from the ASR module as input, tokenizes it, and passes the resulting tensors to the model to get the final intent classification (e.g., "Distress," "Normal").
+\textbf{Model Selection and Architecture}: TunBERT, a BERT variant for Tunisian Arabic, is selected for intent analysis.
+\label{subsubsec:tunbert_finetuning}
+\textbf{Fine-tuning and Dataset Preparation}: Fine-tuned on a custom Tunisian distress dataset, preprocessed for context.
+\label{subsubsec:tunbert_training}
+\textbf{Training Configuration}: Optimized with low learning rates and batch processing for efficiency.
+
+
+\textbf{Model Selection and Fine-tuning:} The NLP module uses a fine-tuned version of \textbf{TunBERT}, a BERT variant for Tunisian Arabic. The fine-tuning process, documented in the \texttt{fineTuneTunBERT.ipynb} notebook, was implemented using the \texttt{AutoTokenizer} and \texttt{AutoModelForSequenceClassification} classes from the \texttt{transformers} library. The model was trained on a custom-built, labeled dataset of Tunisian distress-related phrases.
+
+\textbf{Real-Time Inference:} For live prediction, the \texttt{classify\_text} function loads the fine-tuned TunBERT model and its tokenizer. It takes the text string from the ASR module as input, tokenizes it, and passes the resulting tensors to the model to get the final intent classification (e.g., "Distress," "Normal").
+
+
+
+\subsubsection{Natural Language Processing (TunBERT Focus)}
+\label{subsec:nlp_implementation}
+
+The NLP module is responsible for the final stage of analysis: determining user intent from the transcribed text. This was accomplished by fine-tuning and implementing a specialized Transformer model.
+
+\paragraph{Model Selection and Architecture}
+For this task, \textbf{TunBERT} was selected, which is a BERT-based model specifically pre-trained on a large corpus of Tunisian Arabic. This provides a strong foundation for understanding the nuances, slang, and code-switching present in the local dialect.
+
+\paragraph{Fine-tuning and Dataset Preparation}
+The core of the implementation was fine-tuning the base TunBERT model for the specific task of distress detection. This process, documented in the \texttt{fineTuneTunBERT.ipynb} notebook, utilized the \texttt{AutoTokenizer} and \texttt{AutoModelForSequenceClassification} classes from the Hugging Face \texttt{transformers} library. A custom dataset of Tunisian dialect phrases related to distress scenarios was collected, manually labeled, and cleaned. This dataset was then tokenized and split into training and validation sets.
+
+\paragraph{Training Configuration and Inference}
+The fine-tuning loop was managed using the PyTorch \texttt{Trainer} and \texttt{TrainingArguments} classes from the \texttt{transformers} library. This allowed for the precise configuration of hyperparameters, including a low learning rate, a batch size of 16, and weight decay to prevent overfitting. For real-time prediction, the \texttt{classify\_text} function in \texttt{vocal\_analysis.py} loads the resulting fine-tuned model and its tokenizer. It takes the text string from the ASR module as input, tokenizes it, and passes the resulting tensors to the model to get the final intent classification (e.g., "Distress," "Normal").
+
+
+
+
 
 \subsection{Integration of SER, ASR, and NLP for Distress Detection}%or multi-modal vocal analysis nhbbklmt pipeline : max 3 jomlett.
 \label{integration_ser_asr_nlp}
 %todo this is only a draft was in the sota chapter
+%todo pipeline image should be present
 The integration of Speech Emotion Recognition (SER), Automatic Speech Recognition (ASR), and Natural Language Processing (NLP) forms a comprehensive vocal analysis pipeline for distress detection.
 This multi-modal approach leverages the strengths of each component to provide a robust assessment of vocal distress signals.
 \\The SER module analyzes the emotional tone of the speech, identifying signs of fear or anxiety that may indicate distress.
 Sim ultaneously, the ASR module transcribes the spoken words into text, capturing the explicit content of the communication.
 Finally, the NLP module processes the transcribed text to extract intent and context, identifying keywords or phrases that suggest an emergency situation.
 By combining emotional cues with linguistic analysis, this integrated pipeline enhances the accuracy and reliability of distress detection, ensuring that both the emotional state and the verbal content are considered in the assessment.
+
+
+The pipeline integrates SER emotion scores, ASR transcripts, and NLP intent analysis for distress detection. A rule-based system, enhanced by machine learning, triggers alerts on high 
+emotion and urgent intent. Real-time performance is maintained via `main.py`'s scheduler.
+
+\begin{thebibliography}{9}
+\bibitem{schuller2018}
+Schuller, B., "Speech Emotion Recognition: Two Decades in a Nutshell," Frontiers in Digital Humanities, 2018.
+\end{thebibliography}
+
+
+
+
 
 
 
