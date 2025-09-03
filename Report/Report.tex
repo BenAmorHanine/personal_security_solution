@@ -701,33 +701,50 @@ This setup performs robust transcription of the user's speech into a text string
 The NLP module determines user intent from the transcribed text, accomplished by fine-tuning and implementing a specialized Transformer model.
 
 \subsubsection{Model Selection and Architecture}
+\label{sec:tunbert selection}
 For this task, \textbf{TunBERT} was selected, a BERT variant for Tunisian Arabic. This provides a strong foundation for understanding the nuances, slang, and code-switching present in the local dialect.
 
 \subsubsection{Fine-tuning and Dataset Preparation}
+\label{sec:finetuning tunbert}
 The core of the implementation was fine-tuning the base TunBERT model for the specific task of distress detection. This process, documented in the \textit{fineTune\_TunBERT.ipynb} notebook, 
 utilized the \textit{AutoTokenizer} and \textit{AutoModelForSequenceClassification} classes from the \texttt{transformers} library. 
 The T- HSAB \ref{sec:nlp_intent}, a dataset of Tunisian dialect phrases related to distress scenarios was chosen, tokenized and split into training and validation sets, during this process. 
 \subsubsection{Training Configuration and Inference}
-The fine-tuning loop was managed using the PyTorch \texttt{Trainer} and \texttt{TrainingArguments} classes from the \texttt{transformers} library. This allowed for the precise configuration of hyperparameters, including a low learning rate, a batch size of 16, and weight decay to prevent overfitting. For real-time prediction, the \texttt{classify\_text} function in \texttt{vocal\_analysis.py} loads the resulting fine-tuned model and its tokenizer. It takes the text string from the ASR module as input, tokenizes it, and passes the resulting tensors to the model to get the final intent classification (e.g., "Distress," "Normal").
+\label{sec:training tunbert}
+The fine-tuning loop was managed using the PyTorch \texttt{Trainer} and \texttt{TrainingArguments} classes from the \texttt{transformers} library. This allowed for the precise configuration of 
+hyperparameters, including a low learning rate, a batch size of 16, and weight decay to prevent overfitting. For real-time prediction, the \texttt{classify\_text} function in \texttt{vocal\_analysis.py} 
+loads the resulting fine-tuned model and its tokenizer. It takes the text string from the ASR module as input, tokenizes it, and passes the resulting tensors to the model to get the final intent 
+classification (e.g., "Distress," "Normal").
 
-For live prediction, the \texttt{classify\_text} function loads the fine-tuned TunBERT model and its tokenizer. It takes the text string from the ASR module as input, tokenizes it, and passes the resulting tensors to the model to get the final intent classification (e.g., "Distress," "Normal").
+For live prediction, the \texttt{classify\_text} function loads the fine-tuned TunBERT model and its tokenizer. It takes the text string from the ASR module as input, tokenizes it, and passes the 
+resulting tensors to the model to get the final intent classification (e.g., "Distress," "Normal").
 
+\subsubsection{Training Configuration and Inference}
+\label{sec:training_tunbert}
 
+The fine-tuning process was managed using the PyTorch \textit{Trainer} and \textit{TrainingArguments} classes from the \textit{transformers} library, which provided precise control over the training loop and its hyperparameters, accelerated on a Google Colab \textbf{TPU}. 
+Key settings were chosen to ensure stable and effective training, including a low learning rate (\texttt{2e-5}), 
+a batch size of 16, weight decay to prevent overfitting, and a set number of training \textbf{epochs} (5).
+
+For live prediction, the \texttt{classify\_text} function loads the fine-tuned TunBERT model and its tokenizer. It takes the transcribed text string from the ASR module as input, tokenizes it, and passes the 
+resulting tensors to the model to get the final intent classification (e.g., "Distress," "Normal").
 
 \subsection{Integration of SER, ASR, and NLP for Distress Detection}%or multi-modal vocal analysis nhbbklmt pipeline : max 3 jomlett.
 \label{integration_ser_asr_nlp}
-%todo this is only a draft was in the sota chapter
-%todo pipeline image should be present
-The integration of Speech Emotion Recognition (SER), Automatic Speech Recognition (ASR), and Natural Language Processing (NLP) forms a comprehensive vocal analysis pipeline for distress detection.
-This multi-modal approach leverages the strengths of each component to provide a robust assessment of vocal distress signals.
-\\The SER module analyzes the emotional tone of the speech, identifying signs of fear or anxiety that may indicate distress.
-Sim ultaneously, the ASR module transcribes the spoken words into text, capturing the explicit content of the communication.
-Finally, the NLP module processes the transcribed text to extract intent and context, identifying keywords or phrases that suggest an emergency situation.
-By combining emotional cues with linguistic analysis, this integrated pipeline enhances the accuracy and reliability of distress detection, ensuring that both the emotional state and the verbal content are considered in the assessment.
+The individual modules are integrated into a cohesive workflow orchestrated by the main \texttt{analyze\_vocal} function in \texttt{vocal\_analysis.py}. Upon receiving an audio file, this function 
+executes the ASR/NLP and SER sub-pipelines in parallel to determine the user's intent and emotional state. The final outputs—the intent classification from TunBERT and the emotion classification from 
+the SpeechBrain model—are then combined into a single, structured JSON object, providing a comprehensive analysis of the vocal signal, Figure \ref{fig:vocal_pipe} dhows a visual representation of the vocal analysis Pipeline.
+\\The pipeline uses \textit{try...except} blocks for ASR, SER, and NLP to handle failures (e.g., corrupted audio, model issues) gracefully, returning partial results or error messages to ensure stability.
+
+\begin{figure}[h!] % placement options: h=here, t=top, b=bottom, p=page
+    \centering
+    \includegraphics[width=1\textwidth]{images/vocal_analysis_pipeline.png}
+    \caption{Vocal Analysis Pipeline for  Distress detection}
+    \label{fig:vocal_pipe}
+\end{figure}
 
 
-The pipeline integrates SER emotion scores, ASR transcripts, and NLP intent analysis for distress detection. A rule-based system, enhanced by machine learning, triggers alerts on high 
-emotion and urgent intent. Real-time performance is maintained via `main.py`'s scheduler.
+
 
 %\begin{thebibliography}{9}
 %\bibitem{schuller2018}
