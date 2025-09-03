@@ -691,7 +691,11 @@ Finally, the emotion corresponding to the highest probability is classified as t
 
 \subsection{Automatic Speech Recognition (ASR)}
 \label{subsec:asr_implementation}
-The \texttt{transcribe\_audio} function handles the ASR task. It instantiates a pipeline object from the Hugging Face \textbf{\texttt{transformers}} library, specifically configured for \texttt{"automatic-speech-recognition"}. This pipeline leverages OpenAI's \textbf{Whisper} model (the \texttt{base} version) to perform robust, zero-shot transcription on the audio file, converting the user's speech into a text string for the NLP module.
+The \textit{transcribe\_audio} function handles the ASR task. It instantiates a pipeline object from the Hugging Face \textbf{\textit{transformers}} library, specifically configured for the \textit{"automatic-speech-recognition"} task using OpenAI's \textbf{Whisper} model.
+\\The \textit{base} version of the model was chosen as it offers an optimal balance between high transcription accuracy and the real-time performance, configured on \textit{Arabic} language.
+\\The pipeline was configured to run on the CPU to ensure broad deployment compatibility. 
+This setup performs robust, zero-shot transcription, converting the user's speech into a text string that is then passed to the NLP module for intent analysis.
+
 
 \subsection{Natural Language Processing (TunBERT Focus)}
 \label{subsec:nlp_tunbert_implementation}
