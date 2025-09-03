@@ -743,29 +743,17 @@ the SpeechBrain model—are then combined into a single, structured JSON object,
     \label{fig:vocal_pipe}
 \end{figure}
 
-
-
-
-%\begin{thebibliography}{9}
-%\bibitem{schuller2018}
-%Schuller, B., "Speech Emotion Recognition: Two Decades in a Nutshell," Frontiers in Digital Humanities, 2018.
-%\end{thebibliography}
-
-
-
-
-
-
-
-\section{Implementation of the Behavioral Profiling Module} % or the Behavioral Anomaly Detection Module or the Machine Learning Module
-\subsection{Behavioral Data Preprocessing}
-The behavioral module's data is prepared in two distinct stages:
+\section{Implementation of the Behavioral Anomaly Detection Module} % or the Behavioral Anomaly Detection Module or the Machine Learning Module
+\subsection{Data Preparation for Behavioral Analysis}
+\label{sec:Data_behav}
+The behavioral module prepares data from \texttt{locations\_collection} in two stages:
 \begin{itemize}
-    \item \textbf{For User Profiling}: To build a user's behavioral profile, their historical location data is fetched from the \texttt{locations\_collection} and filtered to include events from the last 30 days.
-    \item \textbf{For Incident Classification}: To train the final \texttt{RandomForestClassifier}, a labeled dataset is created from past alerts. For each alert, a feature vector is constructed from the four anomaly scores (location, hour, weekday, month), and the target label is set based on the \texttt{is\_incident} field.
+\item \textbf{User Profiling}: Historical GPS and timestamp data (last 30 days) builds routine profiles through \texttt{preprocess\_data.py}. For new users, k-means clustering on population averages generates synthetic profiles until real data is available.
+\item \textbf{Incident Classification}: A labeled dataset from past alerts trains the \textit{RandomForestClassifier}. Feature vectors contain four anomaly scores (location, hour, weekday, month) with \textit{is\_incident} labels indicating true\/false incidents. For new users, synthetic data, generated via k-means clustering of population averages in \textit{preprocess\_data.py}, initializes profiles until sufficient real data is collected.
 \end{itemize}
-%todo le faite quon a synthetisé de la data pour new users ? si je me rappelle bien, en t cas comment we handled new users
-\subsection{Implementation of Unsupervised Profiling}
+This dual approach enables both unsupervised routine learning and supervised incident prediction while handling the cold-start problem for new users.
+
+ \subsection{Implementation of Unsupervised User Profiling}
 \label{sec:unsupervised_implementation}
 %todo this is a draft
 % Purpose: Detail the practical execution of unsupervised profiling.
@@ -780,7 +768,8 @@ while frequency distributions in `db\_functions.py` model temporal
 patterns (e.g., weekday mornings), building a "pattern of life" for anomaly detection.
 
 
-\subsection{Anomaly Scoring }
+\subsection{Ream-Time Anomaly Scoring Implementation}
+\label{sec:anomaly_scoring_impl}
 Anomaly scoring, the 2nd stage of the behavioral analysis, quantifies the degree of deviation of a new, live event from the user's established profile. This is accomplished by calculating an anomaly score—a numerical
  value representing how "unusual" an event is. This score is not a single value, but rather a vector of scores, with each element corresponding to a different dimension of the user's behavior.
 For spatial deviations, the score is derived from the geometric distance between a user's current coordinates and the centroids of their known routine locations. A greater distance corresponds to a 
@@ -789,6 +778,13 @@ For temporal deviations, the score is based on the principle of inverse frequenc
 An event's timestamp (e.g., the hour of the day) is compared against the learned frequency distributions from the user's profile. Activities occurring at times with low historical probability 
 (e.g., being active at 3 AM for a user who is typically home) are assigned a significantly higher anomaly score. By combining these scores, the system creates a rich, multi-dimensional feature vector that 
 captures the full context of a user's deviation from their normal "pattern of life."
+
+\subsection{Supervised Incident Classifier Implementation}
+\label{sec:Incident_class_impl}
+
+
+\subsection{le tout peut etre}
+\label{}
 
 %\section{Final Decision Engine and System Integration}
 %this may be merged with the first section (dont know shkoun shyemshi bahtha sahbou ( hawka naamlou referencing lel sections elli will tailor the details if nkaddmou el decision engine kbal les ai modules))

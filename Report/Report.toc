@@ -1,0 +1,65 @@
+\babel@toc {english}{}\relax 
+\contentsline {chapter}{Introduction}{i}{chapter*.7}%
+\contentsline {chapter}{Company Presentation}{ii}{chapter*.8}%
+\contentsline {section}{\numberline {I}Overview}{ii}{section.0.1}%
+\contentsline {section}{\numberline {II}Sectors of Activities}{iii}{section.0.2}%
+\contentsline {subsection}{\numberline {II.1}Services offered}{iii}{subsection.0.2.1}%
+\contentsline {section}{\numberline {III}Organizational structure and Human Capital}{iv}{section.0.3}%
+\contentsline {chapter}{Internship Context and Objectives}{v}{chapter*.12}%
+\contentsline {section}{\numberline {IV}Problem Statement and Motivation}{v}{section.0.4}%
+\contentsline {subsection}{\numberline {IV.1}Market Context and Existing Solutions}{v}{subsection.0.4.1}%
+\contentsline {section}{\numberline {V}Description}{v}{section.0.5}%
+\contentsline {section}{\numberline {VI}Core Mission, Objectives and Expected Results}{vi}{section.0.6}%
+\contentsline {subsection}{\numberline {VI.1}Core Mission}{vi}{subsection.0.6.1}%
+\contentsline {subsection}{\numberline {VI.2}Main Objectives}{vi}{subsection.0.6.2}%
+\contentsline {subsection}{\numberline {VI.3}Expected Results}{vii}{subsection.0.6.3}%
+\contentsline {section}{\numberline {VII}Internship timeline }{vii}{section.0.7}%
+\contentsline {chapter}{Theoritical Foundations and State of the Art}{viii}{chapter*.13}%
+\contentsline {section}{\numberline {VIII}Geospatical Analysis for Risk Prediction}{viii}{section.0.8}%
+\contentsline {subsection}{\numberline {VIII.1}Crime Hotspot Forecasting and Spatial Analysis}{viii}{subsection.0.8.1}%
+\contentsline {subsection}{\numberline {VIII.2}Density-Based Clustering for Spatial Data}{ix}{subsection.0.8.2}%
+\contentsline {subsection}{\numberline {VIII.3}Real-time Risk Assessment Systems}{x}{subsection.0.8.3}%
+\contentsline {section}{\numberline {IX}Vocal Signal Processing for Distress Detection}{x}{section.0.9}%
+\contentsline {subsection}{\numberline {IX.1}Speech Emotion Recognition (SER)}{x}{subsection.0.9.1}%
+\contentsline {subsection}{\numberline {IX.2}Automatic Speech Recognition (ASR)}{x}{subsection.0.9.2}%
+\contentsline {subsection}{\numberline {IX.3}Natural Language Processing (NLP) for Intent Analysis}{xi}{subsection.0.9.3}%
+\contentsline {section}{\numberline {X}Machine Learning for Behavioral Anomaly Detection}{xii}{section.0.10}%
+\contentsline {subsection}{\numberline {X.1}Unsupervised Profiling of User Routines}{xii}{subsection.0.10.1}%
+\contentsline {subsection}{\numberline {X.2} Anomaly Scoring as a Measure of Deviation}{xii}{subsection.0.10.2}%
+\contentsline {subsection}{\numberline {X.3}Supervised Classification for Incident Prediction}{xiii}{subsection.0.10.3}%
+\contentsline {chapter}{Design and implementation}{xiv}{chapter*.16}%
+\contentsline {section}{\numberline {XI}System Architecture, Integration, and Decision Engine Overview}{xiv}{section.0.11}%
+\contentsline {subsection}{\numberline {XI.1}Overall System Architecture}{xiv}{subsection.0.11.1}%
+\contentsline {subsection}{\numberline {XI.2}Final Decision Engine Design}{xiv}{subsection.0.11.2}%
+\contentsline {subsection}{\numberline {XI.3}System Integration and API Design}{xv}{subsection.0.11.3}%
+\contentsline {subsubsection}{\numberline {XI.3.1}On-demand API Endpoint}{xv}{subsubsection.0.11.3.1}%
+\contentsline {subsubsection}{\numberline {XI.3.2}API Response Body}{xv}{subsubsection.0.11.3.2}%
+\contentsline {subsubsection}{\numberline {XI.3.3}Automated Periodic Risk Assessment}{xvi}{subsubsection.0.11.3.3}%
+\contentsline {subsection}{\numberline {XI.4}Technical stack and tools used}{xvi}{subsection.0.11.4}%
+\contentsline {subsection}{\numberline {XI.5}Data Management and Preprocessing}{xvii}{subsection.0.11.5}%
+\contentsline {section}{\numberline {XII}Implementation of the Geospatial Analysis Module}{xvii}{section.0.12}%
+\contentsline {subsection}{\numberline {XII.1}Data acquisition and Preprocessing}{xvii}{subsection.0.12.1}%
+\contentsline {subsection}{\numberline {XII.2}Spatial Clustering Implementation}{xvii}{subsection.0.12.2}%
+\contentsline {subsection}{\numberline {XII.3}Risk Score Calculation and Integration}{xvii}{subsection.0.12.3}%
+\contentsline {section}{\numberline {XIII}Implementation of the Vocal Signal Processing Pipeline}{xviii}{section.0.13}%
+\contentsline {subsection}{\numberline {XIII.1}Vocal Data Preprocessing}{xviii}{subsection.0.13.1}%
+\contentsline {subsection}{\numberline {XIII.2}Speech Emotion Recognition (SER)}{xviii}{subsection.0.13.2}%
+\contentsline {subsection}{\numberline {XIII.3}Automatic Speech Recognition (ASR)}{xviii}{subsection.0.13.3}%
+\contentsline {subsection}{\numberline {XIII.4}Natural Language Processing (TunBERT Focus)}{xix}{subsection.0.13.4}%
+\contentsline {subsubsection}{\numberline {XIII.4.1}Model Selection and Architecture}{xix}{subsubsection.0.13.4.1}%
+\contentsline {subsubsection}{\numberline {XIII.4.2}Fine-tuning and Dataset Preparation}{xix}{subsubsection.0.13.4.2}%
+\contentsline {subsubsection}{\numberline {XIII.4.3}Training Configuration and Inference}{xix}{subsubsection.0.13.4.3}%
+\contentsline {subsubsection}{\numberline {XIII.4.4}Training Configuration and Inference}{xx}{subsubsection.0.13.4.4}%
+\contentsline {subsection}{\numberline {XIII.5}Integration of SER, ASR, and NLP for Distress Detection}{xx}{subsection.0.13.5}%
+\contentsline {section}{\numberline {XIV}Implementation of the Behavioral Anomaly Detection Module}{xx}{section.0.14}%
+\contentsline {subsection}{\numberline {XIV.1}Data Preparation for Behavioral Analysis}{xx}{subsection.0.14.1}%
+\contentsline {subsection}{\numberline {XIV.2}Implementation of Unsupervised User Profiling}{xxi}{subsection.0.14.2}%
+\contentsline {subsection}{\numberline {XIV.3}Ream-Time Anomaly Scoring Implementation}{xxi}{subsection.0.14.3}%
+\contentsline {subsection}{\numberline {XIV.4}Supervised Incident Classifier Implementation}{xxii}{subsection.0.14.4}%
+\contentsline {subsection}{\numberline {XIV.5}le tout peut etre}{xxii}{subsection.0.14.5}%
+\contentsline {chapter}{Results and Discussion}{xxiii}{chapter*.19}%
+\contentsline {section}{\numberline {XV}Evaluation and Results}{xxiii}{section.0.15}%
+\contentsline {subsection}{\numberline {XV.1}Geospatial}{xxiii}{subsection.0.15.1}%
+\contentsline {section}{\numberline {XVI}Discussion}{xxiii}{section.0.16}%
+\contentsline {chapter}{Conclusion and perspectives}{xxiv}{chapter*.21}%
+\contentsline {chapter}{Appendix 1}{xxv}{appendix*.22}%
