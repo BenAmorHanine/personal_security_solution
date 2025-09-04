@@ -789,14 +789,43 @@ Finally, the trained model, scaler, and optimized threshold are serialized using
 %todo normalement fama partie okhra lel pipeline kolha
 
 
-
 \chapter{Results and Discussion}
 \label{ch:results_and_disc}
 
+% --- Chapter Introduction ---
+% Briefly introduce this final chapter. Explain that it will first present the
+% objective performance metrics for each of the system's AI modules, and then
+% provide a broader discussion of these findings, including challenges faced
+% and recommendations for future work.
+%This chapter presents the quantitative evaluation of the safety system's performance, followed by an analysis of the findings. The evaluation focuses on individual module performance and system-wide metrics, while the discussion interprets these results within the context of project objectives and real-world deployment considerations.
+%This chapter presents the quantitative evaluation of each of the safety system's AI modules, followed with a discussion of these findings, including challenges faced.
+
+This chapter evaluates the safety system's performance through quantitative metrics for its AI modules, followed by a discussion. 
+It analyzes results against project goals, addresses challenges and proposes future enhancements.
 \section{Evaluation and Results}
-\label{sec:res}
-\subsection{Geospatial}
-\label{sec:geospatial_res}
+\label{sec:results}
+% --- Section Goal ---
+% To present the quantitative and qualitative outcomes of your project in a clear,
+% objective, data-driven manner. This section is for the "what happened."
+
+    \subsection{Evaluation Methodology}
+    \label{subsec:eval_methodology}
+    % --- What to write ---
+    % 1. Metrics: Define Precision, Recall, and especially the F1-Score. Explain
+    %    why the F1-Score is the most important metric for your imbalanced dataset
+    %    (where true incidents are rare).
+    % 2. Test Data: Briefly describe the test set you used for evaluation (e.g.,
+    %    a holdout set of historical alerts, or a suite of simulated scenarios).
+
+    \subsection{Geospatial Module Performance}
+    \label{subsec:geo_results}
+    % --- What to write ---
+    % 1. The primary result here is visual. Present the map of Tunisia showing the
+    %    high-risk clusters your model identified from the ACLED data.
+    % 2. Include a small summary table (e.g., number of clusters found, top 3 cities
+    %    with the highest risk concentration).
+
+
 Figure \ref{fig:Clusters_heatmap} illustrates the cluster distribution to put in the appendixacross Tunisia, highlighting urban risk areas. See Discussion for result analysis.
 \begin{figure}[h!] % placement options: h=here, t=top, b=bottom, p=page
     \centering
@@ -805,15 +834,65 @@ Figure \ref{fig:Clusters_heatmap} illustrates the cluster distribution to put in
     \label{fig:Clusters_heatmap}
 \end{figure}
 
+    \subsection{Vocal Module Performance}
+    \label{subsec:vocal_results}
+    % --- What to write ---
+    % 1. SER (Wav2Vec 2.0): Provide a results table with F1-Score, Precision, and
+    %    Recall for key emotions like "Fear," "Anger," and "Neutral" on your test set.
+    % 2. NLP (TunBERT): Provide a similar results table for your intent classifications
+    %    like "Distress" and "Normal". A confusion matrix figure is excellent here.
 
+    \subsection{Behavioral Module Performance}
+    \label{subsec:behavioral_results}
+    % --- What to write ---
+    % 1. Present a results table showing the final F1-Score, Precision, and Recall
+    %    for your RandomForestClassifier.
+    % 2. State the average optimal decision threshold that your optimization process found.
 
+    \subsection{Overall System Performance}
+    \label{subsec:overall_results}
+    % --- What to write ---
+    % 1. End-to-End Latency: Report the average response time from API call to final
+    %    result. This is a critical metric for a real-time system.
+    % 2. Summary Table: A small table comparing the primary metric (e.g., F1-Score)
+    %    across all three AI modules for an at-a-glance comparison.
 
-
+%========================================================================================
 \section{Discussion}
+\label{sec:discussion}
+% --- Section Goal ---
+% To interpret the results, reflect on the project's challenges and limitations,
+% and propose future directions. This section is for the "so what?"
 
+    \subsection{Interpretation of Key Findings}
+    \label{subsec:interpretation}
+    % --- What to write ---
+    % 1. Did you meet your main objectives (e.g., >80% accuracy)?
+    % 2. Compare the modules: Which was the most effective? Which was the weakest?
+    % 3. Discuss how the modules complement each other (e.g., a scenario where
+    %    geo-risk is low but vocal distress is high).
+
+    \subsection{Challenges and Limitations}
+    \label{subsec:challenges}
+    % --- What to write ---
+    % 1. Data Scarcity: Discuss the challenge of working with a low-resource language
+    %    (Tunisian Arabic) and the limitations of the available crime data.
+    % 2. Cold Start Problem: Address the inherent challenge of providing accurate
+    %    behavioral analysis for new users with no historical data.
+    % 3. Model Generalization: Discuss the potential risk that your models might not
+    %    perform as well on data from different regions or demographics.
 Edge cases, including sparse rural data coverage, were mitigated using synthetic data generation, though further validation is needed (see Discussion).
 
 
+
+
+    \subsection{Future Work and Recommendations}
+    \label{subsec:future_work}
+    % --- What to write ---
+    % 1. Suggest concrete next steps, like collecting more labeled Tunisian vocal data.
+    % 2. Recommend experimenting with other models (like XGBoost).
+    % 3. Propose integrating new data sources mentioned in the Cahier des Charges
+    %    (e.g., social media, video feeds).
 
 
 
