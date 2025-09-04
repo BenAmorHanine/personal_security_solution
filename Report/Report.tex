@@ -580,6 +580,14 @@ Upon successful analysis, the API returns a JSON object with the final risk asse
 For continuous safety monitoring, the system relies on a server-side scheduling mechanism to regularly trigger a check for each user at regular intervals (every 15 minutes).
 This is implemented using a cron job that sends a POST request to the same /process endpoint.
 
+
+
+\subsubsection{System Testing and Validation}
+\label{subsec:system_testing}
+System reliability was validated through unit and integration tests using \textbf{pytest}. Tests in \textit{test\_capture.py} cover core functions like \textit{process\_capture}, 
+leveraging fixtures and monkeypatch to simulate scenarios such as new user handling and high-risk event detection, ensuring correct system behavior under varied conditions.
+
+
 \subsection{Technical stack and tools used}
 \label{technical}
 The system leverages a robust technical stack to enable real-time distress detection:
@@ -804,9 +812,6 @@ This chapter evaluates the safety system's performance through quantitative metr
 It analyzes results against project goals, addresses challenges and proposes future enhancements.
 \section{Evaluation and Results}
 \label{sec:results}
-% --- Section Goal ---
-% To present the quantitative and qualitative outcomes of your project in a clear,
-% objective, data-driven manner. This section is for the "what happened."
 
     \subsection{Evaluation Methodology}
     \label{subsec:eval_methodology}
@@ -882,9 +887,7 @@ Figure \ref{fig:Clusters_heatmap} illustrates the cluster distribution to put in
     % 3. Model Generalization: Discuss the potential risk that your models might not
     %    perform as well on data from different regions or demographics.
 Edge cases, including sparse rural data coverage, were mitigated using synthetic data generation, though further validation is needed (see Discussion).
-
-
-
+scarse tunisian data
 
     \subsection{Future Work and Recommendations}
     \label{subsec:future_work}
