@@ -63,11 +63,10 @@
 \contentsline {subsection}{\numberline {XV.2}Geospatial Module Performance}{xxiii}{subsection.0.15.2}%
 \contentsline {subsubsection}{\numberline {XV.2.1}Model Comparison: DBSCAN vs. OPTICS}{xxiii}{subsubsection.0.15.2.1}%
 \contentsline {subsection}{\numberline {XV.3}Vocal Module Performance}{xxiv}{subsection.0.15.3}%
-\contentsline {subsection}{\numberline {XV.4}Vocal Module Performance}{xxiv}{subsection.0.15.4}%
-\contentsline {subsubsection}{\numberline {XV.4.1}Speech Emotion Recognition (SER)}{xxiv}{subsubsection.0.15.4.1}%
-\contentsline {subsubsection}{\numberline {XV.4.2}NLP Intent Classification Results}{xxv}{subsubsection.0.15.4.2}%
-\contentsline {subsection}{\numberline {XV.5}Behavioral Module Performance}{xxv}{subsection.0.15.5}%
-\contentsline {subsection}{\numberline {XV.6}Overall System Performance}{xxvi}{subsection.0.15.6}%
+\contentsline {subsubsection}{\numberline {XV.3.1}Speech Emotion Recognition (SER)}{xxiv}{subsubsection.0.15.3.1}%
+\contentsline {subsubsection}{\numberline {XV.3.2}NLP Intent Classification Results}{xxv}{subsubsection.0.15.3.2}%
+\contentsline {subsection}{\numberline {XV.4}Behavioral Module Performance}{xxv}{subsection.0.15.4}%
+\contentsline {subsection}{\numberline {XV.5}Overall System Performance}{xxvi}{subsection.0.15.5}%
 \contentsline {section}{\numberline {XVI}Discussion}{xxvi}{section.0.16}%
 \contentsline {subsection}{\numberline {XVI.1}Interpretation of Key Findings}{xxvi}{subsection.0.16.1}%
 \contentsline {subsection}{\numberline {XVI.2}Challenges and Limitations}{xxvi}{subsection.0.16.2}%
