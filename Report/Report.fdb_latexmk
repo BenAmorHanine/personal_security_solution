@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex Report"] 1756999055.64425 "Report.aux" "Report.bbl" "Report" 1757001024.72516 0
+["bibtex Report"] 1757023791.563 "Report.aux" "Report.bbl" "Report" 1757024742.77947 0
   "./references.bib" 1756861454 16777 edc9b3dcddb1ae6a14f78426ca125ad5 ""
   "C:/Users/user/AppData/Local/Programs/MiKTeX/bibtex/bst/bibtex/unsrt.bst" 1291864736 18030 1376b4b231b50c66211e47e42eda2875 ""
-  "Report.aux" 1757001022 18820 9c6ae775860759051a2d454ac826fbfc "pdflatex"
+  "Report.aux" 1757024741 21135 d3e8aef0b804693cb125cf2595b2045a "pdflatex"
   (generated)
   "Report.bbl"
   "Report.blg"
   (rewritten before read)
-["pdflatex"] 1757001018.46864 "e:/Solution_securite_perso/Report/Report.tex" "Report.pdf" "Report" 1757001024.72669 0
+["pdflatex"] 1757024738.79338 "e:/Solution_securite_perso/Report/Report.tex" "Report.pdf" "Report" 1757024742.78007 0
   "C:/Users/user/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1748091076 279613 fe62a258ff6d99cc2243c3a2d16aa767 ""
   "C:/Users/user/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1728633160 24224575 dbe8964d3878c7686ae3438ced8d4dc8 ""
   "C:/Users/user/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1001775420 2900 1537cc8184ad1792082cd229ecc269f4 ""
@@ -163,15 +163,16 @@
   "C:/Users/user/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/user/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1700127522 55487 80a65caedd3722f4c20a14a69e785d8f ""
   "FrontPage.pdf" 1756046041 76730 a86e41f4e3f0f6761e047dd62f0d283b ""
-  "Report.aux" 1757001022 18820 9c6ae775860759051a2d454ac826fbfc "pdflatex"
-  "Report.bbl" 1756999056 4674 0307fc3353af068c1b5e9c13fabeee77 "bibtex Report"
-  "Report.lof" 1757001022 1166 20829161f6ef9422625951e943d23720 "pdflatex"
-  "Report.lot" 1757001022 150 7460b00ca4c2d98f724b7acc062e00fd "pdflatex"
-  "Report.out" 1757001022 16284 022af41f90eb0c83214ab511d6a17107 "pdflatex"
-  "Report.tex" 1757001017 60440 6062ef40713150205c1ae282a56f98e0 ""
-  "Report.toc" 1757001022 7049 fa449e4be6dd26ffb2977ab98c5d467b "pdflatex"
-  "e:/Solution_securite_perso/Report/Report.tex" 1757001017 60440 6062ef40713150205c1ae282a56f98e0 ""
+  "Report.aux" 1757024741 21135 d3e8aef0b804693cb125cf2595b2045a "pdflatex"
+  "Report.bbl" 1757023791 4674 0307fc3353af068c1b5e9c13fabeee77 "bibtex Report"
+  "Report.lof" 1757024741 1322 33afc6225a15f890e8657e3e7c8e151f "pdflatex"
+  "Report.lot" 1757024741 556 1aea1f56c4c986530b2038855cc0ef6b "pdflatex"
+  "Report.out" 1757024741 17460 3d66dfd5003f4cf51ee16d034b594236 "pdflatex"
+  "Report.tex" 1757024737 66833 0d1d86544152ec7ababa30d8cf6d0f2b ""
+  "Report.toc" 1757024741 7610 b1125a7e88dfc2d41014f198822793ab "pdflatex"
+  "e:/Solution_securite_perso/Report/Report.tex" 1757024737 66833 0d1d86544152ec7ababa30d8cf6d0f2b ""
   "images/Expertise_hydatis.png" 1756310900 86014 7b14ba81703f5d942aa8e4f4f9726328 ""
+  "images/confusionmatrix_nlp.png" 1757012283 744315 90268305239528030cbd752529e18554 ""
   "images/dbscanVSkmeans.png" 1756631475 169255 3bebc0bc265ac80938206a67ce98b72e ""
   "images/diag5.png" 1756717136 231990 565ddf45460a4c8a34a7ee3fbb31e004 ""
   "images/high_risk_locations_heatmap_tunisia_acled_data.png" 1756748299 73380 9e048796c21d052bf5a3a97bea42759a ""

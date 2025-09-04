@@ -35,37 +35,42 @@
 \contentsline {subsubsection}{\numberline {XI.3.1}On-demand API Endpoint}{xv}{subsubsection.0.11.3.1}%
 \contentsline {subsubsection}{\numberline {XI.3.2}API Response Body}{xv}{subsubsection.0.11.3.2}%
 \contentsline {subsubsection}{\numberline {XI.3.3}Automated Periodic Risk Assessment}{xvi}{subsubsection.0.11.3.3}%
+\contentsline {subsubsection}{\numberline {XI.3.4}System Testing and Validation}{xvi}{subsubsection.0.11.3.4}%
 \contentsline {subsection}{\numberline {XI.4}Technical stack and tools used}{xvi}{subsection.0.11.4}%
 \contentsline {subsection}{\numberline {XI.5}Data Management and Preprocessing}{xvii}{subsection.0.11.5}%
 \contentsline {section}{\numberline {XII}Implementation of the Geospatial Analysis Module}{xvii}{section.0.12}%
 \contentsline {subsection}{\numberline {XII.1}Data acquisition and Preprocessing}{xvii}{subsection.0.12.1}%
 \contentsline {subsection}{\numberline {XII.2}Spatial Clustering Implementation}{xvii}{subsection.0.12.2}%
-\contentsline {subsection}{\numberline {XII.3}Risk Score Calculation and Integration}{xvii}{subsection.0.12.3}%
+\contentsline {subsection}{\numberline {XII.3}Risk Score Calculation and Integration}{xviii}{subsection.0.12.3}%
 \contentsline {section}{\numberline {XIII}Implementation of the Vocal Signal Processing Pipeline}{xviii}{section.0.13}%
 \contentsline {subsection}{\numberline {XIII.1}Vocal Data Preprocessing}{xviii}{subsection.0.13.1}%
 \contentsline {subsection}{\numberline {XIII.2}Speech Emotion Recognition (SER)}{xviii}{subsection.0.13.2}%
-\contentsline {subsection}{\numberline {XIII.3}Automatic Speech Recognition (ASR)}{xviii}{subsection.0.13.3}%
+\contentsline {subsection}{\numberline {XIII.3}Automatic Speech Recognition (ASR)}{xix}{subsection.0.13.3}%
 \contentsline {subsection}{\numberline {XIII.4}Natural Language Processing (TunBERT Focus)}{xix}{subsection.0.13.4}%
 \contentsline {subsubsection}{\numberline {XIII.4.1}Model Selection and Architecture}{xix}{subsubsection.0.13.4.1}%
 \contentsline {subsubsection}{\numberline {XIII.4.2}Fine-tuning and Dataset Preparation}{xix}{subsubsection.0.13.4.2}%
 \contentsline {subsubsection}{\numberline {XIII.4.3}Training Configuration and Inference}{xix}{subsubsection.0.13.4.3}%
-\contentsline {subsubsection}{\numberline {XIII.4.4}Training Configuration and Inference}{xix}{subsubsection.0.13.4.4}%
+\contentsline {subsubsection}{\numberline {XIII.4.4}Training Configuration and Inference}{xx}{subsubsection.0.13.4.4}%
 \contentsline {subsection}{\numberline {XIII.5}Integration of SER, ASR, and NLP for Distress Detection}{xx}{subsection.0.13.5}%
-\contentsline {section}{\numberline {XIV}Implementation of the Behavioral Anomaly Detection Module}{xx}{section.0.14}%
-\contentsline {subsection}{\numberline {XIV.1}Data Preparation for Behavioral Analysis}{xx}{subsection.0.14.1}%
+\contentsline {section}{\numberline {XIV}Implementation of the Behavioral Anomaly Detection Module}{xxi}{section.0.14}%
+\contentsline {subsection}{\numberline {XIV.1}Data Preparation for Behavioral Analysis}{xxi}{subsection.0.14.1}%
 \contentsline {subsection}{\numberline {XIV.2}Implementation of Unsupervised User Profiling}{xxi}{subsection.0.14.2}%
 \contentsline {subsection}{\numberline {XIV.3}Real-Time Anomaly Scoring Implementation}{xxi}{subsection.0.14.3}%
-\contentsline {subsection}{\numberline {XIV.4}Supervised Incident Classifier Implementation}{xxi}{subsection.0.14.4}%
+\contentsline {subsection}{\numberline {XIV.4}Supervised Incident Classifier Implementation}{xxii}{subsection.0.14.4}%
 \contentsline {chapter}{Results and Discussion}{xxiii}{chapter*.19}%
 \contentsline {section}{\numberline {XV}Evaluation and Results}{xxiii}{section.0.15}%
 \contentsline {subsection}{\numberline {XV.1}Evaluation Methodology}{xxiii}{subsection.0.15.1}%
 \contentsline {subsection}{\numberline {XV.2}Geospatial Module Performance}{xxiii}{subsection.0.15.2}%
+\contentsline {subsubsection}{\numberline {XV.2.1}Model Comparison: DBSCAN vs. OPTICS}{xxiii}{subsubsection.0.15.2.1}%
 \contentsline {subsection}{\numberline {XV.3}Vocal Module Performance}{xxiv}{subsection.0.15.3}%
-\contentsline {subsection}{\numberline {XV.4}Behavioral Module Performance}{xxiv}{subsection.0.15.4}%
-\contentsline {subsection}{\numberline {XV.5}Overall System Performance}{xxiv}{subsection.0.15.5}%
-\contentsline {section}{\numberline {XVI}Discussion}{xxiv}{section.0.16}%
-\contentsline {subsection}{\numberline {XVI.1}Interpretation of Key Findings}{xxiv}{subsection.0.16.1}%
-\contentsline {subsection}{\numberline {XVI.2}Challenges and Limitations}{xxiv}{subsection.0.16.2}%
-\contentsline {subsection}{\numberline {XVI.3}Future Work and Recommendations}{xxiv}{subsection.0.16.3}%
-\contentsline {chapter}{Conclusion and perspectives}{xxv}{chapter*.21}%
-\contentsline {chapter}{Appendix 1}{xxvi}{appendix*.22}%
+\contentsline {subsection}{\numberline {XV.4}Vocal Module Performance}{xxiv}{subsection.0.15.4}%
+\contentsline {subsubsection}{\numberline {XV.4.1}Speech Emotion Recognition (SER)}{xxiv}{subsubsection.0.15.4.1}%
+\contentsline {subsubsection}{\numberline {XV.4.2}NLP Intent Classification Results}{xxv}{subsubsection.0.15.4.2}%
+\contentsline {subsection}{\numberline {XV.5}Behavioral Module Performance}{xxv}{subsection.0.15.5}%
+\contentsline {subsection}{\numberline {XV.6}Overall System Performance}{xxvi}{subsection.0.15.6}%
+\contentsline {section}{\numberline {XVI}Discussion}{xxvi}{section.0.16}%
+\contentsline {subsection}{\numberline {XVI.1}Interpretation of Key Findings}{xxvi}{subsection.0.16.1}%
+\contentsline {subsection}{\numberline {XVI.2}Challenges and Limitations}{xxvi}{subsection.0.16.2}%
+\contentsline {subsection}{\numberline {XVI.3}Future Work and Recommendations}{xxvi}{subsection.0.16.3}%
+\contentsline {chapter}{Conclusion and perspectives}{xxvii}{chapter*.25}%
+\contentsline {chapter}{Appendix 1}{xxviii}{appendix*.26}%
