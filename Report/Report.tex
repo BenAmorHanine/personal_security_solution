@@ -252,6 +252,7 @@ Giving the limited resources of emergency services (police, paramedics), false a
 %  This gap hits home for Hydatis, the motivation behind this work is clear: we need to move beyond simple, reactive triggers
 % and build smarter, faster ways to protect people by qualifying alerts with precision.
 \subsection{Market Context and Existing Solutions}
+\label{sex:market}
 
 Several commercial solutions exist in the personal safety market, including panic button apps like 
 bSafe, location-sharing platforms like Life360, and wearable devices such as personal alarms. However,
@@ -272,10 +273,9 @@ detection while minimizing false positives.
 %Academic literature reviews
 %In-depth analysis of existing methods
 
-%todo: reduce space in the footer ( especially see this page!)
-%todo: and fama paget fihom khatt fl footer o whayed lee
 
-\section{Description}% or scope : the "What." and "how" A high-level overview of the solution.
+\section{Description}
+\label{sec:proj_descr}
 
 This project involves designing an AI-powered module for a Smart wearable Solution, aimed at enhancing personal safety through automated incident detection during my Summer internship at Hydatis.
 The module integrates four key data streams: 
@@ -327,7 +327,8 @@ My core mission in this project is to develop an intelligent, multi-modal safety
 \end{itemize}
 
 
-\section{Internship timeline }% or planning %professionalism and project management skills.%%%%%often a Gantt chart)
+\section{Internship timeline }
+\label{timeline}
 %Timeline = just dates and deadlines
 %Planning = timeline + methodology + resources + milestones
 
@@ -338,8 +339,6 @@ This project is structured over my two-month internship period at Hydatis, devid
     \item \textbf{Weeks 5-6:} Behavioral profiling model development and integration of the three AI modules.
     \item \textbf{Weeks 7-8:} Final system integration, testing, optimization, and documentation.
 \end{itemize}
-
-%todo: label the sections and subsections
 %todo: diagramme de gantt!!!!
 
 \chapter{Theoritical Foundations and State of the Art}
@@ -445,25 +444,25 @@ and Natural Language Processing (NLP) for intent analysis. %for analyzing the tr
 \label{ser}
 Speech contains important information beyond the words themselves, such as the speacker's emotion, pitch and tone.
 Speech Emotion Recognition (SER) is the field of study focused on automatically identifying the emotional state of a speaker from their voice by analyzing acoustic and prosodic features—such as pitch, tone, and energy—to classify emotions like anger, happiness, or fear.
-\\The process begins with feature extraction, a foundational concept, where meaningful data is derived from the raw audio signal, often using preprocessing  tools like \textbf{Librosa} \cite{librosa}.%todo cite it
+\\The process begins with feature extraction, a foundational concept, where meaningful data is derived from the raw audio signal, often using preprocessing  tools like \textbf{Librosa} \cite{librosa}.
 \\Modern SER systems employ transformer-based architectures like \textbf{Wav2Vec 2.0} \cite{NEURIPS2020_92d1e1ebWav2Vec} 
 which is a self-supervised model that demonstrates superior performance through pre-training on diverse audio data followed by task-specific fine-tuning.
-\\For instance, research has shown that Wav2Vec 2.0 can reach an accuracy of 79.58\% on the IEMOCAP benchmark\cite{wang2022finetunedwav2vec20hubertbenchmark},% [Wang et al., 2022], %todo here we cite the paper fl okhrin we cite the offical documentation
+\\For instance, research has shown that Wav2Vec 2.0 can reach an accuracy of 79.58\% on the IEMOCAP benchmark\cite{wang2022finetunedwav2vec20hubertbenchmark},% [Wang et al., 2022],
 validating its selection as a robust theoretical foundation for the distress detection module.
 
 
 \subsection{Automatic Speech Recognition (ASR)}%speech-to-text conversion
 \label{asr}
 Automatic Speech Recognition (ASR) is the process of converting spoken language into written text, enabling machines to understand and process human speech.
-The Progress in speech recognition has been energized by the development of unsupervised pre-training techniques exemplified by Wav2Vec 2.0 \cite{NEURIPS2020_92d1e1ebWav2Vec} (See \ref{ser}).  
+The Progress in speech recognition has been energized by the development of unsupervised pre-training techniques exemplified by Wav2Vec 2.0 \cite{NEURIPS2020_92d1e1ebWav2Vec} (See \ref{ser}). 
 This suggests that while unsupervised pre-training has improved the quality of audio encoders dramatically, the lack
 of an equivalently high-quality pre-trained decoder, combined with a recommended protocol of dataset-specific fine
 tuning, is a crucial weakness which limits their usefulness and robustness.  
 
-For this, OpenAI implemented \textbf{Whipser}, \cite{pmlr-v139-radford21aWhisper} a Transformer-based model trained on a massive 680,000 hours of diverse audio, enabling it to perform robustly in a zero-shot setting without  
+For this, OpenAI implemented \textbf{Whipser}, \cite{pmlr-v139-radford21aWhisper} a Transformer-based model trained on a massive 680,000 hours of diverse audio, enabling it to perform robustly in a zero-shot setting without 
 Reaserchers have also worked on a bench of versions of Whisper focusing on more epochs while adding, SpecAugment Stochastic Depth, or BPE Dropout, forming a family of Tiny, Medium, Large architectures\dots \cite{pmlr-v139-radford21aWhisper}
 
-%Whisper models, which are trained on a broad and diverse distribution of audio and evaluated in a zero-shot setting,  
+%Whisper models, which are trained on a broad and diverse distribution of audio and evaluated in a zero-shot setting, 
 Whisper models could potentially match human behavior much better than existing systems.
 To assert their efficiency, comparaisons between  Whisper models with both human performance
  and standard fine-tuned ML models were done. Whisper showed better transcription over all ML models and was close to that of professional human transcribers.
@@ -477,7 +476,7 @@ To assert their efficiency, comparaisons between  Whisper models with both human
 \\In this context, it is important to note that Whisper, fine-tuned with Arabic datasets, showed impressive performance: 
 It reached a WER of  81.8 on the TARIC dataset (vs95.3 for Wav2vec2.0), and 74.1 and 85.9 on respectively Tun SO and TunCS datasets.\cite{abdallah2023leveragingdatacollectionunsupervised}
 
-\subsection{Natural Language Processing (NLP) for Intent Analysis}% intent analysis from transcribed speech
+\subsection{Natural Language Processing (NLP) for Intent Analysis}
 \label{sec:nlp_intent}
 Natural Language Processing (NLP) is the final stage of the vocal analysis pipeline, tasked with analyzing the transcribed text from the ASR module to determine user intent in order to assess risk for distress detection.
 The theory behind NLP for intent analysis relies on Transformer-based language models, notably \textbf{BERT} (Bidirectional Encoder Representations from Transformers), proven with highly effectiveness for text classification\cite{devlin-etal-2019-bert}.
@@ -503,14 +502,14 @@ making it ideal for GPS traces in order to identify a user's routine "hotspots" 
 
 Temporal dimension: routines are modeled using frequency distributions. 
 By analyzing the timestamps of a user's location history, the system builds probability models at different time scales:time of day,  the day of the week. 
-This allows learning a user's unique temporal "pattern of life \cite{1339268pattern}," establishing a baseline for detecting unusual activity when a user deviates from their learned routine.%todo citation ib bib file 
+This allows learning a user's unique temporal "pattern of life \cite{1339268pattern}," establishing a baseline for detecting unusual activity when a user deviates from their learned routine.
 
 
 \subsection{ Anomaly Scoring as a Measure of Deviation}
 \label{sec:anomaly_scoring}
 Anomaly scoring quantifies the degree of deviation from established behavioral baselines. The theoretical foundation involves measuring statistical distance between observed behaviors and learned normal patterns across multiple dimensions.
 
-Spatial anomaly detection employs \textbf{distance-based} metrics, including \textbf{Euclidean} and \textbf{geodesic} distance measures, to assess positional deviations from routine locations %todo\cite{chandola2009anomaly}.
+Spatial anomaly detection employs \textbf{distance-based} metrics, including \textbf{Euclidean} and \textbf{geodesic} distance measures, to assess positional deviations from routine locations\cite{chandola2009anomaly}.
 
 Temporal anomalies are typically identified through \textbf{statistical} approaches using \textbf{probability distributions}, where events occurring during periods of historically low frequency receive higher anomaly scores.
 
@@ -534,10 +533,12 @@ Given the high imbalance in Personal Safety data, with genuine incidents being r
 % By combining predictions from multiple models, ensembles produce more reliable results than individual models. 
 
 
-
 \chapter{Design and implementation}
 \label{ch:4eme}
-%todo we need an intro here 
+This chapter details the technical architecture and implementation of the Personal Safety system, translating the conceptual design into a functional prototype. 
+It is structured around the system's four core components: the geospatial risk module, the vocal distress detector, the personalized behavioral profiler, and the rule-based fusion engine that integrates their outputs. 
+The implementation relies on a Python-based stack, leveraging libraries such as scikit-learn and Transformers to build the system's predictive capabilities.
+
 %\section{System Architecture and Data management}
 \section{System Architecture, Integration, and Decision Engine Overview}
 \label{sec:system_architecture}
@@ -711,7 +712,7 @@ The model achieved 82\% precision on a test set with latency compatible with our
 \label{sec:vocal_preprocess}
 All incoming audio data undergoes a critical preprocessing step using the \textbf{Librosa} library to ensure suitability with the pre-trained models.  
 Audio is resampled to a consistent \textbf{16kHz} format to standardize inputs and ensure compatibility with Whisper ASR and Wav2Vec 2.0 SER models.  
-See \ref{sec:nlp_tunbert_implementation} for details on NLP-specific preprocessing.%todo verify ref later
+See \ref{sec:nlp_tunbert_implementation} for details on NLP-specific preprocessing.
 
 \subsection{Speech Emotion Recognition (SER)}
 \label{subsec:ser_implementation}
@@ -814,11 +815,11 @@ The spatial anomaly score is derived from the \textbf{geodesic distance} in kilo
 \subsection{Supervised Incident Classifier Implementation}
 \label{sec:Incident_class_impl}
 
-The final stage of the behavioral module is a supervised classifier, implemented in \texttt{incident\_classifier.py}, that predicts the probability of a genuine incident from the four anomaly scores. For each user, a personalized model is trained on their historical alerts from the \texttt{locations\_collection}.
+The final stage of the behavioral module is a supervised classifier, implemented in \textit{incident\_classifier.py}, that predicts the probability of a genuine incident from the four anomaly scores. For each user, a personalized model is trained on their historical alerts from the \textit{locations\_collection}.
 
-The \texttt{train\_incident\_classifier} function utilizes a \textbf{\texttt{RandomForestClassifier}} from Scikit-learn, training it on a feature vector of the four anomaly scores after they have been normalized with a \texttt{StandardScaler}. To optimize for the highly imbalanced nature of safety data, the \texttt{optimize\_incident\_threshold} function uses K-Fold cross-validation to determine the decision threshold that maximizes the \textbf{\texttt{f1\_score}}.
+The \textit{train\_incident\_classifier} function utilizes a \textbf{\textit{RandomForestClassifier}} from Scikit-learn, training it on a feature vector of the four anomaly scores after they have been normalized with a \textit{StandardScaler}. To optimize for the highly imbalanced nature of safety data, the \textit{optimize\_incident\_threshold} function uses K-Fold cross-validation to determine the decision threshold that maximizes the \textbf{\textit{f1\_score}}.
 
-Finally, the trained model, scaler, and optimized threshold are serialized using \texttt{joblib} and stored in the user's MongoDB document. In a live scenario, the \texttt{predict\_incident} function loads these personalized artifacts, scales the incoming anomaly scores, and uses the model's \texttt{predict\_proba} method to return the final, real-time incident probability.
+Finally, the trained model, scaler, and optimized threshold are serialized using \textit{joblib} and stored in the user's MongoDB document. In a live scenario, the \textit{predict\_incident} function loads these personalized artifacts, scales the incoming anomaly scores, and uses the model's \textit{predict\_proba} method to return the final, real-time incident probability.
 %todo normalement fama partie okhra lel pipeline kolha
 
 
@@ -842,7 +843,7 @@ Precision, Recall, and F1-Score are used as primary metrics, with F1-Score prior
 For the behavioral module, a 5-Fold Cross-Validation strategy was implemented to provide a reliable estimate of the model's performance.
 The geospatial module is validated qualitatively through risk hotspot maps. %and quantitatively by comparing cluster densities against official Tunisian crime statistics. 
 %The vocal pipeline, combining SER (Wav2Vec 2.0) and NLP (TunBERT), is evaluated on a 20\% holdout from the Tunisian distress dataset, with confusion matrices used to highlight classification errors. 
-The behavioral module leverages a personalized \texttt{RandomForestClassifier} evaluated on the same 20\% holdout set, with decision thresholds optimized via 5-fold cross-validation in the \texttt{optimize\_incident\_threshold} function. Finally, all supervised models are benchmarked against naive baselines to confirm predictive lift and ensure robustness.
+The behavioral module leverages a personalized \textit{RandomForestClassifier} evaluated on the same 20\% holdout set, with decision thresholds optimized via 5-fold cross-validation in the \textit{optimize\_incident\_threshold} function. Finally, all supervised models are benchmarked against naive baselines to confirm predictive lift and ensure robustness.
 The combined SER and NLP models are evaluated on the 20\% holdout from the Tunisian distress dataset with confusion matrices used to visualize classification performance.
 
 
@@ -891,7 +892,7 @@ This model's role is to analyze the acoustic properties of the user's speech and
 
 \subsubsection{NLP Intent Classification Results}
 The core of the vocal module's intelligence lies in the fine-tuned \textbf{TunBERT model}, which was specifically trained and evaluated on the custom-labeled Tunisian distress dataset. 
-%The model's performance was measured on a 20\% hold-out test set, as detailed in the \texttt{fineTuneTunBERT.ipynb} notebook.
+%The model's performance was measured on a 20\% hold-out test set, as detailed in the \textit{fineTuneTunBERT.ipynb} notebook.
 
 Table \ref{tab:nlp_results} presents the performance metrics for the critical task of distinguishing between "Distress" and "Normal" intent from transcribed text. The model achieved a high F1-Score of \textbf{0.82} for the crucial "Distress" class, demonstrating its effectiveness in a real-world scenario.
 
@@ -922,9 +923,9 @@ negatives (i.e., real distress situations being missed) which confirms the model
 \subsection{Behavioral Module Performance}
 \label{subsec:behavioral_results}
 
-The performance of the personalized behavioral module was evaluated using a robust \textbf{5-Fold Cross-Validation} strategy for each user, as implemented in the \texttt{incident\_classifier.py} script. The evaluation focused on the \textbf{F1-Score} to account for the highly imbalanced nature of the data, where genuine incidents are rare.
+The performance of the personalized behavioral module was evaluated using a robust \textbf{5-Fold Cross-Validation} strategy for each user, as implemented in the \textit{incident\_classifier.py} script. The evaluation focused on the \textbf{F1-Score} to account for the highly imbalanced nature of the data, where genuine incidents are rare.
 
-Table \ref{tab:behavioral_results} summarizes the \textbf{average performance} of the \texttt{RandomForestClassifier} across a representative sample of user profiles. On average, the models achieved a strong F1-Score of \textbf{0.79} for the critical "Incident" class, demonstrating a reliable ability to correctly identify true emergencies.
+Table \ref{tab:behavioral_results} summarizes the \textbf{average performance} of the \textit{RandomForestClassifier} across a representative sample of user profiles. On average, the models achieved a strong F1-Score of \textbf{0.79} for the critical "Incident" class, demonstrating a reliable ability to correctly identify true emergencies.
 
 % --- NOTE: These are representative placeholder numbers. You should replace them ---
 % --- with the average results from your model evaluation notebook. ---
@@ -942,7 +943,7 @@ Table \ref{tab:behavioral_results} summarizes the \textbf{average performance} o
 \end{table}
 
 A key part of the implementation was the optimization of the decision threshold on a per-user basis. The cross-validation process, 
-implemented in the \texttt{optimize\_incident\_threshold} function, determined the optimal decision threshold for each user's specific data, 
+implemented in the \textit{optimize\_incident\_threshold} function, determined the optimal decision threshold for each user's specific data, 
 with the resulting values typically ranging between \textbf{0.40 and 0.55}. Any event with a predicted probability greater than the user's 
 personal threshold is classified as a potential incident. This is crucial to assure Precison: detecting real Recall while minimizing false alarms.
 %This personalized approach is crucial for balancing the need to detect real threats (Recall) while minimizing false alarms (Precision) for each individual.

@@ -30,7 +30,7 @@
 \contentsline {chapter}{Design and implementation}{xiv}{chapter*.15}%
 \contentsline {section}{\numberline {XI}System Architecture, Integration, and Decision Engine Overview}{xiv}{section.0.11}%
 \contentsline {subsection}{\numberline {XI.1}Overall System Architecture}{xiv}{subsection.0.11.1}%
-\contentsline {subsection}{\numberline {XI.2}Final Decision Engine Design}{xiv}{subsection.0.11.2}%
+\contentsline {subsection}{\numberline {XI.2}Final Decision Engine Design}{xv}{subsection.0.11.2}%
 \contentsline {subsection}{\numberline {XI.3}System Integration and API Design}{xv}{subsection.0.11.3}%
 \contentsline {subsubsection}{\numberline {XI.3.1}On-demand API Endpoint}{xv}{subsubsection.0.11.3.1}%
 \contentsline {subsubsection}{\numberline {XI.3.2}API Response Body}{xv}{subsubsection.0.11.3.2}%
@@ -40,7 +40,7 @@
 \contentsline {subsection}{\numberline {XI.5}Data Management and Preprocessing}{xvii}{subsection.0.11.5}%
 \contentsline {section}{\numberline {XII}Implementation of the Geospatial Analysis Module}{xvii}{section.0.12}%
 \contentsline {subsection}{\numberline {XII.1}Data acquisition and Preprocessing}{xvii}{subsection.0.12.1}%
-\contentsline {subsection}{\numberline {XII.2}Spatial Clustering Implementation}{xvii}{subsection.0.12.2}%
+\contentsline {subsection}{\numberline {XII.2}Spatial Clustering Implementation}{xviii}{subsection.0.12.2}%
 \contentsline {subsection}{\numberline {XII.3}Risk Score Calculation and Integration}{xviii}{subsection.0.12.3}%
 \contentsline {section}{\numberline {XIII}Implementation of the Vocal Signal Processing Pipeline}{xviii}{section.0.13}%
 \contentsline {subsection}{\numberline {XIII.1}Vocal Data Preprocessing}{xviii}{subsection.0.13.1}%
@@ -49,7 +49,7 @@
 \contentsline {subsection}{\numberline {XIII.4}Natural Language Processing (TunBERT Focus)}{xix}{subsection.0.13.4}%
 \contentsline {subsubsection}{\numberline {XIII.4.1}Model Selection and Architecture}{xix}{subsubsection.0.13.4.1}%
 \contentsline {subsubsection}{\numberline {XIII.4.2}Fine-tuning and Dataset Preparation}{xix}{subsubsection.0.13.4.2}%
-\contentsline {subsubsection}{\numberline {XIII.4.3}Training Configuration and Inference}{xix}{subsubsection.0.13.4.3}%
+\contentsline {subsubsection}{\numberline {XIII.4.3}Training Configuration and Inference}{xx}{subsubsection.0.13.4.3}%
 \contentsline {subsubsection}{\numberline {XIII.4.4}Training Configuration and Inference}{xx}{subsubsection.0.13.4.4}%
 \contentsline {subsection}{\numberline {XIII.5}Integration of SER, ASR, and NLP for Distress Detection}{xx}{subsection.0.13.5}%
 \contentsline {section}{\numberline {XIV}Implementation of the Behavioral Anomaly Detection Module}{xxi}{section.0.14}%

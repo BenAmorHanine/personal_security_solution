@@ -9,7 +9,7 @@
 \contentsline {figure}{\numberline {5}{\ignorespaces Whisper's performance is close to that of professional human transcribers.}}{xi}{figure.caption.14}%
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {6}{\ignorespaces Architecture Diagram of the System}}{xiv}{figure.caption.16}%
-\contentsline {figure}{\numberline {7}{\ignorespaces Vocal Analysis Pipeline for Distress detection}}{xx}{figure.caption.17}%
+\contentsline {figure}{\numberline {7}{\ignorespaces Vocal Analysis Pipeline for Distress detection}}{xxi}{figure.caption.17}%
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {8}{\ignorespaces High Risk Locations Heatmap of Tunisia based on the ACLED Data}}{xxiv}{figure.caption.19}%
 \contentsline {figure}{\numberline {9}{\ignorespaces Confusion matrix for the TunBERT intent classifier on the held-out test set.}}{xxv}{figure.caption.22}%
