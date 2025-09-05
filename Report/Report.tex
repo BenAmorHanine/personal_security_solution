@@ -860,7 +860,7 @@ Figure \ref{fig:Clusters_heatmap} illustrates the cluster distribution across Tu
 The performance of the vocal analysis pipeline was evaluated by assessing its two primary sub-modules: the pre-trained Speech Emotion Recognition (SER) model and the custom-tuned Natural Language Processing (NLP) intent classifier.
 
 \subsubsection{Speech Emotion Recognition (SER)}
-For the SER task, the system integrates the powerful, pre-trained \texttt{speechbrain/emotion-recognition-wav2vec2-IEMOCAP} model. 
+For the SER task, the system integrates the powerful, pre-trained \textit{speechbrain/emotion-recognition-wav2vec2-IEMOCAP} model. 
 This model was selected for its state-of-the-art performance on the standard IEMOCAP academic benchmark for emotion recognition. 
 This model's role is to analyze the acoustic properties of the user's speech and provide a crucial emotional context score, which is then passed to the final decision engine.
 
@@ -926,11 +926,10 @@ personal threshold is classified as a potential incident. This is crucial to ass
     \subsection{Overall System Performance}
 \label{subsec:overall_results}
 
-The Hydatis system was evaluated as a whole, focusing on end-to-end latency and the rule-based fusion of module outputs.
+The Safety system was evaluated as a whole, focusing on end-to-end latency and the rule-based fusion of module outputs.
 
 \subsubsection{End-to-End Latency}
-From raw sensor input to final risk score, the system achieved an average latency of \textbf{450ms} under typical load, satisfying real-time safety requirements.
-
+The system achieved an average latency of \textbf{450ms} from raw sensor input to final risk score, satisfying real-time safety requirements.
 \subsubsection{Rule-Based Decision Fusion}
 Final risk is derived through a transparent rule-based engine that combines geospatial, vocal, and behavioral outputs. High-confidence vocal distress signals (e.g., $>$0.9) trigger immediate high-risk alerts, while moderate behavioral anomalies are only escalated if supported by geospatial risk. This ensures decisions are both explainable and efficient.
 
@@ -940,14 +939,24 @@ Final risk is derived through a transparent rule-based engine that combines geos
 % --- Section Goal ---
 % To interpret the results, reflect on the project's challenges and limitations,
 % and propose future directions. This section is for the "so what?"
+In this section, we will discuss the results found, reflect on the project's challenges and limitations, and finally propose future recommendations and enhancements.
 
     \subsection{Interpretation of Key Findings}
     \label{subsec:interpretation}
-    % --- What to write ---
-    % 1. Did you meet your main objectives (e.g., >80% accuracy)?
-    % 2. Compare the modules: Which was the most effective? Which was the weakest?
-    % 3. Discuss how the modules complement each other (e.g., a scenario where
-    %    geo-risk is low but vocal distress is high).
+    
+The evaluation of the system demonstrates that it met its primary objectives: A real-time, multi-modal AI engine, capable of providing a nuanced risk assessment with low latency (~450ms). 
+%The performance of the core supervised modules exceeded the initial project targets, achieving high F1-Scores for the critical "Distress" and "Incident" classes. However, individual module performance varied significantly, indicating areas for targeted improvement in future iterations. 
+Comparative analysis revealed distinct performance profiles across system components: The \textbf{vocal analysis pipeline} demonstrated the highest reliability in detecting genuine distress events, with TunBERT's fine-tuning for Tunisian dialect proving effective for intent classification. Speech emotion recognition provided valuable supplementary signals. 
+The personalised \textbf{behavioral profiling module} achieved consistent performance in detecting routine deviations but exhibited limitations with new users due to insufficient historical data.
+While the \textbf{Geospatial module} is unsupervised, its ability to provide static risk context was crucial for the rule-based engine's decision-making.
+The rule-based engine successfully confirmed high-risk events when all three modules showed strong signals.
+
+Critical scenarios illustrate their complementarity: For instance, the system can correctly avoid a false positive at a loud concert by noting that while the audio is loud, the NLP model detects 
+no distress keywords. Conversely, it can correctly flag a potential domestic dispute based on a high vocal distress score, even when the geospatial and behavioral risk factors are low. 
+This demonstrates the system's ability to interpret complex, real-world context, a significant advancement over simpler, single-trigger safety systems.
+
+
+
 
     \subsection{Challenges and Limitations}
     \label{subsec:challenges}
