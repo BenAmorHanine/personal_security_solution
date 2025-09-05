@@ -73,5 +73,4 @@
 \contentsline {subsection}{\numberline {XVI.1}Interpretation of Key Findings}{xxvii}{subsection.0.16.1}%
 \contentsline {subsection}{\numberline {XVI.2}Challenges and Limitations}{xxvii}{subsection.0.16.2}%
 \contentsline {subsection}{\numberline {XVI.3}Future Work and Recommendations}{xxvii}{subsection.0.16.3}%
-\contentsline {chapter}{Conclusion and perspectives}{xxviii}{chapter*.25}%
-\contentsline {chapter}{Appendix 1}{xxix}{appendix*.26}%
+\contentsline {chapter}{Conclusion and perspectives}{xxix}{chapter*.25}%

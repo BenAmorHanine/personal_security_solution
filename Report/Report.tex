@@ -955,9 +955,6 @@ Critical scenarios illustrate their complementarity: For instance, the system ca
 no distress keywords. Conversely, it can correctly flag a potential domestic dispute based on a high vocal distress score, even when the geospatial and behavioral risk factors are low. 
 This demonstrates the system's ability to interpret complex, real-world context, a significant advancement over simpler, single-trigger safety systems.
 
-
-
-
     \subsection{Challenges and Limitations}
     \label{subsec:challenges}
     % --- What to write ---
@@ -967,30 +964,36 @@ This demonstrates the system's ability to interpret complex, real-world context,
     %    behavioral analysis for new users with no historical data.
     % 3. Model Generalization: Discuss the potential risk that your models might not
     %    perform as well on data from different regions or demographics.
-Edge cases, including sparse rural data coverage, were mitigated using synthetic data generation, though further validation is needed (see Discussion).
-scarse tunisian data
+%Edge cases, including sparse rural data coverage, were mitigated using synthetic data generation, though further validation is needed (see Discussion). scarse tunisian data
+While the system met its core objectives, several limitations remain. The most critical is \textbf{data scarcity and quality}: the Tunisian dialect dataset for the vocal NLP module is small compared to high-resource languages, and the ACLED dataset used for geospatial analysis is biased toward urban areas, lacks rural coverage, and focuses on political unrest rather than street-level crime, limiting precision and generalizability. The \textbf{cold start problem} also affects the behavioral module, as reliable anomaly detection requires sufficient historical data; new users are temporarily handled through synthetic data and conservative default anomaly scores, but this remains a constraint until enough behavioral evidence is collected.
+
 
     \subsection{Future Work and Recommendations}
     \label{subsec:future_work}
     % --- What to write ---
     % 1. Suggest concrete next steps, like collecting more labeled Tunisian vocal data.
-    % 2. Recommend experimenting with other models (like XGBoost).
+    % 2. Recommend experimenting with other models (like XGBoost).NOOO
     % 3. Propose integrating new data sources mentioned in the Cahier des Charges
     %    (e.g., social media, video feeds).
+    %suggest finishing the web interface that logs the alerts
+
+Based on the findings and limitations identified in this project, several key areas are recom-
+mended for future development to further enhance the system's robustness and accuracy
+\begin{itemize}
+    \item \textbf{Expand Data Resources:} Future work should focus on expanding the system's data, particularly by collecting a larger Tunisian vocal dataset and incorporating more granular, street-level crime data to complement the current ACLED source, in addition to integrating additional data sources, such as social media and video feeds
+    
+    \item \textbf{Refine the Cold Start Solution:} The cold start issue in the behavioral module can be improved by replacing the default high anomaly score with a hybrid strategy that uses a global, non-personalized model for new users until sufficient personal data is collected.
+    
+    \item \textbf{Complete System Integration:} The final steps for a production-ready system include completing the web interface for real-time alert logging.
 
 
-
-
+\end{itemize}
 %\section*{Conclusion}
 %\section{Conclusion}
 \chapter*{Conclusion and perspectives}
 \addcontentsline{toc}{chapter}{Conclusion and perspectives}
 \markboth{Conclusion and perspectives}{}
 
-\begin{appendix}
-\chapter{Appendix 1}
-Insert your appendixes here if you need.
-\end{appendix}
 
 %\spacing{1}
 \bibliographystyle{unsrt}
