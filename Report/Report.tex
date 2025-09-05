@@ -118,15 +118,25 @@
 \begin{document}
 \pagenumbering{gobble}
 \includepdf[pages=-]{FrontPage.pdf}
-\chapter*{Acknowledgments}
+%\chapter*{Acknowledgments}
 
 \frontmatter %here yothhrou les num des pages en bas 
 \chapter*{Abstract}
-\normalsize{Write your abstract here.
+\normalsize{
+    
+This internship project focused on the design and development of  an intelligent personal safety system that leverages multi-modal artificial intelligence to assess user risk in real time. 
+
+Traditional safety applications often rely on single-trigger mechanisms, which can lead to false alarms or missed threats. To address this limitation, we integrate three complementary modules: a geospatial risk analyzer, a vocal distress detector tailored to Tunisian Arabic, and a behavioral anomaly engine that models individual movement patterns. 
+
+The system was implemented using cutting-Edge AI techniques, including clustering algorithms for hotspot detection, a custom-trained NLP model for distress signal recognition, and personalized anomaly scoring for user behavior. Evaluation results demonstrated that the system operates with low end-to-end latency (\textbf{450 ms}) and provides context-aware risk assessments through a transparent rule-based fusion engine. Key findings confirm the feasibility of applying AI-driven, multi-modal analysis to improve both the accuracy and reliability of personal safety monitoring. 
+
+This work represents a strong proof-of-concept, highlighting the importance of integrating diverse data streams rather than relying on isolated signals. Future extensions include expanding the Tunisian vocal dataset, improving behavioral modeling for new users, and extending the platform with a web interface for alert management. 
+
+
+}
 
 \medskip
-{\noindent \textbf{Keywords: ..., ... .} }
-
+{\noindent \textbf{Keywords: Personal Safety, Multi-Modal AI, Tunisian Arabic, Real-Time Processing, Geospatial Analysis, Vocal Distress Detection, Behavioral Anomaly, Rule-Based Fusion.}}
 \spacing{1}
 \tableofcontents{}
 \newpage 
@@ -159,8 +169,23 @@
 \addcontentsline{toc}{chapter}{Introduction}
 \markboth{Introduction}{}
 
-\chapter{Company Presentation} % we should metion that there are a lot of spacing between title of chapter and sctions
+Imagine walking home late at night. Your phone is in your pocket, and with it, a dozen safety apps. But would they really understand if you were in trouble? Most rely on a single button press—a solution that can be too obvious to use in the moment, or that might cry wolf when you simply drop your phone.
 
+This is the problem we set out to solve at Hydatis. During my internship, I worked on a new kind of safety system, one that's smart enough to understand context. Instead of waiting for you to ask for help, it uses AI to quietly listen to the world around you, learning what's normal so it can recognize when something is wrong.
+
+Think of it as a digital guardian that pays attention on three fronts:
+*   Where you are: It knows if you've wandered into a high-risk area.
+*   What it hears: It understands the unique sounds of distress in Tunisian Arabic.
+*   What you do: It learns your daily routine so it can spot unusual behavior.
+
+%Building this was a challenge. Teaching an AI Machine to understand the subtle nuances of a specific dialect? How do you personalize safety without invading privacy? This report is the story of how we built a working prototype that can assess risk in under half a second, weaving together these different clues to get a clearer picture of your safety.
+Developing this system was a challenge. Training an AI to understand the subtle nuances of a specific dialect, and designing a personalized safety solution without compromising privacy, required careful consideration. This report presents the creation of a  prototype capable of assessing risk in under half a second, intelligently integrating multiple data streams to provide a comprehensive and context-aware evaluation of personal safety.
+
+In the following chapters, I'll walk you through our process. We'll start with the landscape of existing technology, then dive into how we designed and built this system. I'll show you how we tested it, what we learned, and where we stumbled. Finally, I'll share our ideas for where this technology could go next.
+
+
+
+\chapter{Company Presentation} % we should metion that there are a lot of spacing between title of chapter and sctions
 \label{ch:1er}
 \section{Overview}
 Founded in 2020, and located in both Meudon la forêt , Meudonn France and tunis, Tunisia, 
